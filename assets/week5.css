@@ -1,0 +1,24 @@
+html, body, #main, #react-entry-point {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-group .form-check {
+    padding-left: 0; /* Remove margin from last button */
+}
+
+.slice {
+    cursor: pointer;
+    opacity: 0.8;
+    text-shadow: none !important;
+}
+
+.slice:hover {
+    opacity: 1;
+    /*stroke: rgb(255, 255, 255);*/
+}

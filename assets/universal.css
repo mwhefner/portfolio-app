@@ -1,0 +1,22 @@
+.form-select {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-info) !important;
+    font-weight: bold !important;
+}
+
+.dbc .Select-placeholder {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-info) !important;
+    font-weight: bold !important;
+}
+
+#theme-switch {
+    margin:0;
+}
+
+.btn-group .form-select, .btn-group .form-check-label {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
