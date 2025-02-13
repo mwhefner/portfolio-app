@@ -20,7 +20,7 @@ dash.register_page(
 # First I handle the data-----------------------------------------------------
 
 # Import data from the csv
-df = pd.read_csv("Steam Top 100 Played Games - List.csv")
+df = pd.read_csv("assets/Steam Top 100 Played Games - List.csv")
 
 # Add rank to title
 df["Name"] = df["Rank"].astype(str) + ". " + df["Name"]

@@ -363,7 +363,6 @@ def toggle_theme_modal(n_clicks, n_2, is_open):
 # Database connectivity for form input
 def load_db_credentials(conf_file="database.conf"):
     """Reads database and SSH credentials from a .conf file."""
-    print("Loading database credentials from:", conf_file)
     config = configparser.ConfigParser()
     config.read(conf_file)
 
@@ -376,7 +375,6 @@ def load_db_credentials(conf_file="database.conf"):
         "ssh_user": config.get("ssh", "ssh_user"),
         "ssh_password": config.get("ssh", "ssh_password"),
     }
-    print("Loaded credentials:", credentials)
     return credentials
 
 def is_running_locally(conf_file="database.conf"):

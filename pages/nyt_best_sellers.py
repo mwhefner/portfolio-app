@@ -13,7 +13,7 @@ dash.register_page(
 )
 
 # Read the CSV and treat ISBN as a string to prevent conversion errors
-df = pd.read_csv("bestsellers.csv", dtype={'ISBN': 'str'})
+df = pd.read_csv("assets/bestsellers.csv", dtype={'ISBN': 'str'})
 
 # Convert ISBN to integer, ignoring errors and converting invalid values to NaN
 df['ISBN'] = pd.to_numeric(df['ISBN'], errors='coerce')
