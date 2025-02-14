@@ -2,7 +2,24 @@ import dash
 from dash import html, dcc, Output, Input
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__, path='/',name="Portfolio", )
+dash.register_page(
+    __name__,
+    path="/",
+    name="Portfolio",
+    title="Data Science & Interactive Analytics Portfolio",
+    description="Transforming complex data, math, and science concepts into interactive and pedagogically-informed software solutions. Explore publications, web projects, and interactive dashboards.",
+    meta_tags=[
+        {"charset": "UTF-8"},
+        {"name": "viewport", "content": "width=device-width, initial-scale=1.0, viewport-fit=cover"},
+        {"name": "robots", "content": "index, follow"},
+        {"name": "keywords", "content": "Data Science, Dash Apps, Interactive Analytics, Machine Learning, Data Visualization, Research Software"},
+        {"name": "author", "content": "Matt Hefner"},
+        {"property": "og:type", "content": "website"},
+        {"property": "og:image", "content": "/assets/as_webp/thumbnail.webp"},
+        {"property": "og:url", "content": "{%url%}"},
+        {"rel": "canonical", "href": "{%url%}"}
+    ]
+)
 
 def makeCard(page):
     tags_dict = {
@@ -61,7 +78,7 @@ def makeCard(page):
     image = []
     if page['image'] != "" :
         image = html.A(
-            dbc.CardImg(src=page.get("image", "/static/images/placeholder286x180.png"), top=True),
+            dbc.CardImg(alt=page.get("description", "/static/images/placeholder286x180.png"),src=page.get("image", "/static/images/placeholder286x180.png"), top=True),
             href=page_path
         )
 
@@ -103,7 +120,6 @@ excluded_pages = ["/not-found-404", "/"] + ["/gregg", "/differential_geometry"]
     Input("card-container", "id")  # Triggers once at startup
 )
 def populate_cards(_):
-    print([page["path"] for page in dash.page_registry.values()])
 
     pages = [page for page in dash.page_registry.values() if (page["path"] not in excluded_pages)]
     return dbc.Col([

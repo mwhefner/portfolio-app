@@ -89,6 +89,7 @@ def update_books(page):
                             src=book["img_url"], 
                             className="img-fluid",
                             style={"width": "100%", "aspectRatio": "2/3", "objectFit": "cover"},
+                            alt=f"The cover for the Rank {book['rank']}: |Title: {book['title']} |Author: {book['author']} |ISBN: {book['ISBN']}",
                         ),
                         dbc.Tooltip(
                             dbc.Card(

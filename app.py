@@ -46,7 +46,8 @@ dash.clientside_callback(
     }
     """,
     Output("theme-switch", "id"),
-    Input("theme-switch", "value"),
+    Input("theme-switch", "value"),  # Pass the stored mapping
+    prevent_initial_call=True
 )
 
 dbc_themes_url = {
@@ -73,7 +74,8 @@ dash.clientside_callback(
     """,
     Output("themeStore", "data"),
     Input("themeSelection", "value"),
-    State("themeMap", "data")  # Pass the stored mapping
+    State("themeMap", "data"),  # Pass the stored mapping
+    prevent_initial_call=True 
 )
 
 # Theme url callback updates the theme stylesheet
@@ -146,7 +148,7 @@ app.layout = dbc.Container([
                             md=9,  # Adjust as needed
                         ),
                         dbc.Col(
-                            html.Img(src="/assets/as_webp/20250121_151318 2.webp", style={"width": "100%", "height": "auto", "borderRadius": "8px"}),
+                            html.Img(src="/assets/as_webp/20250121_151318 2.webp", style={"width": "100%", "height": "auto", "borderRadius": "8px"},alt="My portrait image"),
                             md=3,  # Adjust as needed
                         ),
                         ], align = "center"
@@ -515,52 +517,3 @@ def submit_feedback(n_clicks, name, email, message):
 
         return "Error: Try Again ❌", "danger", False, dash.no_update
 
-app.index_string = '''
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-        <meta name="robots" content="index, follow">
-        
-        {%metas%}
-        <title>Data Science & Interactive Analytics | {%title%}</title>
-        {%favicon%}
-        {%css%}
-
-        <!-- SEO Meta Tags -->
-        <meta name="description" content="Transforming complex data, math, and science concepts into interactive and pedagogically-informed software solutions. Explore publications, web projects, and interactive dashboards.">
-        <meta name="keywords" content="Data Science, Dash Apps, Interactive Analytics, Machine Learning, Data Visualization, Research Software">
-        <meta name="author" content="Your Name">
-
-        <!-- Open Graph (OG) Meta Tags for Social Sharing -->
-        <meta property="og:type" content="website">
-        <meta property="og:title" content="Data Science & Interactive Analytics | {%title%}">
-        <meta property="og:description" content="Transforming complex data, math, and science into interactive software solutions. Explore my projects!">
-        <meta property="og:image" content="/assets/as_webp/thumbnail.webp">
-        <meta property="og:url" content="{%url%}">
-        
-        <!-- Twitter Card for Social Media -->
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Data Science & Interactive Analytics | {%title%}">
-        <meta name="twitter:description" content="Transforming data into interactive tools. Explore my projects!">
-        <meta name="twitter:image" content="/assets/as_webp/thumbnail.webp">
-
-        <!-- Preload Important Assets -->
-        <link rel="preload" as="image" href="/assets/as_webp/thumbnail.webp" type="image/webp">
-
-        <!-- Canonical URL -->
-        <link rel="canonical" href="{%url%}">
-
-    </head>
-    <body>
-        {%app_entry%}
-        <footer>
-            {%config%}
-            {%scripts%}
-            {%renderer%}
-        </footer>
-    </body>
-</html>
-
-'''
