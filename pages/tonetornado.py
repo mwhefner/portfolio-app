@@ -7,7 +7,7 @@ dash.register_page(
     name="tonetornado", 
     title="tonetornado", 
     description="tonetornado is a free and interactive web tool that circularly visualizes (and makes) sound (and useful overlays) for learning (and fun!)", 
-    image="/assets/tonetornado.png"
+    image="/assets/as_webp/tonetornado.webp"
 )
 
 layout = html.Div([

@@ -10,7 +10,7 @@ dash.register_page(
     name="New York Times Best Sellers: Fiction", 
     title="New York Times Best Sellers: Fiction", 
     description="Explore the history of New York Times' Best-Selling Fiction.", 
-    image="assets/nyt.png"
+    image="assets/as_webp/nyt.webp"
 )
 
 # Data Wrangling----------------------

@@ -7,7 +7,7 @@ dash.register_page(
     name="The changing mix of fossil fuels used and the related evolution of CO₂ emissions", 
     title="The changing mix of fossil fuels used and the related evolution of CO₂ emissions", 
     description="Published in Springer's Mitigation and Adaptation Strategies for Global Change journal.", 
-    image="assets/mix_paper.png"
+    image="assets/as_webp/mix_paper.webp"
 )
 
 layout = html.Div([
