@@ -127,7 +127,7 @@ def update_books(page):
                                 style={"width": "250px", "padding": "10px"}
                             ),
                             target=f"tooltip-{index}",
-                            placement="right",
+                            placement="bottom",
                             style={"maxWidth": "300px", "whiteSpace": "normal"}
                         ),
 
