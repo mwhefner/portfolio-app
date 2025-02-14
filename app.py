@@ -537,17 +537,17 @@ app.index_string = '''
         <meta property="og:type" content="website">
         <meta property="og:title" content="Data Science & Interactive Analytics | {%title%}">
         <meta property="og:description" content="Transforming complex data, math, and science into interactive software solutions. Explore my projects!">
-        <meta property="og:image" content="/assets/thumbnail.webp">
+        <meta property="og:image" content="/assets/as_webp/thumbnail.webp">
         <meta property="og:url" content="{%url%}">
         
         <!-- Twitter Card for Social Media -->
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="Data Science & Interactive Analytics | {%title%}">
         <meta name="twitter:description" content="Transforming data into interactive tools. Explore my projects!">
-        <meta name="twitter:image" content="/assets/thumbnail.webp">
+        <meta name="twitter:image" content="/assets/as_webp/thumbnail.webp">
 
         <!-- Preload Important Assets -->
-        <link rel="preload" as="image" href="/assets/thumbnail.webp" type="image/webp">
+        <link rel="preload" as="image" href="/assets/as_webp/thumbnail.webp" type="image/webp">
 
         <!-- Canonical URL -->
         <link rel="canonical" href="{%url%}">
