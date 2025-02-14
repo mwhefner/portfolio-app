@@ -7,7 +7,7 @@ dash.register_page(
     path="/",
     name="Portfolio",
     title="Data Science & Interactive Analytics Portfolio",
-    description="Transforming complex data, math, and science concepts into interactive and pedagogically-informed software solutions. Explore publications, web projects, and interactive dashboards.",
+    description="Transforming complex data, math, and science concepts into interactive and pedagogically-informed software solutions. Explore publications, web projects and interactive dashboards.",
     image="as_webp/thumbnail.webp",
     meta_tags=[
         {"charset": "UTF-8"},
