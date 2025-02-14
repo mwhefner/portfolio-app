@@ -8,7 +8,7 @@ dash.register_page(
     name="Portfolio",
     title="Data Science & Interactive Analytics Portfolio",
     description="Transforming complex data, math, and science concepts into interactive and pedagogically-informed software solutions. Explore publications, web projects, and interactive dashboards.",
-    image="assets/as_webp/thumbnail.webp",
+    image="as_webp/thumbnail.webp",
     meta_tags=[
         {"charset": "UTF-8"},
         {"name": "viewport", "content": "width=device-width, initial-scale=1.0, viewport-fit=cover"},
@@ -16,7 +16,7 @@ dash.register_page(
         {"name": "keywords", "content": "Data Science, Dash Apps, Interactive Analytics, Machine Learning, Data Visualization, Research Software"},
         {"name": "author", "content": "Matt Hefner"},
         {"property": "og:type", "content": "website"},
-        {"property": "og:image", "content": "assets/as_webp/thumbnail.webp"},
+        {"property": "og:image", "content": "as_webp/thumbnail.webp"},
         {"property": "og:url", "content": "{%url%}"},
         {"rel": "canonical", "href": "{%url%}"}
     ]
