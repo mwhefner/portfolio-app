@@ -20,3 +20,14 @@
     align-items: center;
     justify-content: center;
 }
+
+/* Highlight all books with the same ISBN class when hovering over any of them */
+[class^="ISBN_"]:hover {
+    border: 2px solid --bs-info;
+}
+
+/* Style all elements with the same ISBN class to be highlighted when hovering over any book */
+[class^="ISBN_"]:hover,
+[class^="ISBN_"]:hover ~ [class^="ISBN_"] {
+    border: 2px solid --bs-info; /* Apply border to all elements with the same class */
+}

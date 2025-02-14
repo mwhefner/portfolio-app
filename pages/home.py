@@ -95,7 +95,7 @@ layout = dbc.Row(
     className="justify-content-center"
 )
 
-excluded_pages = ["/not-found-404", "/"] + ["/gregg", "/differential_geometry", "/nyt_best_sellers"]
+excluded_pages = ["/not-found-404", "/"] + ["/gregg", "/differential_geometry"]
 
 # Callback to populate the layout on app startup
 @dash.callback(
