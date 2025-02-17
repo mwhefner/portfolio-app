@@ -113,7 +113,7 @@ layout = dbc.Row(
     className="justify-content-center"
 )
 
-excluded_pages = ["/not-found-404", "/"] + ["/gregg", "/differential_geometry"]
+excluded_pages = ["/not-found-404", "/"] + ["/gregg"]
 
 # Callback to populate the layout on app startup
 @dash.callback(
@@ -123,12 +123,26 @@ excluded_pages = ["/not-found-404", "/"] + ["/gregg", "/differential_geometry"]
 def populate_cards(_):
 
     pages = [page for page in dash.page_registry.values() if (page["path"] not in excluded_pages)]
+    
+    
     return dbc.Col([
-        html.Div([html.H1(["Portfolio", html.Br(), html.I(className="fa-solid fa-newspaper mt-2 mb-2"), html.Br(), "Updated weekly."], className="mt-3 mb-3")], style={"textAlign": "center"}),
+        
+        html.Div([
+            html.H1([
+                "Portfolio", 
+                html.Br(), 
+                html.I(className="fa-solid fa-newspaper mt-2 mb-2"), 
+            ], className="m-0"),
+            
+            html.Strong("Updated Weekly", className="m-0")
+        ], style={"textAlign": "center"}, className="mt-3 mb-3"),
+
+        
         dbc.Row([
             dbc.Col([makeCard(page) for i, page in enumerate(pages) if i % 3 == 0], className = "p-0"),
             dbc.Col([makeCard(page) for i, page in enumerate(pages) if i % 3 == 1], className = "p-0"),
             dbc.Col([makeCard(page) for i, page in enumerate(pages) if i % 3 == 2], className = "p-0")
         ],
+                
     )],style={'overflowY': 'auto', 'height': '100vh'})
 

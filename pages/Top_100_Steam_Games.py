@@ -9,10 +9,10 @@ import math
 dash.register_page(
     __name__, 
     path='/Top_100_Steam_Games',
-    title='Top 100 Steam Games by Tag',
-    name='Top 100 Steam Games by Tag',
+    title='Top 100 Steam Games',
+    name='Top 100 Steam Games',
     description="Interactively explore and compare the top 100 most played games on Steam by multiple tags and price.", 
-    image="/assets/Top_100_Steam_Games.png"
+    image="/assets/as_webp/Top_100_Steam_Games.webp"
 )
 # At some point I would like to learn to make this dynamic in the app
 # themes = ["CERULEAN", "COSMO", "CYBORG", "DARKLY", "FLATLY", "JOURNAL", "LITERA", "LUMEN", "LUX", "MATERIA", "MINTY", "MORPH", "PULSE", "QUARTZ", "SANDSTONE", "SIMPLEX", "SKETCHY", "SLATE", "SOLAR", "SPACELAB", "SUPERHERO", "UNITED", "VAPOR", "YETI", "ZEPHYR"]
@@ -20,7 +20,7 @@ dash.register_page(
 # First I handle the data-----------------------------------------------------
 
 # Import data from the csv
-df = pd.read_csv("assets/Steam Top 100 Played Games - List.csv")
+df = pd.read_csv("assets/data/Steam Top 100 Played Games - List.csv")
 
 # Add rank to title
 df["Name"] = df["Rank"].astype(str) + ". " + df["Name"]

@@ -22,7 +22,7 @@ app = dash.Dash(
 
 # Bio text
 bio_text = """
-I tackle complex problems and transform data, math and science concepts into interactive, pedagogically-informed software solutions. I built this web app with the [Dash open source framework](https://dash.plotly.com/) to showcase my **publications** and **web projects** you can browse in the portfolio linked below.
+I tackle complex problems and transform data, math and science concepts into interactive, pedagogically-informed software solutions. I built this web app with the [Dash open source framework](https://dash.plotly.com/) to showcase my **publications** and **web projects** which you may browse in the portfolio linked below.
 
 <br>
 

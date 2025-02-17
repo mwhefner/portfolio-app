@@ -21,54 +21,49 @@ import dash_bootstrap_components as dbc
 # Main page layout
 
 layout = html.Div(
-    
     [
-        
-        dcc.Location(id = "url"),
-        
-        # Navigation bar
+        dcc.Location(id="url"),
+
+        # Navigation bar (auto-sized)
         dbc.Navbar(
             dbc.Container(
                 [
-
-                dbc.Nav(
-                    children=[
-                        dbc.NavItem(dbc.NavLink("Overview", href="#Overview", id= "Overview", n_clicks=0)),
-                        dbc.NavItem(dbc.NavLink("Temporal Fusion Transformer", href="#TFT", id= "TFT", n_clicks=0)),
-                        dbc.NavItem(dbc.NavLink("VARMAX", href="#VARMAX", id="VARMAX", n_clicks=0)),
-                        dbc.NavItem(dbc.NavLink("DeepAR", href="#DeepAR", id="DeepAR", n_clicks=0)),
-                        dbc.NavItem(dbc.NavLink("Discussion", href="#Discussion", id="Discussion", n_clicks=0)),
-                    ],
-                    style={"display": "flex", "justify-content": "space-around", "width": "100%"}
-                ),
-                
+                    dbc.Nav(
+                        children=[
+                            dbc.NavItem(dbc.NavLink("Overview", href="#Overview", id="Overview", n_clicks=0)),
+                            dbc.NavItem(dbc.NavLink("Temporal Fusion Transformer", href="#TFT", id="TFT", n_clicks=0)),
+                            dbc.NavItem(dbc.NavLink("VARMAX", href="#VARMAX", id="VARMAX", n_clicks=0)),
+                            dbc.NavItem(dbc.NavLink("DeepAR", href="#DeepAR", id="DeepAR", n_clicks=0)),
+                            dbc.NavItem(dbc.NavLink("Discussion", href="#Discussion", id="Discussion", n_clicks=0)),
+                        ],
+                        style={"display": "flex", "justify-content": "space-around", "width": "100%"}
+                    ),
                 ]
             ),
             color="primary",
             dark=True,
         ),
-        
+
+        # Scroll container (takes up remaining height)
         html.Div(
-            
-            id="scroll-container", 
-            
-            className = "p-5",
-    
-            style = {
-                "width": "100%", 
-                "height": "100%", 
-                'overflowY' : 'auto'
+            id="scroll-container",
+            className="p-5",
+            style={
+                "flex": "1",  # This makes it take up remaining space
+                "width": "100%",
+                "overflowY": "auto",
+                "minHeight": 0  # IMPORTANT: Prevents height inheritance issues
             }
-            
         ),
+    ],
     
-    ], 
-    
-    style = {
-        "width": "100%", 
-        "height": "100%"
+    style={
+        "display": "flex",
+        "flexDirection": "column",
+        "height": "100vh"  # Makes the whole app take up the full viewport height
     }
 )
+
 
 # Overview subpage layout
 
@@ -80,18 +75,50 @@ overview_markdown_1 = dcc.Markdown(
     
     - a [**Temporal Fusion Transformer (TFT)** model](#TFT), a deep learning model that captures long-range dependencies,
     - a [**Vector AutoRegressive Moving-Average with Exogenous Variables (VARMAX)** model](#VARMAX), a classical statistical model for multivariate time series and
-    - a [**DeepAR**](#) model, a probabilistic forecasting model using recurrent neural networks.
+    - a [**DeepAR**](#DeepAR) model, a probabilistic forecasting model using recurrent neural networks.
     
     I use the [discussion](#Discussion) tab above to discuss interpretability and quantification of uncertainty.
     
     # Data
+    
+    # To do:
+    
+    - Figure Below
+    - Button Below
+    
+    ## Monday
+    
+    For the TFT:
+    
+    - Reading
+    - Plot
+    - Training
+    - Diagnostics
+    
+    ## Tuesday
+    
+    For VARMAX:
+    
+    - Reading
+    - Plot
+    - Training
+    - Diagnostics
+    
+    ## Monday
+    
+    For DeepAR:
+    
+    - Reading
+    - Plot
+    - Training
+    - Diagnostics
     
     """
 )
 
 overview_fig_1 = "I am a plotly time series figure that can be toggled between proportional or absolute over time. Similar to the CDIAC dashboard, each of my categories can be toggled."
 
-overview_fig_2 = "I am (a row of) button(s) for changing the figure above. 1) proportion - to - absolute."
+overview_fig_2 = "I am a (row of) button(s) for changing the figure above. 1) proportion - to - absolute."
 
 overview_layout = html.Div(
     [
@@ -109,6 +136,12 @@ overview_layout = html.Div(
 )
 
 # TFT subpage layout
+
+# https://arxiv.org/abs/1912.09363
+
+# https://medium.com/dataness-ai/understanding-temporal-fusion-transformer-9a7a4fcde74b
+
+# https://github.com/google-research/google-research/blob/master/tft/README.md
 
 tft_markdown = dcc.Markdown(
     """
@@ -156,6 +189,8 @@ varmax_layout = html.Div(
 )
 
 # DeepAR subpage layout
+
+# https://docs.aws.amazon.com/sagemaker/latest/dg/deepar.html
 
 deepar_markdown = dcc.Markdown(
     """
