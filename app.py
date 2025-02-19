@@ -47,7 +47,6 @@ dash.clientside_callback(
     """,
     Output("theme-switch", "id"),
     Input("theme-switch", "value"),  # Pass the stored mapping
-    prevent_initial_call=True
 )
 
 dbc_themes_url = {
@@ -124,6 +123,13 @@ dash.clientside_callback(
 
 # Define application layout
 app.layout = dbc.Container([
+    
+    # A target output for the theme stylesheet callback (not strictly necessary)
+    html.Div(id="themeTarget", style={"display": "none"}),
+    # Default theme is LUX
+    dcc.Store(data = dbc_themes_url['LUX'], id="themeStore", storage_type="local"),
+    # Store theme URLs so the callback has access to it
+    dcc.Store(id="themeMap", data=dbc_themes_url, storage_type="local"),
 
     dcc.Store(id="feedback-storage"),
     dcc.Store(id="feedback-dummy-target"),
@@ -223,18 +229,13 @@ app.layout = dbc.Container([
         id="portfolio-modal",
         centered=True,
         size="lg",
-        scrollable=True
+        scrollable=True,
     ),
 
     # Theme Modal
     dbc.Modal(
         [
-            # A target output for the theme stylesheet callback (not strictly necessary)
-            html.Div(id="themeTarget", style={"display": "none"}),
-            # Default theme is LUX
-            dcc.Store(data = dbc_themes_url['LUX'], id="themeStore"),
-            # Store theme URLs so the callback has access to it
-            dcc.Store(id="themeMap", data=dbc_themes_url),
+
             dbc.ModalHeader(dbc.ModalTitle("Theme")),
             dbc.ModalBody(
                 dbc.Row(
