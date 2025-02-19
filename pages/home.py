@@ -102,7 +102,7 @@ def makeCard(page):
                 ]
             ),
         ],
-        className="me-3 mb-3 p-3"
+        className="me-3 mb-3 p-3 custom-shadow-card"
     )
 
 

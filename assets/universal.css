@@ -4,6 +4,20 @@
     height: 0px;
 }
 
+body {
+    background-image: url("background_asset.svg");
+    width: 100vw;
+    height: 100vh;
+}
+
+.false-body {
+    background-color: var(--bs-body-bg) !important;
+}
+
+.custom-shadow-card {
+    box-shadow: 2px 2px 4px var(--bs-primary);
+}
+
 /* Show scrollbar when scrolling */
 .scroll-container:hover::-webkit-scrollbar {
     width: 8px; /* Adjust as needed */

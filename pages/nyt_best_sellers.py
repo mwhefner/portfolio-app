@@ -44,7 +44,10 @@ layout = html.Div([
 ], style={
     "width": "100%", 
     "height": "100%", 
-    'overflowY' : 'auto'})
+    'overflowY' : 'auto'},
+
+    className = "false-body"
+)
 
 colors = {i: f"rgba(var(--bs-primary-rgb), {1 - (i - 1) * 0.05})" for i in range(1, 21)}
 

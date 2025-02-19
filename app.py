@@ -223,7 +223,7 @@ app.layout = dbc.Container([
         id="portfolio-modal",
         centered=True,
         size="lg",
-        scrollable=True,
+        scrollable=True
     ),
 
     # Theme Modal
