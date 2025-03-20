@@ -4,6 +4,10 @@
     height: 0px;
 }
 
+#react-entry-point {
+    position:absolute;
+}
+
 body {
     background-image: url("background_asset.svg");
     width: 100vw;
@@ -35,6 +39,10 @@ body {
     background-color: var(--bs-body-bg) !important;
     color: var(--bs-info) !important;
     font-weight: bold !important;
+}
+
+.LaTeX-p p {
+    margin-bottom: 0px;
 }
 
 #theme-switch {

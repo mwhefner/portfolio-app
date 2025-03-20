@@ -129,7 +129,7 @@ def populate_cards(_):
         
         html.Div([
             html.H1([
-                "Portfolio", 
+                "Web Portfolio", 
                 html.Br(), 
                 html.I(className="fa-solid fa-newspaper mt-2 mb-2"), 
             ], className="m-0"),

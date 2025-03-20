@@ -15,7 +15,7 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.mi
 app = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.LUX, dbc_css, dbc.icons.FONT_AWESOME],
-    title = "Matt Hefner's Portfolio",
+    title = "M W Hefner's Web Portfolio",
     suppress_callback_exceptions=True,
     update_title = "thinkin' hard...",
     use_pages=True)
@@ -143,7 +143,7 @@ app.layout = dbc.Container([
     # Portfolio Modal
     dbc.Modal(
         [
-            dbc.ModalHeader(dbc.ModalTitle("Matt Hefner")),
+            dbc.ModalHeader(dbc.ModalTitle("M W Hefner")),
             dbc.ModalBody(
                 [
                     html.H1("Welcome!", style={"textAlign": "center"}, className="m-5"),
@@ -163,7 +163,7 @@ app.layout = dbc.Container([
                         dbc.Col(
                                 dbc.Button(
                                     dbc.Row([
-                                            dbc.Col(html.Span("Portfolio", className="fw-bold"), width="auto"),
+                                            dbc.Col(html.Span("Web Portfolio", className="fw-bold"), width="auto"),
                                             dbc.Col(html.I(className="fa-solid fa-images"), width="auto", className="text-end")
                                         ]),
                                     id="portfolio-btn",
@@ -297,7 +297,7 @@ app.layout = dbc.Container([
 
     # theme popover
     dbc.Popover(
-        dbc.PopoverBody(html.Em("select a color theme")),
+        dbc.PopoverBody(html.Em("select a UI color theme")),
         target="theme-button",
         trigger="hover",
     ),
@@ -314,7 +314,7 @@ app.layout = dbc.Container([
 
         dbc.Button(
             dbc.Row([
-                dbc.Col(html.Span("Themes", className="fw-bold"), width="auto"),
+                dbc.Col(html.Span("UI Themes", className="fw-bold"), width="auto"),
                 dbc.Col(html.I(className="fa-solid fa-palette"), width="auto", className="text-end")
             ], className="d-flex justify-content-between align-items-center", align="center"),
             id="theme-button",
@@ -322,7 +322,7 @@ app.layout = dbc.Container([
         ),
         dbc.Button(
             dbc.Row([
-                dbc.Col(html.Span("Matt Hefner", className="fw-bold"), width="auto"),
+                dbc.Col(html.Span("Artist Home", className="fw-bold"), width="auto"),
                 dbc.Col(html.I(className="fa-solid fa-bars"), width="auto", className="text-end")
             ], className="d-flex justify-content-between align-items-center", align="center"),
             id="library-hamburger",
@@ -353,15 +353,17 @@ app.layout = dbc.Container([
 def toggle_portfolio_modal(n_clicks, n_2, n_3, is_open):
     return not is_open
 
-# Theme modal callback
-@app.callback(
+app.clientside_callback(
+    """
+    function(n_clicks, n_2, is_open) {
+        return !is_open;
+    }
+    """,
     Output("theme-modal", "is_open"),
     [Input("theme-button", "n_clicks"), Input("close-theme-modal", "n_clicks")],
     State("theme-modal", "is_open"),
     prevent_initial_call=True,
 )
-def toggle_theme_modal(n_clicks, n_2, is_open):
-    return not is_open
 
 # Database connectivity for form input
 def load_db_credentials(conf_file="database.conf"):
