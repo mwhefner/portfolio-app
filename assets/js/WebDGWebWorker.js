@@ -1,29 +1,34 @@
-onmessage = function(e) {
-    console.log("Received in worker:", e.data); // Print the full JSON object
+onmessage = function (e) {
+
+    // Ignore React DevTools messages
+    if (!e.data.from_webdg) {
+        console.warn("Ignoring nonsense sent to webworker. This is normal with some developer browser extensions.");
+        return;
+    }
 
     try {
-
         let obj;
 
         if (e.data.subject === "render_embbeded_curve") {
             obj = createEmbeddedCurveOBJ(e.data.ec_params);
         } else if (e.data.subject === "render_surface") {
             obj = createSurfaceOBJ(e.data.s_params);
-        } else {
+        } else if (e.data.subject === "render_curve") {
             obj = createCurveJSON(e.data.c_params);
+        } else {
+            console.warn("The webworker was called with an ambiguous context.", e.data.subject);
+            postMessage({ success: false});
+            return;
         }
-    
-        postMessage({ success: true, obj_file: obj });
+
+        postMessage({ success: true, obj_file: obj});
 
     } catch (error) {
-
         console.error("An error occurred:", error);
-        postMessage({ success: false, error: error.message });
-
+        postMessage({ success: false, error: error.message});
     }
-    
-
 };
+
 
 
 function createCurveJSON(params) {
@@ -75,6 +80,11 @@ function createCurveJSON(params) {
         math.derivative(alphaDoublePrimeCompiled[2].toString(), 't')
     ];
 
+    // Speed
+    const speed = math.parse(
+        `norm([${alphaPrimeCompiled[0]}, ${alphaPrimeCompiled[1]}, ${alphaPrimeCompiled[2]}]) / 1`
+    );
+    
     // Curvature :(
     const curvature = math.parse("norm(cross([" + alphaPrimeCompiled[0] + ", " + alphaPrimeCompiled[1] + ", " + alphaPrimeCompiled[2] + "], [" + alphaDoublePrimeCompiled[0] + ", " + alphaDoublePrimeCompiled[1] + ", " + alphaDoublePrimeCompiled[2] + "])) / (norm([" + alphaPrimeCompiled[0] + ", " + alphaPrimeCompiled[1] + ", " + alphaPrimeCompiled[2] + "]) ^ 3)");
 
@@ -87,6 +97,7 @@ function createCurveJSON(params) {
     let curveData = {
         vertices: [],
         colors: [],
+        speed: [],
         curvature: [],
         torsion: [],
         alpha : alphaCompiled.toString(),
@@ -108,20 +119,23 @@ function createCurveJSON(params) {
         curveData.vertices.push([x, y, z]);
 
         // Evaluate curvature and torsion
+        const spe = speed.evaluate(scope);  // Evaluate curvature
         const cur = curvature.evaluate(scope);  // Evaluate curvature
         const tor = torsion.evaluate(scope);    // Evaluate torsion
         
         // Store the results
+        curveData.speed.push(spe);
         curveData.curvature.push(cur);
         curveData.torsion.push(tor);
-
 
         // Assign colors based on the selected mode
         let color;
         if (color_by === "Solid Color") {
             color = solidColor;
         } else if (color_by === "xyz") {
-            color = [(255 * x) % 255,(255 * y) % 255,(255 * z) % 255]; // Normalize assuming [-1,1] range
+            color = [(255 * x) % 255,(255 * y) % 255,(255 * z) % 255]; 
+        } else if (color_by === "Speed") {
+            color = [speed];  // Color based on speed (simplified)
         } else if (color_by === "Curvature") {
             color = [curvature];  // Color based on curvature (simplified)
         } else if (color_by === "Torsion") {
@@ -134,7 +148,10 @@ function createCurveJSON(params) {
     }
 
 
-    // Find the min and max of the curvature and torsion arrays
+    // Find the min and max of the speed, curvature and torsion arrays
+    const minSpeed = Math.min(...curveData.speed);
+    const maxSpeed = Math.max(...curveData.speed);
+
     const minCurvature = Math.min(...curveData.curvature);
     const maxCurvature = Math.max(...curveData.curvature);
 
@@ -173,6 +190,7 @@ function createCurveJSON(params) {
 
     // Normalize and scale color values after the loop
     curveData.colors = curveData.colors.map((color, index) => {
+        let spe = curveData.speed[index]; // Get the corresponding curvature value
         let cur = curveData.curvature[index]; // Get the corresponding curvature value
         let tor = curveData.torsion[index];   // Get the corresponding torsion value
 
@@ -192,9 +210,18 @@ function createCurveJSON(params) {
             // Map the torsion value from min-max to 0-255
             let normalizedTorsion = ((tor - minTorsion) / (maxTorsion - minTorsion));
             return getDivergingColor(normalizedTorsion);
+        } else if (color_by === "Speed") {
+            // Handle division by zero case
+            if (maxSpeed - minSpeed === 0 || maxSpeed - minSpeed < 0.00001) {
+                return getDivergingColor(0.5); // Or you can return 0, depending on your preference
+            }
+            // Map the Speed value from min-max to 0-255
+            let normalizedSpeed = ((spe - minSpeed) / (maxSpeed - minSpeed));
+
+            return getDivergingColor(normalizedSpeed);
         }
 
-        return color;  // If not Curvature or Torsion, return the original color
+        return color;  // If not Speed, Curvature or Torsion, return the original color
     });
 
 
@@ -203,19 +230,100 @@ function createCurveJSON(params) {
     return curveData;
 }
 
-
-
-
 // SURFACE-----------------------------------------------------
 
 function createSurfaceOBJ(params) {
 
     console.log("The validated: ", params);
 
-    console.log("OBJ of the surface has been created.");
+    importScripts('https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js');
 
-    return "I'm the surface obj.";
+    const { s_nu_validated, s_nv_validated, s_uend_validated, s_ustart_validated, s_vend_validated, s_vstart_validated, s_x_validated, s_y_validated, s_z_validated } = params;
+
+    const uStart = math.evaluate(s_ustart_validated);
+    const uEnd = math.evaluate(s_uend_validated);
+    const vStart = math.evaluate(s_vstart_validated);
+    const vEnd = math.evaluate(s_vend_validated);
+
+    const uSteps = s_nu_validated;
+    const vSteps = s_nv_validated;
+
+    let objString = "# OBJ file with normals\n";
+
+    function evalXYZ(u, v) {
+        return {
+            x: math.evaluate(s_x_validated, { u, v }),
+            y: math.evaluate(s_y_validated, { u, v }),
+            z: math.evaluate(s_z_validated, { u, v })
+        };
+    }
+
+    function crossProduct(a, b) {
+        return {
+            x: a.y * b.z - a.z * b.y,
+            y: a.z * b.x - a.x * b.z,
+            z: a.x * b.y - a.y * b.x
+        };
+    }
+
+    function normalize(v) {
+        const length = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+        return { x: v.x / length, y: v.y / length, z: v.z / length };
+    }
+
+    const du = (uEnd - uStart) / uSteps;
+    const dv = (vEnd - vStart) / vSteps;
+
+    // Create vertices
+    for (let i = 0; i <= uSteps; i++) {
+        for (let j = 0; j <= vSteps; j++) {
+            const u = uStart + i * du;
+            const v = vStart + j * dv;
+
+            const p = evalXYZ(u, v);
+            objString += `v ${p.x} ${p.y} ${p.z}\n`;
+        }
+    }
+
+    // Create normals (with boundary condition handling)
+    for (let i = 0; i <= uSteps; i++) {
+        for (let j = 0; j <= vSteps; j++) {
+            const u = uStart + i * du;
+            const v = vStart + j * dv;
+
+            const p = evalXYZ(u, v);
+            const pu = evalXYZ(u + 1e-5, v);
+            const pv = evalXYZ(u, v + 1e-5);
+
+            const duVec = { x: pu.x - p.x, y: pu.y - p.y, z: pu.z - p.z };
+            const dvVec = { x: pv.x - p.x, y: pv.y - p.y, z: pv.z - p.z };
+
+            const normal = normalize(crossProduct(duVec, dvVec));
+
+            objString += `vn ${normal.x} ${normal.y} ${normal.z}\n`;
+        }
+    }
+
+    // Create faces (fix boundary faces)
+    for (let i = 0; i < uSteps; i++) {
+        for (let j = 0; j < vSteps; j++) {
+            const p1 = i * (vSteps + 1) + j + 1;
+            const p2 = (i + 1) * (vSteps + 1) + j + 1;
+            const p3 = (i + 1) * (vSteps + 1) + j + 2;
+            const p4 = i * (vSteps + 1) + j + 2;
+
+            objString += `f ${p1}//${p1} ${p2}//${p2} ${p3}//${p3}\n`;
+            objString += `f ${p1}//${p1} ${p3}//${p3} ${p4}//${p4}\n`;
+        }
+    }
+
+    console.log("OBJ file with normals has been created.");
+
+    return objString;
 }
+
+
+
 
 // EMBEDDED CURE------------------------------------------------
 

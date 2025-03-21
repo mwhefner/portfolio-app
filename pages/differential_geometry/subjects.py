@@ -323,7 +323,7 @@ curves = html.Div(
                 dbc.InputGroupText("Color curve by"),
                 dbc.Select(
                     options=[
-                        
+                        {"label": "its speed.", "value": "Speed"},
                         {"label": "its curvature.", "value": "Curvature"},
                         {"label": "its torsion.", "value": "Torsion"},
                         {"label": "its (X,Y,Z) coordinates.", "value": "xyz"},
@@ -718,7 +718,8 @@ surfaces = html.Div(
                         {"label": "Torus", "value": "Torus"},
                         {"label": "Helical Strake", "value": "Helical Strake"},
                         {"label": "Cone", "value": "Cone"},
-                        {"label": "Klein Bottle", "value": "Klein Bottle"},
+                        {"label": '"Figure 8" Immersion of Klein Bottle', "value": "Klein Bottle"},
+                        {"label": 'Möbius strip', "value": "Mobius"},
                     ],
                     persistence=True,
                     persistence_type = "memory",
@@ -786,6 +787,8 @@ surfaces = html.Div(
             }
         ),
         
+        dcc.Store(id="s_y_validated"),
+        
         dbc.InputGroup(
             [
                 dbc.InputGroupText(
@@ -823,6 +826,8 @@ surfaces = html.Div(
                 "overflowX": "auto"  # Adds horizontal scrolling if necessary
             }
         ),
+        
+        dcc.Store(id="s_z_validated"),
         
         dbc.InputGroup(
             [
@@ -863,6 +868,10 @@ surfaces = html.Div(
         ),
         
         dcc.Markdown("***"),
+        
+        dcc.Store(id="s_ustart_validated"),
+        dcc.Store(id="s_uend_validated"),
+        dcc.Store(id="s_nu_validated"),
         
         dcc.Markdown(r"""
                      
@@ -961,6 +970,10 @@ surfaces = html.Div(
         ),
         
         dcc.Markdown("***"),
+        
+		dcc.Store(id="s_vstart_validated"),
+        dcc.Store(id="s_vend_validated"),
+        dcc.Store(id="s_nv_validated"),
             
         dcc.Markdown(r"""
                      
@@ -1067,20 +1080,14 @@ surfaces = html.Div(
                     options=[
                         {"label": "its Gaussian curvature.", "value": "Gaussian Curvature"},
                         {"label": "its mean curvature.", "value": "Mean Curvature"},
-                        {"label": "its (X,Y,Z) Coordinates.", "value": "xyz"},
-                        {"label": "this solid color:", "value": "Solid Color"},
+                        {"label": "its first principal curvature.", "value": "k1"},
+                        {"label": "its second principal curvature.", "value": "k2"},
+                        {"label": "scene lighting.", "value": "Solid Color"},
                     ],
                     value="Solid Color",
                     id="s_colorby",
                     className="flex-grow-1",
-                ),
-                dbc.Input(
-                    type="color",
-                    id="s_colorpicker",
-                    value="#8080ff",
-                    className="p-0 border-0",
-                    style={"width": "10%", "height": "2.5rem"}  # Adjust height for visibility
-                ),
+                )
             ],
             className="mb-3"
         ),
@@ -1149,10 +1156,10 @@ clientside_callback(
                     "s_zcomponent": "0",
                     "s_ustart": "-1",
                     "s_uend": "1",
-                    "s_nu": 10,
+                    "s_nu": 2,
                     "s_vstart": "-1",
                     "s_vend": "1",
-                    "s_nv": 10
+                    "s_nv": 2
                 },
                 "Torus": {
                     "s_xcomponent": "(2 + cos(v)) * cos(u)",
@@ -1160,43 +1167,54 @@ clientside_callback(
                     "s_zcomponent": "sin(v)",
                     "s_ustart": "0",
                     "s_uend": "2 * pi",
-                    "s_nu": 30,
-                    "s_vstart": "0",
-                    "s_vend": "2 * pi",
-                    "s_nv": 30
-                },
-                "Helical Strake": {
-                    "s_xcomponent": "(1 + 0.1 * v) * cos(u)",
-                    "s_ycomponent": "(1 + 0.1 * v) * sin(u)",
-                    "s_zcomponent": "v",
-                    "s_ustart": "0",
-                    "s_uend": "6 * pi",
-                    "s_nu": 50,
-                    "s_vstart": "-1",
-                    "s_vend": "1",
-                    "s_nv": 20
-                },
-                "Klein Bottle": {
-                    "s_xcomponent": "(2 + cos(u/2) * sin(v) - sin(u/2) * sin(2v)) * cos(u)",
-                    "s_ycomponent": "(2 + cos(u/2) * sin(v) - sin(u/2) * sin(2v)) * sin(u)",
-                    "s_zcomponent": "sin(u/2) * sin(v) + cos(u/2) * sin(2v)",
-                    "s_ustart": "0",
-                    "s_uend": "2 * pi",
                     "s_nu": 50,
                     "s_vstart": "0",
                     "s_vend": "2 * pi",
                     "s_nv": 50
                 },
-                "Cone": {
+                "Helical Strake": {
                     "s_xcomponent": "v * cos(u)",
                     "s_ycomponent": "v * sin(u)",
-                    "s_zcomponent": "v",
+                    "s_zcomponent": "u",
+                    "s_ustart": "-4 * pi",
+                    "s_uend": "4 * pi",
+                    "s_nu": 100,
+                    "s_vstart": "1",
+                    "s_vend": "3",
+                    "s_nv": 10
+                },
+                "Mobius": {
+                    "s_xcomponent": "3 * (1 + (v / 2) * cos((u) / 2)) * cos(u)",
+                    "s_ycomponent": "3 * (1 + (v / 2) * cos(u / 2)) * sin(u)",
+                    "s_zcomponent": "3 * (v / 2) * sin(u / 2)",
                     "s_ustart": "0",
-                    "s_uend": "2 * PI",
-                    "s_nu": 30,
-                    "s_vstart": "0",
+                    "s_uend": "2 * pi",
+                    "s_nu": 100,
+                    "s_vstart": "-1",
                     "s_vend": "1",
-                    "s_nv": 20
+                    "s_nv": 25
+                },
+                "Klein Bottle": {
+                    "s_xcomponent": "(3 + cos(u / 2) * sin(v) - sin(u / 2) * sin(2 * v)) * cos(u)",
+                    "s_ycomponent": "(3 + cos(u / 2) * sin(v) - sin(u / 2) * sin(2 * v)) * sin(u)",
+                    "s_zcomponent": "sin(u / 2) * sin(v) + cos(u / 2) * sin(2 * v)",
+                    "s_ustart": "0",
+                    "s_uend": "2 * pi",
+                    "s_nu": 100,
+                    "s_vstart": "0",
+                    "s_vend": "2 * pi",
+                    "s_nv": 100
+                },
+                "Cone": {
+                    "s_xcomponent": "(1 - (1 / 3) * u) * cos(v)",
+                    "s_zcomponent": "(1 - (1 / 3) * u) * sin(v)",
+                    "s_ycomponent": "u",
+                    "s_ustart": "-3",
+                    "s_uend": "3",
+                    "s_nu": 2,
+                    "s_vstart": "0",
+                    "s_vend": "2 * pi",
+                    "s_nv": 100
                 }
             };
     
@@ -1294,13 +1312,14 @@ clientside_callback(
         
         let valid = isValid(result);
         
-        return [result, valid, !valid];
+        return [result, valid, !valid, valid ? value : "1"];
         
     }
     """,
     [Output("s_ycomponent_formtext", "children"),
     Output("s_ycomponent", "valid"),
-    Output("s_ycomponent", "invalid")],
+    Output("s_ycomponent", "invalid"),
+    Output("s_y_validated", "data")],
     Input("s_ycomponent_parse", "n_clicks"),
     State("s_ycomponent", "value"),
     prevent_initial_call=True
@@ -1320,13 +1339,14 @@ clientside_callback(
         
         let valid = isValid(result);
         
-        return [result, valid, !valid];
-        
+        return [result, valid, !valid, valid ? value : "1"];
+ 
     }
     """,
     [Output("s_zcomponent_formtext", "children"),
     Output("s_zcomponent", "valid"),
-    Output("s_zcomponent", "invalid")],
+    Output("s_zcomponent", "invalid"),
+    Output("s_z_validated", "data")],
     Input("s_zcomponent_parse", "n_clicks"),
     State("s_zcomponent", "value"),
     prevent_initial_call=True
@@ -1355,7 +1375,10 @@ clientside_callback(
             isValid(results.nt),
             !isValid(results.ts),
             !isValid(results.te),
-            !isValid(results.nt)
+            !isValid(results.nt),
+            isValid(results.ts) ? ts_value : "0",
+            isValid(results.te) ? te_value : "1",
+            isValid(results.nt) ? nt_value : "1"
         ];
     }
     """,
@@ -1369,6 +1392,9 @@ clientside_callback(
         Output("s_ustart", "invalid"),
         Output("s_uend", "invalid"),
         Output("s_nu", "invalid"),
+        Output("s_ustart_validated", "data"),
+        Output("s_uend_validated", "data"),
+        Output("s_nu_validated", "data")
     ],
     [
         Input("s_u_parse", "n_clicks")
@@ -1404,7 +1430,10 @@ clientside_callback(
             isValid(results.nt),
             !isValid(results.ts),
             !isValid(results.te),
-            !isValid(results.nt)
+            !isValid(results.nt),
+            isValid(results.ts) ? ts_value : "0",
+            isValid(results.te) ? te_value : "1",
+            isValid(results.nt) ? nt_value : "1"
         ];
     }
     """,
@@ -1418,6 +1447,9 @@ clientside_callback(
         Output("s_vstart", "invalid"),
         Output("s_vend", "invalid"),
         Output("s_nv", "invalid"),
+        Output("s_vstart_validated", "data"),
+        Output("s_vend_validated", "data"),
+        Output("s_nv_validated", "data")
     ],
     [
         Input("s_v_parse", "n_clicks")
@@ -1428,18 +1460,6 @@ clientside_callback(
         State("s_nv", "value"),
     ],
     prevent_initial_call=True
-)
-
-# for color
-clientside_callback(
-    """
-    function(selected_value) {
-        // Return true to disable, false to enable the color picker
-        return selected_value !== "Solid Color";
-    }
-    """,
-    Output("s_colorpicker", "disabled"),
-    Input("s_colorby", "value"),
 )
 
 # render readiness callback
@@ -1560,6 +1580,15 @@ clientside_callback(
         State("c_colorpicker", "value"),
         
         State("s_x_validated", "data"),
+        State("s_y_validated", "data"),
+        State("s_z_validated", "data"),
+        State("s_ustart_validated", "data"),
+        State("s_uend_validated", "data"),
+        State("s_nu_validated", "data"),
+        State("s_vstart_validated", "data"),
+        State("s_vend_validated", "data"),
+        State("s_nv_validated", "data"),
+        State("s_colorby", "value")
     ],
     prevent_initial_call=True,
 )

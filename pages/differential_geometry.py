@@ -5,14 +5,14 @@ import pages.differential_geometry.subjects as dg_subjects
 import pages.differential_geometry.analytics as dg_analytics
 import pages.differential_geometry.settings as dg_settings
 
-"""register_page(
+register_page(
     __name__, 
     path="/webdg", 
     name="WebDG", 
     title="WebDG", 
     description="WebDG is a free Web application for Differential Geometry education. WebDG provides students and instructors a free and accessible technology robust enough to interactively explore abstract differentiable curves and surfaces without the substantial overhead of computer algebra systems.", 
     image="/assets/as_webp/differential_geometry.webp"
-)"""
+)
 
 # Is the following necessary for anything?
 '''clientside_callback(
@@ -55,7 +55,7 @@ layout = html.Div(
                 dbc.Button(
                     dbc.Row([
                         
-                        dbc.Col(html.Span("Refresh", className="fw-bold"), width="auto"),
+                        dbc.Col(html.Span("Reset 3D Engine", className="fw-bold"), width="auto"),
                         
                         dbc.Col(html.I(className="fa-solid fa-rotate"), width="auto", className="text-end")
                         
@@ -109,38 +109,6 @@ layout = html.Div(
             ),
         ],
         justify="space-between"
-    ),
-    
-    # refresh popover
-    dbc.Popover(
-        dbc.PopoverBody(html.Em("start or refresh the WebDG graphing calculator")),
-        target="re_start_engine",
-        trigger="hover",
-        placement="bottom"
-    ),
-    
-    # subject popover
-    dbc.Popover(
-        dbc.PopoverBody(html.Em("select a subject to study the differential geometry of")),
-        target="subject",
-        trigger="hover",
-        placement="bottom"
-    ),
-    
-    # analytics popover
-    dbc.Popover(
-        dbc.PopoverBody(html.Em("see relevant numerical and algebraic analytics")),
-        target="analytics",
-        trigger="hover",
-        placement="bottom"
-    ),
-    
-    # settings popover
-    dbc.Popover(
-        dbc.PopoverBody(html.Em("change rendering engine settings")),
-        target="settings",
-        trigger="hover",
-        placement="bottom"
     ),
     
     # help popover
@@ -234,24 +202,58 @@ layout = html.Div(
     dbc.Modal(
         [
 
-            dbc.ModalHeader(dbc.ModalTitle("Welcome to WebDG!")),
+            dbc.ModalHeader(dbc.ModalTitle("Welcome!")),
             dbc.ModalBody(
+                [
+                    
+                dcc.Markdown(
+                    r"""          
+          
+                    **WebDG**
+                    
+                    """,
+                    style={
+                        "textAlign": "center", 
+                        "fontSize": "2em",
+                    }
+                    
+                ),
+                
+                dcc.Markdown(
+                    r"""          
+                    
+                    _A free **Web** application for **D**ifferential **G**eometry education._
+                    
+                    """,
+                    style={
+                        "textAlign": "center", 
+                        "fontSize": "1.25em",
+                    }
+                    
+                ),
+                
                 dcc.Markdown(
                     """
-                    
-                    _**WebDG** is a free **Web** application for **D**ifferential **G**eometry education._
-                    
+
                     ***
                     
-                    Made for both students and instructors, WebDG is a free and accessible technology robust enough to interactively explore the differential geometry of abstract curves and surfaces without the substantial overhead of computer algebra systems.
+                    #### About
+                    
+                    Made for both students and instructors, WebDG is a free and accessible technology robust enough to interactively explore the differential geometry of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.
                     
                     **This software is free for anyone to use to learn or teach others about differential geometry. No login, download, licence, or subscription is required.**
                     
                     ***
                     
+                    #### Citation
+                    
                     As a professional courtesy, I ask to be acknowledged with citation when appropriate (e.g. American Mathematical Society style citation):
                     
                     Hefner, M. W. (2025), *WebDG*, https://mathymattic.pythonanywhere.com/webdg, (accessed Debructober 32, 3025).
+                    
+                    ***
+                    
+                    #### Support
                     
                     If you find this app useful and would like for it to stay online and ad-free — or if you would just like to support it and apps like it — [please consider joining me on my patreon.]() You can also help by sharing this app!
                     
@@ -259,11 +261,25 @@ layout = html.Div(
                     
                     Check out the [video tutorial for WebDG here on youtube]().
                     
-                    **Reopen this info modal at any time by selecting the question mark at the bottom left.**
-                    
+                    ***
                     
                     """
-                )
+                ),
+                
+                dcc.Markdown(
+                    r"""          
+                    
+                    **Reopen this info modal at any time by selecting the question mark at the bottom left.**
+                    
+                    """,
+                    style={
+                        "textAlign": "center", 
+                        "fontSize": "1.25em",
+                    }
+                    
+                ),
+                
+                ]
             ),
             dbc.ModalFooter(
 
@@ -283,15 +299,15 @@ layout = html.Div(
         size="lg"
     ),
     
-    dbc.Alert(["Use the Refresh (", html.I(className="fa-solid fa-rotate"), ") button at the top left to start (and to re-start) the WebDG graphing calculator. You can close info alerts such as this with the X to the right."], color="info", dismissable=True, is_open=True, className = "m-3", style = { 'user-select': 'none' }),
+
     
-    dbc.Alert(["WebDG is ready! Change the visualization by rendering a subject to study using the Subjects (", html.I(className="fa-solid fa-subscript"), ") menu above."], color="info", dismissable=True, is_open=False, className = "m-3", id="refresh_alert", style = { 'user-select': 'none' }),
+    dbc.Alert(["WebDG is ready! Change the visualization by rendering a subject to study using the Subjects (", html.I(className="fa-solid fa-subscript"), ") menu above. You can close info alerts such as this with the X to the right."], color="info", dismissable=True, is_open=True, className = "m-3", id="refresh_alert", style = { 'user-select': 'none' }),
     
     dbc.Alert([dbc.Spinner(color="warning", size="sm"), " Please wait while WebDG is processing your subject."], id= "rendering_alert", color="warning", dismissable=False, is_open=True, className = "m-3", style = { 'display': 'none', 'user-select': 'none' }),
 
     dbc.Alert(
         [
-            'Success! WebDG has rendered your subject. Orbit your view (or that of your "camera") in this space around your focal point by left-click and dragging. Adjust the position of that focal point with your arrow keys. See subject, camera, and lighting details in the Settings menu with the ',
+            'Success! WebDG has rendered your subject. Orbit your view (or that of your "camera") in this space around your focal point by left-click and dragging. Adjust the position of your focal point with your arrow keys. Zoom with your mouse wheel. Explore more subject and lighting adjustments in the Settings menu with the ',
             html.I(className="fa-solid fa-gear"),
             ' icon on the top right.'
         ],
@@ -315,6 +331,8 @@ layout = html.Div(
     }
 )
 
+"""dbc.Alert(["Use the Refresh (", html.I(className="fa-solid fa-rotate"), ") button at the top left to start (and to re-start) the WebDG graphing calculator. You can close info alerts such as this with the X to the right."], color="info", dismissable=True, is_open=True, className = "m-3", style = { 'user-select': 'none' }),"""
+
 # this callback opens the "engine refreshed" alert when the refresh button is pressed
 clientside_callback(
     """
@@ -331,8 +349,7 @@ clientside_callback(
 clientside_callback(
     ClientsideFunction(namespace="differential_geometry", function_name="refresh"),
     Output("refresh_dummy_target", "data"),
-    Input("re_start_engine", "n_clicks"),
-    prevent_initial_call=True  # This stops it from running on page load
+    Input("re_start_engine", "n_clicks")
 )
 
 # The following callbacks operate the modals for the Subject,
