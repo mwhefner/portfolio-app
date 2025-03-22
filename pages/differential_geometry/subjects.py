@@ -574,7 +574,7 @@ clientside_callback(
         };
         
         function isValid(value) {
-            return typeof value === "string" && value.startsWith("$");
+            return typeof value === "string" && value.startsWith("$") && !(te_value <= ts_value);
         }
 
         return [
@@ -718,8 +718,8 @@ surfaces = html.Div(
                         {"label": "Torus", "value": "Torus"},
                         {"label": "Helical Strake", "value": "Helical Strake"},
                         {"label": "Cone", "value": "Cone"},
-                        {"label": '"Figure 8" Immersion of Klein Bottle', "value": "Klein Bottle"},
                         {"label": 'Möbius strip', "value": "Mobius"},
+                        {"label": '"Figure 8" Immersion of Klein Bottle', "value": "Klein Bottle"},
                     ],
                     persistence=True,
                     persistence_type = "memory",
@@ -1178,10 +1178,10 @@ clientside_callback(
                     "s_zcomponent": "u",
                     "s_ustart": "-4 * pi",
                     "s_uend": "4 * pi",
-                    "s_nu": 100,
+                    "s_nu": 60,
                     "s_vstart": "1",
                     "s_vend": "3",
-                    "s_nv": 10
+                    "s_nv": 30
                 },
                 "Mobius": {
                     "s_xcomponent": "3 * (1 + (v / 2) * cos((u) / 2)) * cos(u)",
@@ -1189,10 +1189,10 @@ clientside_callback(
                     "s_zcomponent": "3 * (v / 2) * sin(u / 2)",
                     "s_ustart": "0",
                     "s_uend": "2 * pi",
-                    "s_nu": 100,
+                    "s_nu": 50,
                     "s_vstart": "-1",
                     "s_vend": "1",
-                    "s_nv": 25
+                    "s_nv": 50
                 },
                 "Klein Bottle": {
                     "s_xcomponent": "(3 + cos(u / 2) * sin(v) - sin(u / 2) * sin(2 * v)) * cos(u)",
@@ -1200,10 +1200,10 @@ clientside_callback(
                     "s_zcomponent": "sin(u / 2) * sin(v) + cos(u / 2) * sin(2 * v)",
                     "s_ustart": "0",
                     "s_uend": "2 * pi",
-                    "s_nu": 100,
+                    "s_nu": 60,
                     "s_vstart": "0",
                     "s_vend": "2 * pi",
-                    "s_nv": 100
+                    "s_nv": 60
                 },
                 "Cone": {
                     "s_xcomponent": "(1 - (1 / 3) * u) * cos(v)",
@@ -1211,10 +1211,10 @@ clientside_callback(
                     "s_ycomponent": "u",
                     "s_ustart": "-3",
                     "s_uend": "3",
-                    "s_nu": 2,
+                    "s_nu": 20,
                     "s_vstart": "0",
                     "s_vend": "2 * pi",
-                    "s_nv": 100
+                    "s_nv": 50
                 }
             };
     
@@ -1365,7 +1365,7 @@ clientside_callback(
         };
         
         function isValid(value) {
-            return typeof value === "string" && value.startsWith("$");
+            return typeof value === "string" && value.startsWith("$") && !(te_value <= ts_value);
         }
 
         return [
@@ -1420,7 +1420,7 @@ clientside_callback(
         };
         
         function isValid(value) {
-            return typeof value === "string" && value.startsWith("$");
+            return typeof value === "string" && value.startsWith("$") && !(te_value <= ts_value);
         }
 
         return [

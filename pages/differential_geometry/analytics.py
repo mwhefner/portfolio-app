@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import html, dcc, callback, Output, Input, State, clientside_callback, no_update, ClientsideFunction, ctx
 import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
 
 not_yet_rendered = html.Div(
@@ -9,7 +10,9 @@ not_yet_rendered = html.Div(
 
             Analytics can be computed here after a subject has been rendered.
             
-            *Note that equations are rendered in $\LaTeX$. This must be done by the main thread, so large expressions may take some time to render and lead to sluggish performance.*
+            *Note that these are computed in real time and rendered in $\LaTeX$. This must be done by the "main thread," so to speak, so __large or complicated expressions may take some time to render and lead to sluggish performance.__*
+            
+            **Complicated surfaces** (e.g. Klein Bottle) and surfaces with a high $n_u$ or $n_v$ may take upwards of a minute to compute analytics for, during which time your browser's performance may be significantly impacted. *It is recommended to open WebDG in a dedicated browser window for such surfaces.*
 
         """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
 
@@ -323,9 +326,9 @@ surfaces = html.Div(
     
     [
         
-        dcc.Store(id = "surfaces_analytics", storage_type='memory'),
-        
         dcc.Store(id = "store_surfaces_data", storage_type='memory'),
+        
+        # TITLE AND XYZ COMPONENTS
         
         dcc.Markdown(r"""
 
@@ -333,9 +336,378 @@ surfaces = html.Div(
             
             ***
             
-            ## The surface $S$
+            **NOTICE** 
+            
+            These calculations are done using [mathjs](https://mathjs.org). Please be aware that, while the results presented are typically accurate, mathjs generally __does not *simplify* trigonometric expressions.__
+            
+            Large equations scroll horizontally.
+            
+            The results below come with no guarantee of accuracy or fitness for any purpose.
+            
+            ***
+            
+            ## The surface
+            
+            $$S = \big( X(u,v), Y(u,v), Z(u,v) \big)$$
 
         """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Markdown(
+            id="s_xyz", 
+            mathjax=True, 
+            className="mx-4 text-wrap w-90",
+            style={
+                "textAlign": "center", 
+                "fontSize": "1.5em",
+                "overflowWrap": "break-word", 
+                "wordBreak": "break-word", 
+                "whiteSpace": "normal",  
+                "display": "block",  
+                "maxWidth": "100%", 
+                "overflowX": "auto"
+            }
+        ),
+        
+        dcc.Markdown(r"""
+
+            #### Selectable $\LaTeX$
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        # Centered Row
+        dbc.Row(
+            dbc.Col(
+                dbc.Input(readonly=True, id="s_xyz_latex", type="text", className="text-center"),
+                width=10  # Adjust width as needed
+            ),
+            className="d-flex justify-content-center align-items-center mb-4",  # Centers everything
+        ),
+        
+        # JACOBIAN
+        
+        dcc.Markdown(r"""
+
+            ***
+
+            # The Jacobian
+            
+            All first-order partial derivatives.
+            
+            $$
+            J =
+            \begin{bmatrix} S_u & S_v \end{bmatrix}=
+            \begin{bmatrix}
+            \frac{\partial X}{\partial u} & \frac{\partial X}{\partial v} \\
+            \frac{\partial Y}{\partial u} & \frac{\partial Y}{\partial v} \\
+            \frac{\partial Z}{\partial u} & \frac{\partial Z}{\partial v}
+            \end{bmatrix}
+            $$
+
+        """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Markdown(
+            id="s_jacobian", 
+            mathjax=True, 
+            className="mx-4 text-wrap w-90",
+            style={
+                "textAlign": "center", 
+                "fontSize": "1.5em",
+                "overflowWrap": "break-word", 
+                "wordBreak": "break-word", 
+                "whiteSpace": "normal",  
+                "display": "block",  
+                "maxWidth": "100%", 
+                "overflowX": "auto"
+            }
+        ),
+        
+        dcc.Markdown(r"""
+
+            #### Selectable $\LaTeX$
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        # Centered Row
+        dbc.Row(
+            dbc.Col(
+                dbc.Input(readonly=True, id="s_jacobian_latex", type="text", className="text-center"),
+                width=10  # Adjust width as needed
+            ),
+            className="d-flex justify-content-center align-items-center mb-4",  # Centers everything
+        ),
+        
+        # HESSIAN(S)
+        
+        dcc.Markdown(r"""
+                     
+            ***
+
+            # The Hessian(s)
+            
+            All second-order partial derivatives.
+            
+            $$
+            H_X =
+            \begin{bmatrix}
+            \frac{\partial^2 X}{\partial u^2} & \frac{\partial^2 X}{\partial u \partial v} \\
+            \frac{\partial^2 X}{\partial v \partial u} & \frac{\partial^2 X}{\partial v^2}
+            \end{bmatrix},
+            $$
+            
+            $$
+            H_Y =
+            \begin{bmatrix}
+            \frac{\partial^2 Y}{\partial u^2} & \frac{\partial^2 Y}{\partial u \partial v} \\
+            \frac{\partial^2 Y}{\partial v \partial u} & \frac{\partial^2 Y}{\partial v^2}
+            \end{bmatrix},
+            $$
+            
+            $$
+            H_Z =
+            \begin{bmatrix}
+            \frac{\partial^2 Z}{\partial u^2} & \frac{\partial^2 Z}{\partial u \partial v} \\
+            \frac{\partial^2 Z}{\partial v \partial u} & \frac{\partial^2 Z}{\partial v^2}
+            \end{bmatrix}
+            $$
+
+        """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Markdown(
+            id="s_hessian", 
+            mathjax=True, 
+            className="mx-4 text-wrap w-90",
+            style={
+                "textAlign": "center", 
+                "fontSize": "1.5em",
+                "overflowWrap": "break-word", 
+                "wordBreak": "break-word", 
+                "whiteSpace": "normal",  
+                "display": "block",  
+                "maxWidth": "100%", 
+                "overflowX": "auto"
+            }
+        ),
+        
+        dcc.Markdown(r"""
+
+            #### Selectable $\LaTeX$
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        # Centered Row
+        dbc.Row(
+            dbc.Col(
+                dbc.Input(readonly=True, id="s_hessian_latex", type="text", className="text-center"),
+                width=10  # Adjust width as needed
+            ),
+            className="d-flex justify-content-center align-items-center mb-4",  # Centers everything
+        ),
+        
+        # FIRST FUNDAMENTAL FORM
+        
+        dcc.Markdown(r"""
+                     
+            ***
+
+            # First Fundamental Form Coefficients $E$, $F$, and $G$
+            
+            $$
+            \begin{bmatrix}
+            E & F \\
+            F & G
+            \end{bmatrix}
+            =
+            \begin{bmatrix}
+            S_u \cdot S_u & S_u \cdot S_v \\
+            S_v \cdot S_u & S_v \cdot S_v
+            \end{bmatrix}
+            $$
+
+        """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Markdown(
+            id="s_fff", 
+            mathjax=True, 
+            className="mx-4 text-wrap w-90",
+            style={
+                "textAlign": "center", 
+                "fontSize": "1.5em",
+                "overflowWrap": "break-word", 
+                "wordBreak": "break-word", 
+                "whiteSpace": "normal",  
+                "display": "block",  
+                "maxWidth": "100%", 
+                "overflowX": "auto"
+            }
+        ),
+        
+        dcc.Markdown(r"""
+
+            #### Selectable $\LaTeX$
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        # Centered Row
+        dbc.Row(
+            dbc.Col(
+                dbc.Input(readonly=True, id="s_fff_latex", type="text", className="text-center"),
+                width=10  # Adjust width as needed
+            ),
+            className="d-flex justify-content-center align-items-center mb-4",  # Centers everything
+        ),
+        
+                # FIRST FUNDAMENTAL FORM
+        
+        # SECOND FUNDAMENTAL FORM
+        
+        dcc.Markdown(r"""
+                     
+            ***
+
+            # Second Fundamental Form Coefficients $L$, $M$, and $N$
+            
+            $$
+            \mathbf{n} = \frac{S_u \times S_v}{|S_u \times S_v|}
+            $$
+            
+            $$
+            \begin{bmatrix}
+            L & M \\
+            M & N
+            \end{bmatrix}
+            =
+            \begin{bmatrix}
+            S_{uu} \cdot \mathbf{n} & S_{uv} \cdot \mathbf{n} \\
+            S_{vu} \cdot \mathbf{n} & S_{vv} \cdot \mathbf{n}
+            \end{bmatrix}
+            $$
+
+        """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Markdown(
+            id="s_sff", 
+            mathjax=True, 
+            className="mx-4 text-wrap w-90",
+            style={
+                "textAlign": "center", 
+                "fontSize": "1.5em",
+                "overflowWrap": "break-word", 
+                "wordBreak": "break-word", 
+                "whiteSpace": "normal",  
+                "display": "block",  
+                "maxWidth": "100%", 
+                "overflowX": "auto"
+            }
+        ),
+        
+        dcc.Markdown(r"""
+
+            #### Selectable $\LaTeX$
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        # Centered Row
+        dbc.Row(
+            dbc.Col(
+                dbc.Input(readonly=True, id="s_sff_latex", type="text", className="text-center"),
+                width=10  # Adjust width as needed
+            ),
+            className="d-flex justify-content-center align-items-center mb-4",  # Centers everything
+        ),
+        
+        
+        # Gaussian $K$, Mean $H$, and Principal ($\kappa_1$ and $\kappa_2$) Curvatures
+        
+        dcc.Markdown(r"""
+                     
+            ***
+
+            # Gaussian $K$, Mean $H$, and Principal ($\kappa_1$ and $\kappa_2$) Curvatures
+            
+            $$
+            K = \frac{LN - M^2}{EG - F^2}
+            $$
+            
+            $$
+            H = \frac{EN - 2FM + GL}{2(EG - F^2)}
+            $$
+            
+            $$
+            \kappa_1 = H + \sqrt{H^2 - K}
+            $$
+            
+            $$
+            \kappa_2 = H - \sqrt{H^2 - K}
+            $$
+
+        """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Markdown(
+            id="s_curvatures", 
+            mathjax=True, 
+            className="mx-4 text-wrap w-90",
+            style={
+                "textAlign": "center", 
+                "fontSize": "1.5em",
+                "overflowWrap": "break-word", 
+                "wordBreak": "break-word", 
+                "whiteSpace": "normal",  
+                "display": "block",  
+                "maxWidth": "100%", 
+                "overflowX": "auto"
+            }
+        ),
+        
+        dcc.Markdown(r"""
+
+            #### Selectable $\LaTeX$
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        # Centered Row
+        dbc.Row(
+            dbc.Col(
+                dbc.Input(readonly=True, id="s_curvatures_latex", type="text", className="text-center"),
+                width=10  # Adjust width as needed
+            ),
+            className="d-flex justify-content-center align-items-center mb-4",  # Centers everything
+        ),
+        
+        # surface curvature plots
+        dcc.Store(id="s_curvature_plot_data"),
+        
+        dcc.Markdown(r"""
+
+            ##### Gaussian
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Graph(figure = go.Figure(), id="s_curvature_plot_K"),
+        
+        dcc.Markdown(r"""
+
+            ##### Mean
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Graph(figure = go.Figure(), id="s_curvature_plot_H"),
+        
+        dcc.Markdown(r"""
+
+            ##### Principal $\kappa_1$
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Graph(figure = go.Figure(), id="s_curvature_plot_k1"),
+        
+        dcc.Markdown(r"""
+
+            ##### Principal $\kappa_2$
+
+        """, mathjax=True, className="mx-4 mt-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Graph(figure = go.Figure(), id="s_curvature_plot_k2"),
+        
     ],
     
     id = "surfaces_analytics_container",
@@ -472,7 +844,7 @@ def analytics_content(n_clicks, data) :
     return hide, hide, hide, show, no_update, no_update, no_update
 
 
-# callback function for rendering analytics
+# callback functions for rendering curve analytics
 clientside_callback(
     ClientsideFunction(namespace="differential_geometry", function_name="render_curve_analytics"),
     Output("c_xyz", "children"),
@@ -564,3 +936,107 @@ def c_tau_kappa_plot_callback(curve_data, light):
     # Return the plotly figure
     return fig
 
+
+# callback functions for rendering surface analytics
+clientside_callback(
+    ClientsideFunction(namespace="differential_geometry", function_name="render_surface_analytics"),
+    Output("s_xyz", "children"),
+    Output("s_xyz_latex", "value"),
+    
+    Output("s_jacobian", "children"),
+    Output("s_jacobian_latex", "value"),
+    Output("s_hessian", "children"),
+    Output("s_hessian_latex", "value"),
+    Output("s_fff", "children"),
+    Output("s_fff_latex", "value"),
+    Output("s_sff", "children"),
+    Output("s_sff_latex", "value"),
+    Output("s_curvatures", "children"),
+    Output("s_curvatures_latex", "value"),
+    Output("s_curvature_plot_data", "data"),
+    
+    Input("store_surfaces_data", "data"),
+
+    prevent_initial_call=True  # This stops it from running on page load
+)
+
+def makeSurfaceCurvaturePlot(surface_data, light, c):
+    if surface_data is None:
+        return go.Figure()
+
+    # Set theme
+    theme = "plotly_dark" if not light else "plotly_white"
+    u = np.array(surface_data['u'])
+    v = np.array(surface_data['v'])
+
+    # Create the figure with the Heatmap trace
+    fig = go.Figure(data=go.Heatmap(
+        x=v,
+        y=u,
+        z=surface_data[c],
+        colorscale='Cividis',  # Set the color scale
+        hovertemplate=(
+            'u: %{x}<br>'    # Display the u value
+            'v: %{y}<br>'    # Display the v value
+            '{c}: %{z}'  # Display the selected column value (with 2 decimal places)
+            '<extra></extra>'  # Remove the extra trace information (default behavior)
+        )
+    ))
+
+    # Ensure the axis labels and ranges are set correctly
+    fig.update_layout(
+        template=theme,
+        margin=dict(t=0, b=0, l=0, r=0),
+        xaxis=dict(
+            title="u",  # Label the x-axis as "u"
+            range=[v.min(), v.max()],  # Set x-axis range to match u
+            scaleanchor="y",  # Lock x-axis to y-axis for equal scaling
+        ),
+        yaxis=dict(
+            title="v",  # Label the y-axis as "v"
+            range=[u.min(), u.max()],  # Set y-axis range to match v
+            scaleanchor="x",  # Lock y-axis to x-axis for equal scaling
+            autorange="reversed"  # Reverse the y-axis as needed
+        ),
+        autosize=True,  # Allow the figure to resize to the container's size
+    )
+
+
+    return fig
+
+
+@callback(
+    Output("s_curvature_plot_K", "figure"),
+    Input("s_curvature_plot_data", "data"),
+    Input('theme-switch', 'value'),
+)
+def c_tau_kappa_plot_callback(surface_data, light):
+    
+    return makeSurfaceCurvaturePlot(surface_data, light, 'K')
+
+@callback(
+    Output("s_curvature_plot_H", "figure"),
+    Input("s_curvature_plot_data", "data"),
+    Input('theme-switch', 'value'),
+)
+def c_tau_kappa_plot_callback(surface_data, light):
+    
+    return makeSurfaceCurvaturePlot(surface_data, light, 'H')
+
+@callback(
+    Output("s_curvature_plot_k1", "figure"),
+    Input("s_curvature_plot_data", "data"),
+    Input('theme-switch', 'value'),
+)
+def c_tau_kappa_plot_callback(surface_data, light):
+    
+    return makeSurfaceCurvaturePlot(surface_data, light, 'k_1')
+
+@callback(
+    Output("s_curvature_plot_k2", "figure"),
+    Input("s_curvature_plot_data", "data"),
+    Input('theme-switch', 'value'),
+)
+def c_tau_kappa_plot_callback(surface_data, light):
+    
+    return makeSurfaceCurvaturePlot(surface_data, light, 'k_2')
