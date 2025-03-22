@@ -159,15 +159,28 @@ function createCurveJSON(params) {
     const maxTorsion = Math.max(...curveData.torsion);
 
     function interpolateColor(value, colorScale) {
-        value = Math.min(1, Math.max(0, value)); // Clamp value to [0,1]
-        
+        if (!Array.isArray(colorScale) || colorScale.length === 0) {
+            throw new Error("colorScale must be a non-empty array.");
+        }
+    
+        value = Math.min(1, Math.max(0, value)); // Clamp value to [0, 1]
+    
         let scaledIndex = value * (colorScale.length - 1);
         let index = Math.floor(scaledIndex);
         let t = scaledIndex - index;
     
-        if (index >= colorScale.length - 1) return colorScale[colorScale.length - 1];
+        // Ensure we don't go out of bounds
+        if (index >= colorScale.length - 1) {
+            return colorScale[colorScale.length - 1];
+        }
     
-        let c0 = colorScale[index], c1 = colorScale[index + 1];
+        let c0 = colorScale[index];
+        let c1 = colorScale[index + 1];
+    
+        // Check if c0 or c1 is undefined
+        if (!c0 || !c1) {
+            throw new Error("Invalid color value at index " + index);
+        }
     
         return [
             Math.round(c0[0] + t * (c1[0] - c0[0])),
@@ -175,6 +188,7 @@ function createCurveJSON(params) {
             Math.round(c0[2] + t * (c1[2] - c0[2]))
         ];
     }
+    
     
     function getDivergingColor(value) {
             const colorScale = [

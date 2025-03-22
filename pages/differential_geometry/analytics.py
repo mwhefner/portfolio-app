@@ -6,13 +6,24 @@ import numpy as np
 
 not_yet_rendered = html.Div(
     [
+        
         dcc.Markdown(r"""
 
             Analytics can be computed here after a subject has been rendered.
+
+        """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
+        
+        dcc.Markdown(r"""
+
+            Please read the following before proceeding.
+
+        """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center","fontSize": "1.5em"}),
+        
+        dcc.Markdown(r"""
             
-            *Note that these are computed in real time and rendered in $\LaTeX$. This must be done by the "main thread," so to speak, so __large or complicated expressions may take some time to render and lead to sluggish performance.__*
+            *Analytics are computed and rendered in $\LaTeX$ "to order." This must be done by the "main thread," so to speak, so __large or complicated expressions may take some time to render and lead to sluggish performance.__*
             
-            **Complicated surfaces** (e.g. Klein Bottle) and surfaces with a high $n_u$ or $n_v$ may take upwards of a minute to compute analytics for, during which time your browser's performance may be significantly impacted. *It is recommended to open WebDG in a dedicated browser window for such surfaces.*
+            **High-computation curves** (e.g. torus knot, curves given a high $n_t$) and **high-computation surfaces** (e.g. Klein bottle, surfaces given a high $n_u$ or $n_v$) may take **upwards of a minute** to compute analytics for, during which time your browser's performance may be significantly impacted. *It is highly recommended to open WebDG in a dedicated browser window for such curves and surfaces.*
 
         """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
 
@@ -815,6 +826,9 @@ clientside_callback(
     Output("store_surfaces_data", "data"),
     Output("store_embedded_curves_data", "data"),
     
+    # update TNB selection to enabled when a curve is rendered
+    Output("tnb_select", "disabled"),
+    
     Input("analytics_button", "n_clicks"),
 
     Input("store_math", "data"),
@@ -827,21 +841,22 @@ def analytics_content(n_clicks, data) :
     show = {'display' : 'block'}
     
     if ctx.triggered_id == "store_math" :
-        return hide, hide, hide, show, no_update, no_update, no_update
+        return hide, hide, hide, show, no_update, no_update, no_update, True
     
     if data['rendered'] :
         
         if data['subject'] == "render_curve" :
-            return show, hide, hide, hide, data, no_update, no_update
+            return show, hide, hide, hide, data, no_update, no_update, False
         
         if data['subject'] == "render_surface" :
             
-            return hide, show, hide, hide, no_update, data, no_update
+            return hide, show, hide, hide, no_update, data, no_update, True
 
         if data['subject'] == "render_embedded_curve" :
-            return hide, hide, show, hide, no_update, no_update, data
+            return hide, hide, show, hide, no_update, no_update, data, True
         
-    return hide, hide, hide, show, no_update, no_update, no_update
+    return hide, hide, hide, show, no_update, no_update, no_update, True
+
 
 
 # callback functions for rendering curve analytics
@@ -860,6 +875,13 @@ clientside_callback(
     Output("c_TNB", "children"),
     Output("c_TNB_latex", "value"),
     Output("c_kappa_tau_plot_data", "data"),
+    
+    # update the TNB anchor slider in settings
+    Output("TNB_t_slider", "min"),#min is t_start
+    Output("TNB_t_slider", "max"),#max is t_end
+    Output("TNB_t_slider", "step"),#step is t_step
+    Output("TNB_t_slider", "value"),#value is t_start
+    
     Input("store_curves_data", "data"),
     prevent_initial_call=True  # This stops it from running on page load
 )
@@ -925,9 +947,8 @@ def c_tau_kappa_plot_callback(curve_data, light):
 
     # Customize the layout
     fig.update_layout(
-        title="Curvature and Torsion vs. t",
         xaxis_title="t",
-        yaxis_title="Value",
+        yaxis_title="Metric",
         legend_title="Metrics",
         template=theme,
         hovermode="closest"
@@ -975,12 +996,13 @@ def makeSurfaceCurvaturePlot(surface_data, light, c):
         y=u,
         z=surface_data[c],
         colorscale='Cividis',  # Set the color scale
-        hovertemplate=(
-            'u: %{x}<br>'    # Display the u value
-            'v: %{y}<br>'    # Display the v value
-            '{c}: %{z}'  # Display the selected column value (with 2 decimal places)
-            '<extra></extra>'  # Remove the extra trace information (default behavior)
+        hovertemplate = (
+            f'u: %{{x}}<br>'    # Display the u value
+            f'v: %{{y}}<br>'    # Display the v value
+            f'{c}: %{{z:.2f}}'  # Display the selected column value with 2 decimal places
+            '<extra></extra>'   # Remove the extra trace information
         )
+
     ))
 
     # Ensure the axis labels and ranges are set correctly
@@ -988,12 +1010,12 @@ def makeSurfaceCurvaturePlot(surface_data, light, c):
         template=theme,
         margin=dict(t=0, b=0, l=0, r=0),
         xaxis=dict(
-            title="u",  # Label the x-axis as "u"
+            title="v",  # Label the x-axis as "u"
             range=[v.min(), v.max()],  # Set x-axis range to match u
             scaleanchor="y",  # Lock x-axis to y-axis for equal scaling
         ),
         yaxis=dict(
-            title="v",  # Label the y-axis as "v"
+            title="u",  # Label the y-axis as "v"
             range=[u.min(), u.max()],  # Set y-axis range to match v
             scaleanchor="x",  # Lock y-axis to x-axis for equal scaling
             autorange="reversed"  # Reverse the y-axis as needed

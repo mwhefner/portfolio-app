@@ -6,46 +6,93 @@ window.dash_clientside.differential_geometry = {
 // visibility booleans
 showAxis : true,
 
+TNB_data : null,
+
+TNB_select : null,
+
+TNB_anchor_slider : null,
+
+TNB_speed_slider : null,
+
+TNB_select_disabled : true,
+
 scaler : 100,
-strokeW : 10,
+strokeW : 4,
 
-getAxisLimits : function(vertices) {
-    let minX = Infinity, maxX = -Infinity;
-    let minY = Infinity, maxY = -Infinity;
-    let minZ = Infinity, maxZ = -Infinity;
+animation_position : 0,
 
-    for (let v of vertices) {
-        minX = math.min(minX, v[0]);
-        maxX = math.max(maxX, v[0]);
-        minY = math.min(minY, v[1]);
-        maxY = math.max(maxY, v[1]);
-        minZ = math.min(minZ, v[2]);
-        maxZ = math.max(maxZ, v[2]);
-    }
+showBackground : true,
+backgroundColor : "#2e2e2e", // "middle gray" https://en.wikipedia.org/wiki/Middle_gray
 
-    let maxAbsX = math.max(math.abs(minX), math.abs(maxX));
-    let maxAbsY = math.max(math.abs(minY), math.abs(maxY));
-    let maxAbsZ = math.max(math.abs(minZ), math.abs(maxZ));
-    let axisLimit = math.max(maxAbsX, maxAbsY, maxAbsZ) * 1.2; // 20% buffer
-
-    return axisLimit;
+getDataAtIndex : function(index, TNB_data) {
+    return {
+        position: TNB_data.position[index],
+        Tangent: TNB_data.Tangent[index],
+        Normal: TNB_data.Normal[index],
+        Binormal: TNB_data.Binormal[index],
+        curvature: TNB_data.curvature[index],
+        torsion: TNB_data.torsion[index],
+        speed: TNB_data.speed[index]
+    };
 },
 
-drawAxes : function (limit, p, sw) {
+getDataAtT : function(t, TNB_data) {
 
-    p.strokeWeight(sw);
+    let index = TNB_data.t_values.findIndex(val => Math.abs(val - t) < 1e-6);
+    if (index === -1) return null; // Return null if t is not found
+    
+    return {
+        position: TNB_data.position[index],
+        Tangent: TNB_data.Tangent[index],
+        Normal: TNB_data.Normal[index],
+        Binormal: TNB_data.Binormal[index],
+        curvature: TNB_data.curvature[index],
+        torsion: TNB_data.torsion[index],
+        speed: TNB_data.speed[index]
+    };
+},
 
-    // X-Axis (Red)
-    p.stroke(255, 0, 0);
-    p.line(-limit, 0, 0, limit, 0, 0);
+// (3) Plot T, N, and B vectors at a given t value using p5.js
+plotTNB : function(t, TNB_data, p, index = null) {
+    let data = this.getDataAtT(t, TNB_data);
 
-    // Y-Axis (Green)
-    p.stroke(0, 255, 0);
-    p.line(0, -limit, 0, 0, limit, 0);
+    if (index) {
+        data = this.getDataAtIndex(index, TNB_data);
+    }
 
-    // Z-Axis (Blue)
-    p.stroke(0, 0, 255);
-    p.line(0, 0, -limit, 0, 0, limit);
+    if (!data) return;
+    
+    let pos = data.position;
+    let T = data.Tangent;
+    let N = data.Normal;
+    let B = data.Binormal;
+
+    p.strokeWeight(this.strokeW);
+    
+    p.push();
+    p.translate(pos[0] * this.scaler, pos[1] * this.scaler, pos[2] * this.scaler);
+    
+    // Draw Tangent vector (YELLOW)
+    p.stroke(255, 255, 0);
+    p.line(0, 0, 0, T[0] * this.scaler, T[1] * this.scaler, T[2] * this.scaler);
+    
+    // Draw Normal vector (CYAN)
+    p.stroke(0, 255, 255);
+    p.line(0, 0, 0, N[0] * this.scaler, N[1] * this.scaler, N[2] * this.scaler);
+    
+    // Draw Binormal vector (MAGENTA)
+    p.stroke(255, 0, 255);
+    p.line(0, 0, 0, B[0] * this.scaler, B[1] * this.scaler, B[2] * this.scaler);
+    
+    p.pop();
+},
+
+drawBackground : function(p) {
+    if (this.showBackground) {
+        p.background(this.backgroundColor);
+    } else {
+        p.clear(0, 0, 0, 0); // transparent background
+    }
 },
 
 parse_constant: function(pre, value) {
@@ -79,7 +126,6 @@ parse_constant: function(pre, value) {
     }
 },
     
-
 parse_math: function(pre, value, accepted_variables) {
     if (!value) {
         return "No value in form input to parse.";
@@ -118,7 +164,6 @@ parse_math: function(pre, value, accepted_variables) {
         return "Input could not be parsed. Please try again.";
     }
 },
-
 
 safe_setup : function (p) {
 
@@ -268,14 +313,18 @@ curve_sketch : function (curveData) {
     
     p.draw = function () {
 
-        p.clear(0, 0, 0, 0); // transparent background
-
-        let axisLimit = dg.getAxisLimits(curveData.vertices) * dg.scaler; // Scale factor
+        dg.drawBackground(p);
 
         // Draw the XYZ axes
         if (dg.showAxis) {
-            dg.drawAxes(axisLimit, p, dg.strokeW);
+            p.strokeWeight(1);
+            p.stroke(128);
+            p.debugMode(dg.scaler * 100, 100, 0, 0, 0);
+        } else {
+            p.noDebugMode();
         }
+
+
         
         // Orbit control to allow mouse interaction
         // Only allow orbit control when no modal is open
@@ -294,6 +343,21 @@ curve_sketch : function (curveData) {
         // Draw text at the origin
         p.push(); // Save the current transformation matrix
 
+        if (!dg.TNB_select_disabled && dg.TNB_select === "anchor") {
+            dg.plotTNB(dg.TNB_anchor_slider, dg.TNB_data, p);
+        } else if (!dg.TNB_select_disabled && dg.TNB_select === "animated") {
+            if (dg.animation_position >= dg.TNB_data.position.length) {
+                dg.animation_position = 0;
+            }
+
+            dg.plotTNB(dg.TNB_anchor_slider, dg.TNB_data, p, dg.animation_position);
+
+            if (p.frameCount % (11 - dg.TNB_speed_slider) == 0) {
+                dg.animation_position += 1;
+            }
+            
+        }
+
         // TODO: translate to focus
 
         p.strokeWeight(dg.strokeW);
@@ -309,6 +373,7 @@ curve_sketch : function (curveData) {
         p.endShape(p.OPEN);
         
         p.pop(); // Restore the previous transformation matrix
+        p.strokeWeight(1);
 
     };
 
@@ -369,7 +434,14 @@ surface_sketch : function (obj_file) {
     
     p.draw = function () {
 
-        p.clear(0, 0, 0, 0);
+        dg.drawBackground(p);
+
+        // Draw the XYZ axes
+        if (dg.showAxis) {
+            p.debugMode(dg.scaler * 100, 100, 0, 0, 0);
+        } else {
+            p.noDebugMode();
+        }
 
         p.orbitControl();
     
@@ -615,14 +687,14 @@ render_curve_analytics: function(curve_data) {
     console.log("I've been asked to render analytics of: ", curve_data);
 
     // Get the math expressions
-    const x_expr = curve_data['c_x_validated'];
-    const y_expr = curve_data['c_y_validated'];
-    const z_expr = curve_data['c_z_validated'];
+    const x_expr = math.parse(curve_data['c_x_validated']);
+    const y_expr = math.parse(curve_data['c_y_validated']);
+    const z_expr = math.parse(curve_data['c_z_validated']);
 
     // Convert expressions to LaTeX
-    const x_latex = math.parse(x_expr).toTex();
-    const y_latex = math.parse(y_expr).toTex();
-    const z_latex = math.parse(z_expr).toTex();
+    const x_latex = x_expr.toTex();
+    const y_latex = y_expr.toTex();
+    const z_latex = z_expr.toTex();
 
     // Compute derivatives
     const dx_dt = math.derivative(x_expr, 't');
@@ -639,9 +711,9 @@ render_curve_analytics: function(curve_data) {
 
     // Compute unit tangent vector (T)
     const speed_expr = math.simplify(`sqrt((${dx_dt})^2 + (${dy_dt})^2 + (${dz_dt})^2)`);
-    const T_x = math.simplify(`${dx_dt} / ${speed_expr}`);
-    const T_y = math.simplify(`${dy_dt} / ${speed_expr}`);
-    const T_z = math.simplify(`${dz_dt} / ${speed_expr}`);
+    const T_x = math.simplify(`(${dx_dt}) / (${speed_expr})`);
+    const T_y = math.simplify(`(${dy_dt}) / (${speed_expr})`);
+    const T_z = math.simplify(`(${dz_dt}) / (${speed_expr})`);
 
     // Compute derivative of T
     const dT_x = math.derivative(T_x, 't');
@@ -649,23 +721,23 @@ render_curve_analytics: function(curve_data) {
     const dT_z = math.derivative(T_z, 't');
 
     // Compute unit normal vector (N)
-    const normal_magnitude_expr = math.simplify(`sqrt(${dT_x}^2 + ${dT_y}^2 + ${dT_z}^2)`);
-    const N_x = math.simplify(`${dT_x} / ${normal_magnitude_expr}`);
-    const N_y = math.simplify(`${dT_y} / ${normal_magnitude_expr}`);
-    const N_z = math.simplify(`${dT_z} / ${normal_magnitude_expr}`);
+    const normal_magnitude_expr = math.simplify(`sqrt((${dT_x})^2 + (${dT_y})^2 + (${dT_z})^2)`);
+    const N_x = math.simplify(`(${dT_x}) / (${normal_magnitude_expr})`);
+    const N_y = math.simplify(`(${dT_y}) / (${normal_magnitude_expr})`);
+    const N_z = math.simplify(`(${dT_z}) / (${normal_magnitude_expr})`);
 
     // Compute binormal vector (B)
-    const B_x = math.simplify(`(${T_y} * ${N_z}) - (${T_z} * ${N_y})`);
-    const B_y = math.simplify(`(${T_z} * ${N_x}) - (${T_x} * ${N_z})`);
-    const B_z = math.simplify(`(${T_x} * ${N_y}) - (${T_y} * ${N_x})`);
+    const B_x = math.simplify(`((${T_y}) * (${N_z})) - ((${T_z}) * (${N_y}))`);
+    const B_y = math.simplify(`((${T_z}) * (${N_x})) - ((${T_x}) * (${N_z}))`);
+    const B_z = math.simplify(`((${T_x}) * (${N_y})) - ((${T_y}) * (${N_x}))`);
 
     // Compute Darboux vector 
     const curvature_expr = math.simplify(
-        `norm(cross([${dx_dt}, ${dy_dt}, ${dz_dt}], [${d2x_dt2}, ${d2y_dt2}, ${d2z_dt2}])) / (norm([${dx_dt}, ${dy_dt}, ${dz_dt}]) ^ 3)`
+        `norm(cross([(${dx_dt}), (${dy_dt}), (${dz_dt})], [(${d2x_dt2}), (${d2y_dt2}), (${d2z_dt2})])) / (norm([(${dx_dt}), (${dy_dt}), (${dz_dt})]) ^ 3)`
     );
 
     const torsion_expr = math.simplify(
-        `dot(cross([${dx_dt}, ${dy_dt}, ${dz_dt}], [${d2x_dt2}, ${d2y_dt2}, ${d2z_dt2}]), [${d3x_dt3}, ${d3y_dt3}, ${d3z_dt3}]) / (norm(cross([${dx_dt}, ${dy_dt}, ${dz_dt}], [${d2x_dt2}, ${d2y_dt2}, ${d2z_dt2}])) ^ 2)`
+        `dot(cross([(${dx_dt}), (${dy_dt}), (${dz_dt})], [(${d2x_dt2}), (${d2y_dt2}), (${d2z_dt2})]), [(${d3x_dt3}), (${d3y_dt3}), (${d3z_dt3})]) / (norm(cross([(${dx_dt}), (${dy_dt}), (${dz_dt})], [(${d2x_dt2}), (${d2y_dt2}), (${d2z_dt2})])) ^ 2)`
     );
 
     // Compute LaTeX representations
@@ -702,6 +774,7 @@ render_curve_analytics: function(curve_data) {
     let curvature_values = [];
     let torsion_values = [];
     let T_values = [], N_values = [], B_values = [], D_values = [];
+    let positions = [];
 
     t_values.forEach(t => {
         let speed = speed_expr.evaluate({ t });
@@ -711,6 +784,7 @@ render_curve_analytics: function(curve_data) {
         let T_t = [T_x.evaluate({ t }), T_y.evaluate({ t }), T_z.evaluate({ t })];
         let N_t = [N_x.evaluate({ t }), N_y.evaluate({ t }), N_z.evaluate({ t })];
         let B_t = [B_x.evaluate({ t }), B_y.evaluate({ t }), B_z.evaluate({ t })];
+        let position = [x_expr.evaluate({ t }), y_expr.evaluate({ t }), z_expr.evaluate({ t })];
 
         // Handle infinity values
         if (!isFinite(speed)) speed = 0;
@@ -723,6 +797,7 @@ render_curve_analytics: function(curve_data) {
         T_values.push(T_t);
         N_values.push(N_t);
         B_values.push(B_t);
+        positions.push(position);
     });
 
     // Create the data dictionary
@@ -733,8 +808,8 @@ render_curve_analytics: function(curve_data) {
         "Tangent": T_values,
         "Normal": N_values,
         "Binormal": B_values,
-        "Darboux": D_values,
-        "t_values" : t_values
+        "t_values" : t_values,
+        "position" : positions
     };
 
     console.log("Computed Curvature, Torsion, and Frenet-Serret Data:", data);
@@ -758,7 +833,12 @@ render_curve_analytics: function(curve_data) {
         `\n\n $$${T_latex}$$ \n\n $$${N_latex}$$ \n\n $$${B_latex}$$`,
         `$$${T_latex}$$  $$${N_latex}$$  $$${B_latex}$$`,
 
-        data  
+        data,
+
+        t_start,
+        t_end,
+        t_step,
+        t_start
     ];
 },
 

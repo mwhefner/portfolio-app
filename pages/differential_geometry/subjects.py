@@ -53,10 +53,14 @@ curves = html.Div(
                 
                 dbc.Select(
                     options=[
-                        {"label": "Planar Curve", "value": "Planar Curve"}, # make a circle
                         {"label": "Line", "value": "Line"},
+                        {"label": "Circle", "value": "Planar Curve"}, # make a circle
+                        {"label": 'Catenary', "value": "Catenary"},
+                        {"label": 'Cycloid', "value": "Cycloid"},
+                        {"label": 'Archimedean Spiral', "value": "Archimedean Spiral"},
                         {"label": "Helix", "value": "Helix"},
                         {"label": "Trefoil Knot", "value": "Trefoil Knot"},
+                        {"label": "Torus Knot", "value": "Torus Knot"},
                     ],
                     persistence=True,
                     persistence_type = "memory",
@@ -427,7 +431,7 @@ clientside_callback(
                     "c_zcomponent": "t",
                     "c_tstart": "-10",
                     "c_tend": "10",
-                    "c_nt": 300
+                    "c_nt": 200
                 },
                 "Trefoil Knot": {
                     "c_xcomponent": "sin(t) + 2 * sin(2 * t)",
@@ -435,8 +439,41 @@ clientside_callback(
                     "c_zcomponent": "sin(3 * t)",
                     "c_tstart": "0",
                     "c_tend": "2 * pi",
-                    "c_nt": 500
+                    "c_nt": 100
+                },
+                "Torus Knot": {
+                    "c_xcomponent": "sin(3 * t) * (1 + 0.3 * cos(4 * t))",
+                    "c_ycomponent": "cos(3 * t) * (1 + 0.3 * cos(4 * t))",
+                    "c_zcomponent": "0.3 * sin(4 * t)",
+                    "c_tstart": "0",
+                    "c_tend": "2 * pi",
+                    "c_nt": 200
+                },
+                "Archimedean Spiral": {
+                    "c_xcomponent": "t * cos(t)",
+                    "c_ycomponent": "t * sin(t)",
+                    "c_zcomponent": "0",
+                    "c_tstart": "0",
+                    "c_tend": "2 * pi",
+                    "c_nt": 200
+                },
+                "Catenary": {
+                    "c_xcomponent": "t",
+                    "c_ycomponent": "cosh(t)",
+                    "c_zcomponent": "0",
+                    "c_tstart": "-pi",
+                    "c_tend": "pi",
+                    "c_nt": 100
+                },
+                "Cycloid": {
+                    "c_xcomponent": "t - sin(t)",
+                    "c_ycomponent": "1 - cos(t)",
+                    "c_zcomponent": "0",
+                    "c_tstart": "0.01",
+                    "c_tend": "1.99 * pi",
+                    "c_nt": 100
                 }
+
             };
             
             // Get the values for the selected preset
@@ -566,6 +603,9 @@ clientside_callback(
     r"""
     function(n_clicks, ts_value, te_value, nt_value) {
         let dg = window.dash_clientside.differential_geometry;
+        
+        ts_value = ts_value.trim();
+        te_value = te_value.trim();
         
         let results = {
             ts: dg.parse_constant("t_{\\text{start}}=", ts_value, ["t"]),
@@ -1071,17 +1111,13 @@ surfaces = html.Div(
             }
         ),
         
-        dcc.Markdown("***"),
+        ##dcc.Markdown("***"),
             
         dbc.InputGroup(
             [
                 dbc.InputGroupText("Color surface by"),
                 dbc.Select(
                     options=[
-                        {"label": "its Gaussian curvature.", "value": "Gaussian Curvature"},
-                        {"label": "its mean curvature.", "value": "Mean Curvature"},
-                        {"label": "its first principal curvature.", "value": "k1"},
-                        {"label": "its second principal curvature.", "value": "k2"},
                         {"label": "scene lighting.", "value": "Solid Color"},
                     ],
                     value="Solid Color",
@@ -1089,7 +1125,8 @@ surfaces = html.Div(
                     className="flex-grow-1",
                 )
             ],
-            className="mb-3"
+            className="mb-3",
+            style={'display' : 'none'}
         ),
 
         dcc.Markdown("***"),
@@ -1178,7 +1215,7 @@ clientside_callback(
                     "s_zcomponent": "u",
                     "s_ustart": "-4 * pi",
                     "s_uend": "4 * pi",
-                    "s_nu": 60,
+                    "s_nu": 300,
                     "s_vstart": "1",
                     "s_vend": "3",
                     "s_nv": 30
@@ -1210,7 +1247,7 @@ clientside_callback(
                     "s_zcomponent": "(1 - (1 / 3) * u) * sin(v)",
                     "s_ycomponent": "u",
                     "s_ustart": "-3",
-                    "s_uend": "3",
+                    "s_uend": "2.75",
                     "s_nu": 20,
                     "s_vstart": "0",
                     "s_vend": "2 * pi",

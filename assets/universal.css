@@ -66,3 +66,22 @@ body {
 [class^="ISBN_"]:hover ~ [class^="ISBN_"] {
     border: 2px solid --bs-info; /* Apply border to all elements with the same class */
 }
+
+
+.webdg_slider .rc-slider {
+    height: 1.5em !important;
+}
+
+.webdg_slider .rc-slider-rail {
+    height: 1.5em !important;
+}
+
+.webdg_slider .rc-slider-handle {
+    width: 1.5em !important;
+    height: 1.5em !important;
+    margin-top: 0em !important;
+}
+
+.webdg_slider .rc-slider-track {
+    height: 1.5em !important;
+}

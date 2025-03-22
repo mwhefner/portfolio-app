@@ -239,9 +239,11 @@ layout = html.Div(
                     
                     #### About
                     
-                    Made for both students and instructors, WebDG is a free and accessible technology robust enough to interactively explore the differential geometry of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.
+                    Made for both students and instructors, WebDG is a free and accessible web app robust enough to interactively explore the differential geometry of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.
                     
                     **This software is free for anyone to use to learn or teach others about differential geometry. No login, download, licence, or subscription is required.**
+                    
+                    Check out the [video tutorial for WebDG here on youtube]().
                     
                     ***
                     
@@ -255,11 +257,9 @@ layout = html.Div(
                     
                     #### Support
                     
-                    If you find this app useful and would like for it to stay online and ad-free — or if you would just like to support it and apps like it — [please consider joining me on my patreon.]() You can also help by sharing this app!
+                    This app costs money to maintain and keep online. You can help keep this tool free and available for everyone by [supporting me on patreon.]() Patreon supporters recieve priority consideration for new feature requests and app suggestions. You can also show your support by sharing this app!
                     
                     This application is built with free and open source technology. To read more about the software used, see the [Dash web application framework](), [mathjs](https://mathjs.org), and the [p5.js javascript library](). To suggest features, report a bug, or get more information, please select the "artist home" button at the bottom right.
-                    
-                    Check out the [video tutorial for WebDG here on youtube]().
                     
                     ***
                     
