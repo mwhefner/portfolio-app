@@ -34,6 +34,34 @@ layout = dbc.Card(
                         style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
                     ),
                     
+                    dcc.Markdown("***\n### Movement",className="my-4"),
+                    
+                    dbc.Switch(
+                        id="show_focal_point",
+                        label="Show Focal Point",
+                        value=True,
+                        disabled=False,
+                        style={'user-select': 'none', "fontSize": "1.5em",},
+                        className="my-2"
+                    ),
+                    
+                    dbc.Label(
+                        "Speed",
+                        className="pb-0 mb-0",
+                        style={'user-select': 'none',"fontSize": "1.5em",},
+                    ),
+                    
+                    dcc.Slider(
+                        min=0.1, 
+                        max=20, 
+                        step=0.1, 
+                        value=5, 
+                        id='movement_speed',
+                        marks=None,  # Removes labeled marks
+                        tooltip={"always_visible": False},  # Optional: Hide tooltip
+                        className="webdg_slider my-2"  # Add the class
+                    ),
+                    
                     dcc.Markdown("***\n### Space",className="my-4"),
                     
                     dbc.Switch(
@@ -172,17 +200,93 @@ layout = dbc.Card(
                                 value=10, 
                                 id='TNB_speed_slider',
                                 marks=None,  # Removes labeled marks
-                                tooltip={"always_visible": True},  # Optional: Hide tooltip
-                                className="webdg_slider mb-2 mt-4"  # Add the class
+                                tooltip={"always_visible": False},  # Optional: Hide tooltip
+                                className="webdg_slider my-2"  # Add the class
                             ),
                         ],
                         id="tnb_animation_wrapper",  # Wrapper div for this section
-                    )
+                    ),
+                    
+                    dcc.Markdown("***\n### Surfaces",className="my-4"),
+                    
+                    dcc.Slider(
+                        min=0, 
+                        max=50, 
+                        step=1, 
+                        value=10, 
+                        id='surfaceShine',
+                        marks=None,  # Removes labeled marks
+                        tooltip={"always_visible": False},  # Optional: Hide tooltip
+                        className="webdg_slider my-2"  # Add the class
+                    ),
+                    
+                    dcc.Markdown("***\n### Lighting",className="my-4"),
+                    
+                    dbc.Label(
+                        "Ambient Light",
+                        className="pb-0 mb-0",
+                        style={'user-select': 'none',"fontSize": "1.5em",},
+                    ),
+                    
+                    dbc.Input(
+                        type="color",
+                        id="ambient_light_colorpicker",
+                        value="#646464",
+                        className="p-0 mb-4",
+                        style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
+                    ),
+                    
+                    dbc.Label(
+                        "Positive X-Axis Directional Light",
+                        className="pb-0 mb-0",
+                        style={'user-select': 'none',"fontSize": "1.5em",},
+                    ),
+                    
+                    dbc.Input(
+                        type="color",
+                        id="x_light_colorpicker",
+                        value="#FF0000",
+                        className="p-0 mb-4",
+                        style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
+                    ),
+                    
+                    dbc.Label(
+                        "Positive Y-Axis Directional Light",
+                        className="pb-0 mb-0",
+                        style={'user-select': 'none',"fontSize": "1.5em",},
+                    ),
+                    
+                    dbc.Input(
+                        type="color",
+                        id="y_light_colorpicker",
+                        value="#00FF00",
+                        className="p-0 mb-4",
+                        style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
+                    ),
+                    
+                    dbc.Label(
+                        "Positive Z-Axis Directional Light",
+                        className="pb-0 mb-0",
+                        style={'user-select': 'none',"fontSize": "1.5em",},
+                    ),
+                    
+                    dbc.Input(
+                        type="color",
+                        id="z_light_colorpicker",
+                        value="#0000FF",
+                        className="p-0 mb-4",
+                        style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
+                    ),
+                    
+                    # end settings children
+                    
                 ],
                 id="settings-content", 
                 className="card-text"
             )
         ),
+        
+        
     ],
     
     className = "px-0"
@@ -261,9 +365,11 @@ clientside_callback(
 
 clientside_callback(
     """
-    function(show_solid_bg, bg_colorpicker_value, show_axes, displayScaleSlider_value, curveWidthSlider_value){
+    function(show_solid_bg, bg_colorpicker_value, show_axes, displayScaleSlider_value, curveWidthSlider_value, movement_speed, show_focal_point, surfaceShine, ambient_light_colorpicker, x_light_colorpicker, y_light_colorpicker, z_light_colorpicker){
         
         let dg = window.dash_clientside.differential_geometry;
+        
+        dg.movementSpeed = movement_speed;
         
         dg.showBackground = show_solid_bg;
         
@@ -275,6 +381,16 @@ clientside_callback(
         
         dg.strokeW = curveWidthSlider_value;
         
+        dg.showFocalPoint = show_focal_point;
+        
+        dg.surfaceShine = surfaceShine;
+        
+        dg.ambient_light = dg.hexToRGB(ambient_light_colorpicker);
+        dg.x_light = dg.hexToRGB(x_light_colorpicker);
+        dg.y_light = dg.hexToRGB(y_light_colorpicker);
+        dg.z_light = dg.hexToRGB(z_light_colorpicker);
+
+        
         return ""; // empty return, no need to actually store anything
     }
     """,
@@ -284,4 +400,11 @@ clientside_callback(
     Input("show_axes", "value"),
     Input("displayScaleSlider", "value"),
     Input("curveWidthSlider", "value"),
+    Input("movement_speed", "value"),
+    Input("show_focal_point", "value"),
+    Input("surfaceShine", "value"),
+    Input("ambient_light_colorpicker", "value"),
+    Input("x_light_colorpicker", "value"),
+    Input("y_light_colorpicker", "value"),
+    Input("z_light_colorpicker", "value"),
 )

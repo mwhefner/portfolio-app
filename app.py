@@ -22,7 +22,7 @@ app = dash.Dash(
 
 # Bio text
 bio_text = """
-I tackle complex problems and transform data, math and science concepts into interactive, pedagogically-informed software solutions. I built this web app with the [Dash open source framework](https://dash.plotly.com/) to showcase my **publications** and **web projects** which you may browse in the portfolio linked below.
+I tackle complex problems and transform data, math and science concepts into interactive, pedagogically-informed software solutions.
 
 <br>
 
@@ -30,7 +30,7 @@ I tackle complex problems and transform data, math and science concepts into int
 
 <br>
 
-If you're looking to turn messy data into clear insights—or to build powerful tools to discover and communicate them—
+If you're looking to turn data or concepts into clear insights—or to build powerful tools to discover and communicate them—
 
 ##### I am searching **right now** for new exciting roles and challenges!
 """
@@ -322,7 +322,7 @@ app.layout = dbc.Container([
         ),
         dbc.Button(
             dbc.Row([
-                dbc.Col(html.Span("Artist Home", className="fw-bold"), width="auto"),
+                dbc.Col(html.Span("Creator", className="fw-bold"), width="auto"),
                 dbc.Col(html.I(className="fa-solid fa-bars"), width="auto", className="text-end")
             ], className="d-flex justify-content-between align-items-center", align="center"),
             id="library-hamburger",

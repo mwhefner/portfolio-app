@@ -34,6 +34,7 @@ layout = html.Div(
     
     dcc.Store(data= {'rendered':False}, id='store_math', storage_type='memory'),
 
+    dcc.Store(id="stop_orbit_control_on_modal_open"),
     
     dcc.Store(id = "refresh_dummy_target"),
 
@@ -133,7 +134,7 @@ layout = html.Div(
                 dbc.Row([
                     dbc.Button(
                         "Close",
-                        id="close-surface-modal",
+                        id="close_subject_modal",
                         className="ms-auto",
                         n_clicks=0,
                     )
@@ -141,7 +142,7 @@ layout = html.Div(
 
             ),
         ],
-        id="surface-modal",
+        id="subject_modal",
         centered=True,
         size="lg"
     ),
@@ -307,7 +308,7 @@ layout = html.Div(
 
     dbc.Alert(
         [
-            'Success! WebDG has rendered your subject. Orbit your view (or that of your "camera") in this space around your focal point by left-click and dragging. Adjust the position of your focal point with your arrow keys. Zoom with your mouse wheel. Explore more subject and lighting adjustments in the Settings menu with the ',
+            'Success! WebDG has rendered your subject. Orbit your view around the focal point by left-clicking and dragging. Move the focal point with the arrow keys, and hold shift while pressing the up or down arrow to move it forward or backward. Zoom using the mouse wheel. Explore more adjustments in the Settings menu with the ',
             html.I(className="fa-solid fa-gear"),
             ' icon on the top right.'
         ],
@@ -364,12 +365,12 @@ clientside_callback(
         
     }
     """,
-    Output("surface-modal", "is_open"),
+    Output("subject_modal", "is_open"),
     [
         Input("subject", "n_clicks"), 
-        Input("close-surface-modal", "n_clicks")
+        Input("close_subject_modal", "n_clicks")
     ],
-    State("surface-modal", "is_open"),
+    State("subject_modal", "is_open"),
     prevent_initial_call=True,
 )
 
@@ -412,3 +413,20 @@ clientside_callback(
     prevent_initial_call=False,
 )
 
+clientside_callback(
+    """
+    function(subject, analytics, settings, theme, portfolio, help) {
+        let dg = window.dash_clientside.differential_geometry;
+        let allClosed = !subject && !analytics && !settings && !theme && !portfolio && !help;
+        dg.orbitControlled = allClosed;
+        return "";
+    }
+    """,
+    Output("stop_orbit_control_on_modal_open", "data"),
+    Input("subject_modal", "is_open"),
+    Input("analytics-modal", "is_open"),
+    Input("settings-modal", "is_open"),
+    Input("theme-modal", "is_open"),
+    Input("portfolio-modal", "is_open"),
+    Input("help-modal", "is_open"),
+)

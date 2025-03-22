@@ -5,6 +5,8 @@ window.dash_clientside.differential_geometry = {
 
 // visibility booleans
 showAxis : true,
+showFocalPoint : true,
+movementSpeed : 1,
 
 TNB_data : null,
 
@@ -23,6 +25,28 @@ animation_position : 0,
 
 showBackground : true,
 backgroundColor : "#2e2e2e", // "middle gray" https://en.wikipedia.org/wiki/Middle_gray
+
+orbitControlled : true,
+
+surfaceShine : 10,
+
+ambient_light : [100, 100, 100],
+
+x_light : [255, 0, 0],
+y_light : [0, 255, 0],
+z_light : [0, 0, 255],
+
+hexToRGB : function(hex) {
+    // Remove the hash (#) if it exists
+    hex = hex.replace('#', '');
+
+    // Parse the RGB values from the hex string
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+
+    return [r, g, b];
+},
 
 getDataAtIndex : function(index, TNB_data) {
     return {
@@ -295,19 +319,26 @@ curve_sketch : function (curveData) {
     // Get the subnamespace to refer to variables more efficiently
     let dg = window.dash_clientside.differential_geometry;
 
+    let cam;
+
     let sketch_function = function (p) {
 
-    p.preload = function () {
-        console.log("Preloading, if need be.");
-    };
 
     p.setup = function () {
-        console.log("Setting up the subject sketch of:", curveData);
+        // console.log("Setting up the subject sketch of:", curveData);
             
         // Run the safe setup function
         dg.safe_setup(p);
 
         p.setAttributes('antialias', true);
+
+        cam = p.createCamera();
+
+        // Place the camera at the top-right.
+        cam.setPosition(400, -400, 800);
+      
+        // Point it at the origin.
+        cam.lookAt(0, 0, 0);
 
     };
     
@@ -328,17 +359,23 @@ curve_sketch : function (curveData) {
         
         // Orbit control to allow mouse interaction
         // Only allow orbit control when no modal is open
-        p.orbitControl();
+        if (dg.orbitControlled) {
+            p.orbitControl();
+        }
+
+        // Draw a gray dot at the focal point of the camera
+        if (dg.showFocalPoint) {
+            p.push();
+            p.translate(cam.centerX, cam.centerY, cam.centerZ);
+            p.fill(255, 255, 255);
+            p.noStroke();
+            p.sphere(3); // Adjust size as needed
+            p.pop();
+        }
+
 
         // account for y pointing down at the start
         p.rotateX(p.PI);
-
-        // Set lighting
-        p.ambientLight(100); // Ambient light with moderate intensity
-        p.directionalLight(255, 255, 255, 1, 0, 0);
-        p.directionalLight(255, 255, 255, 0, 1, 0);
-        p.directionalLight(255, 255, 255, 0, 0, 1);
-
     
         // Draw text at the origin
         p.push(); // Save the current transformation matrix
@@ -358,8 +395,6 @@ curve_sketch : function (curveData) {
             
         }
 
-        // TODO: translate to focus
-
         p.strokeWeight(dg.strokeW);
         p.noFill();
 
@@ -373,17 +408,43 @@ curve_sketch : function (curveData) {
         p.endShape(p.OPEN);
         
         p.pop(); // Restore the previous transformation matrix
+        
+
+        
         p.strokeWeight(1);
 
-    };
+        if (p.keyIsDown(p.LEFT_ARROW) === true) {
+            cam.move(-dg.movementSpeed, 0, 0);
+        }
+    
+        if (p.keyIsDown(p.RIGHT_ARROW) === true) {
+            cam.move(dg.movementSpeed, 0, 0);
+        }
+    
+        if (p.keyIsDown(p.UP_ARROW) === true) {
 
-    p.windowResized = function () {
+            if (p.keyIsDown(p.SHIFT)) {
+                cam.move(0, 0, -dg.movementSpeed);
+            } else {
+                cam.move(0, -dg.movementSpeed, 0);
+            }
+            
+        }
+    
+        if (p.keyIsDown(p.DOWN_ARROW) === true) {
+
+            if (p.keyIsDown(p.SHIFT)) {
+                cam.move(0, 0, dg.movementSpeed);
+            } else {
+                cam.move(0, dg.movementSpeed, 0);
+            }
+
+        }
 
     };
 
     p.keyPressed = function () {
-        // arrow keys will move focus according to movement mode
-        // in subject settings
+
     };
     
     } // This ends the sketch function
@@ -409,15 +470,13 @@ surface_sketch : function (obj_file) {
 
     //subject
     let subject;
+    let cam;
 
     // Get the subnamespace to refer to variables more efficiently
     let dg = window.dash_clientside.differential_geometry;
 
     let sketch_function = function (p) {
 
-    p.preload = function () {
-        console.log("Preloading, if need be.");
-    };
 
     p.setup = function () {
         // console.log("Setting up the subject sketch of:", obj_file);
@@ -426,8 +485,14 @@ surface_sketch : function (obj_file) {
         dg.safe_setup(p);
     
         p.setAttributes('antialias', true);
+
+        cam = p.createCamera();
     
-        p.camera(0, -500, 500, 0, 0, 0, 0, 1, 0);
+        // Place the camera at the top-right.
+        cam.setPosition(400, -400, 800);
+      
+        // Point it at the origin.
+        cam.lookAt(0, 0, 0);
 
         subject = p.createModel(subject_model, '.obj');
     };
@@ -438,20 +503,39 @@ surface_sketch : function (obj_file) {
 
         // Draw the XYZ axes
         if (dg.showAxis) {
+            p.strokeWeight(1);
+            p.stroke(128);
             p.debugMode(dg.scaler * 100, 100, 0, 0, 0);
         } else {
             p.noDebugMode();
         }
 
-        p.orbitControl();
+        // Orbit control to allow mouse interaction
+        // Only allow orbit control when no modal is open
+        if (dg.orbitControlled) {
+            p.orbitControl();
+        }
+
+        // Draw a gray dot at the focal point of the camera
+        if (dg.showFocalPoint) {
+            p.push();
+            p.translate(cam.centerX, cam.centerY, cam.centerZ);
+            p.fill(255, 255, 255);
+            p.noStroke();
+            p.sphere(3); // Adjust size as needed
+            p.pop();
+        }
     
         // Set lighting
-        p.ambientLight(128);
-        p.directionalLight(255, 0, 0, 1, 0, 0);
-        p.directionalLight(0, 255, 0, 0, 1, 0);
-        p.directionalLight(0, 0, 255, 0, 0, 1);
+        // Set lighting
+        p.ambientLight(dg.ambient_light[0], dg.ambient_light[1], dg.ambient_light[2]); // Ambient light with moderate intensity
+
+
+        p.directionalLight(dg.x_light[0], dg.x_light[1], dg.x_light[2], 1, 0, 0);
+        p.directionalLight(dg.y_light[0], dg.y_light[1], dg.y_light[2], 0, 1, 0);
+        p.directionalLight(dg.z_light[0], dg.z_light[1], dg.z_light[2], 0, 0, 1);
         p.ambientMaterial(255); // Ensure the model reacts to lighting
-        p.shininess(10);       // Make highlights pop
+        p.shininess(dg.surfaceShine);       // Make highlights pop
         p.specularMaterial(255);
     
         p.push(); 
@@ -466,16 +550,36 @@ surface_sketch : function (obj_file) {
         p.model(subject);
     
         p.pop();
-    };
+
+        p.strokeWeight(1);
+
+        if (p.keyIsDown(p.LEFT_ARROW) === true) {
+            cam.move(-dg.movementSpeed, 0, 0);
+        }
     
+        if (p.keyIsDown(p.RIGHT_ARROW) === true) {
+            cam.move(dg.movementSpeed, 0, 0);
+        }
+    
+        if (p.keyIsDown(p.UP_ARROW) === true) {
 
-    p.windowResized = function () {
+            if (p.keyIsDown(p.SHIFT)) {
+                cam.move(0, 0, -dg.movementSpeed);
+            } else {
+                cam.move(0, -dg.movementSpeed, 0);
+            }
+            
+        }
+    
+        if (p.keyIsDown(p.DOWN_ARROW) === true) {
 
-    };
+            if (p.keyIsDown(p.SHIFT)) {
+                cam.move(0, 0, dg.movementSpeed);
+            } else {
+                cam.move(0, dg.movementSpeed, 0);
+            }
 
-    p.keyPressed = function () {
-        // arrow keys will move focus according to movement mode
-        // in subject settings
+        }
     };
     
     } // This ends the sketch function
