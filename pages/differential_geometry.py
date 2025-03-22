@@ -10,8 +10,8 @@ register_page(
     path="/webdg", 
     name="WebDG", 
     title="WebDG", 
-    description="WebDG is a free Web application for Differential Geometry education. WebDG provides students and instructors a free and accessible technology robust enough to interactively explore abstract differentiable curves and surfaces without the substantial overhead of computer algebra systems.", 
-    image="/assets/as_webp/differential_geometry.webp"
+    description="WebDG is a free web application for differential geometry education. WebDG provides students and instructors a free and accessible web app robust enough to interactively explore abstract differentiable curves and surfaces without the substantial overhead of learning to script computer algebra systems.", 
+    image="/assets/as_webp/webdg.webp"
 )
 
 # Is the following necessary for anything?
@@ -215,10 +215,14 @@ layout = html.Div(
                     """,
                     style={
                         "textAlign": "center", 
-                        "fontSize": "2em",
+                        "fontSize": "3em",
                     }
                     
                 ),
+                
+                html.Img(src="/assets/as_webp/webdg.webp", 
+                        style={"height": "200px", "display": "block", "margin": "0 auto", "marginBottom": "1.5rem"},
+                        alt="A Klein bottle at an angle."),
                 
                 dcc.Markdown(
                     r"""          
