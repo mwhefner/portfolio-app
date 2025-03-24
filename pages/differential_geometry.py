@@ -18,7 +18,7 @@ register_page(
 '''clientside_callback(
     """
     function(n_clicks) {
-        console.log("Button pressed.");
+        //console.log("Button pressed.");
     }
     """,
     Output("DGWE_Store", "data"),
@@ -37,6 +37,10 @@ layout = html.Div(
     dcc.Store(id="stop_orbit_control_on_modal_open"),
     
     dcc.Store(id = "refresh_dummy_target"),
+    
+    dcc.Store(id = "killswitch_dummy_target"),
+    
+    dcc.Location(id='webdg_url', refresh=False),
 
     
     # Help menu button
@@ -227,6 +231,8 @@ layout = html.Div(
                 dcc.Markdown(
                     r"""          
                     
+                    Version 1.0.0
+                    
                     _A free **Web** application for **D**ifferential **G**eometry education._
                     
                     """,
@@ -243,7 +249,11 @@ layout = html.Div(
                     ***
                     
                     #### About
-                    
+                    """, mathjax=True, className="mb-5"
+                ),
+                
+                dcc.Markdown(
+                    r"""    
                     Made for both students and instructors, WebDG is a free and accessible web app robust enough to interactively explore the differential geometry of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.
                     
                     **This software is free for anyone to use to learn or teach others about differential geometry. No login, download, licence, or subscription is required.**
@@ -252,8 +262,54 @@ layout = html.Div(
                     
                     ***
                     
-                    #### Citation
+                    #### What does it do?
                     
+                    """, mathjax=True, className="mb-5"
+                ),
+                
+                dcc.Markdown(
+                    r"""    
+                    
+                    ##### Subjects
+                    
+                    WebDG can be used to study either an abstract parametric curve or surface in space. Give WebDG the $\mathbb{R}^3$ parameterization of your differentiable manifold to see an interative visualization and analytics.
+                    
+                    """, mathjax=True, className="mb-5"
+                ),
+                
+                dcc.Markdown(
+                    r"""    
+                    
+                    ##### Analytics
+                    
+                    For **curves**, WebDG symbolically computes explicit formulas for:
+                    
+                    - the first, second, and third derivatives;
+                    - the Frenet-Serret frame;
+                    - the speed;
+                    - the curvature;
+                    - and the torsion
+                    
+                    with plots for the latter three.
+                    
+                    For **surfaces**, WebDG symbolically computes explicit formulas for the:
+                    
+                    - the Jacobian (all first-order partial derivatives),
+                    - the Hessian(s) (all second-order partial derivatives),
+                    - the First Fundamental Form coefficients,
+                    - the Second Fundamental Form coefficients,
+                    - and the Gaussian, mean, and principal curvatues
+                    
+                    with plots for the three curvatures.
+                    
+                    ***
+                    
+                    #### Citation
+                    """, mathjax=True, className="mb-5"
+                ),
+                
+                dcc.Markdown(
+                    r"""    
                     As a professional courtesy, I ask to be acknowledged with citation when appropriate (e.g. American Mathematical Society style citation):
                     
                     Hefner, M. W. (2025), *WebDG*, https://mathymattic.pythonanywhere.com/webdg, (accessed Debructober 32, 3025).
@@ -261,14 +317,18 @@ layout = html.Div(
                     ***
                     
                     #### Support
-                    
+                    """, mathjax=True, className="mb-5"
+                ),
+                
+                dcc.Markdown(
+                    r"""    
                     This app costs money to maintain and keep online. You can help keep this tool free and available for everyone by [supporting me on patreon.]() Patreon supporters recieve priority consideration for new feature requests and app suggestions. You can also show your support by sharing this app!
                     
-                    This application is built with free and open source technology. To read more about the software used, see the [Dash web application framework](), [mathjs](https://mathjs.org), and the [p5.js javascript library](). To suggest features, report a bug, or get more information, please select the "artist home" button at the bottom right.
+                    This application is built with free and open source technology. To read more about the software used, see the [Dash web application framework](), [mathjs](https://mathjs.org), and the [p5.js javascript library](). To suggest features, report a bug, or get more information, please select the "creator" button at the bottom right.
                     
                     ***
                     
-                    """
+                    """, mathjax=True
                 ),
                 
                 dcc.Markdown(
@@ -355,6 +415,13 @@ clientside_callback(
     ClientsideFunction(namespace="differential_geometry", function_name="refresh"),
     Output("refresh_dummy_target", "data"),
     Input("re_start_engine", "n_clicks")
+)
+
+# This callback will run the 'killswitch_engage' function when the URL changes
+clientside_callback(
+    ClientsideFunction(namespace="differential_geometry", function_name="killswitch_engage"),
+    Output("killswitch_dummy_target", "data"),
+    Input("webdg_url", "href")  # Trigger when the URL changes
 )
 
 # The following callbacks operate the modals for the Subject,

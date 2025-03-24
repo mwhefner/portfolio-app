@@ -57,7 +57,7 @@ curves = html.Div(
             
             ## The curve 
             
-            $$\alpha=(X(t),Y(t),Z(t))$$
+            $$\alpha(t)=(X(t),Y(t),Z(t))$$
 
         """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
@@ -100,7 +100,7 @@ curves = html.Div(
             
             ## The first derivative 
             
-            $$\alpha'=(X'(t),Y'(t),Z'(t))$$
+            $$\alpha'(t)=(X'(t),Y'(t),Z'(t))$$
 
         """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
@@ -143,7 +143,7 @@ curves = html.Div(
             
             ## The second derivative 
             
-            $$\alpha''=(X''(t),Y''(t),Z''(t))$$
+            $$\alpha''(t)=(X''(t),Y''(t),Z''(t))$$
 
         """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
@@ -186,7 +186,7 @@ curves = html.Div(
             
             ## The third derivative 
              
-            $$\alpha'''=(X'''(t),Y'''(t),Z'''(t))$$
+            $$\alpha'''(t)=(X'''(t),Y'''(t),Z'''(t))$$
 
         """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
@@ -995,6 +995,7 @@ def makeSurfaceCurvaturePlot(surface_data, light, c):
         x=v,
         y=u,
         z=surface_data[c],
+        zmid=0,
         colorscale='Cividis',  # Set the color scale
         hovertemplate = (
             f'u: %{{x}}<br>'    # Display the u value

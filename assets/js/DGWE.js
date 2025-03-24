@@ -78,9 +78,10 @@ getDataAtT : function(t, TNB_data) {
 
 // (3) Plot T, N, and B vectors at a given t value using p5.js
 plotTNB : function(t, TNB_data, p, index = null) {
+
     let data = this.getDataAtT(t, TNB_data);
 
-    if (index) {
+    if (index || index === 0) {
         data = this.getDataAtIndex(index, TNB_data);
     }
 
@@ -121,7 +122,7 @@ drawBackground : function(p) {
 
 parse_constant: function(pre, value) {
     if (!value) {
-        return "Please enter a valid value in the input form to parse.";
+        return ["Please enter a valid value in the input form to parse.", 0];
     }
 
     try {
@@ -142,11 +143,11 @@ parse_constant: function(pre, value) {
         }
 
         // Format as LaTeX
-        return "$$" + pre + " " + parsed.toTex() + "$$";
+        return ["$$" + pre + " " + parsed.toTex() + "$$", evaluated];
 
     } catch (e) {
         
-        return "Input could not be parsed. Please try again.";
+        return ["Input could not be parsed. Please try again.", 0];
     }
 },
     
@@ -220,7 +221,7 @@ refresh : function () {
 
         p.setup = function () {
 
-            console.log("Setting up landing page sketch.");
+            //console.log("Setting up landing page sketch.");
             
             // Run the safe setup function
             dg.safe_setup(p);
@@ -302,10 +303,10 @@ refresh : function () {
 
     if (typeof WebDG_Sketch !== "undefined") {
         WebDG_Sketch.remove(); // This properly disposes of the old instance
-        console.log("Existing WebDG instance destroyed. cya");
+        //console.log("Existing WebDG instance destroyed. cya");
     }
 
-    console.log("A new WebDG instance is being created.");
+    //console.log("A new WebDG instance is being created.");
 
     WebDG_Sketch = new p5(landing_sketch);
 
@@ -325,7 +326,7 @@ curve_sketch : function (curveData) {
 
 
     p.setup = function () {
-        // console.log("Setting up the subject sketch of:", curveData);
+        // //console.log("Setting up the subject sketch of:", curveData);
             
         // Run the safe setup function
         dg.safe_setup(p);
@@ -339,6 +340,13 @@ curve_sketch : function (curveData) {
       
         // Point it at the origin.
         cam.lookAt(0, 0, 0);
+
+        document.addEventListener('wheel', function(event) {
+            //console.log(event);
+            if (event.ctrlKey && event.deltaY !== 0) {
+              event.preventDefault();
+            }
+          }, { passive: false });
 
     };
     
@@ -383,6 +391,7 @@ curve_sketch : function (curveData) {
         if (!dg.TNB_select_disabled && dg.TNB_select === "anchor") {
             dg.plotTNB(dg.TNB_anchor_slider, dg.TNB_data, p);
         } else if (!dg.TNB_select_disabled && dg.TNB_select === "animated") {
+
             if (dg.animation_position >= dg.TNB_data.position.length) {
                 dg.animation_position = 0;
             }
@@ -451,10 +460,10 @@ curve_sketch : function (curveData) {
 
     if (typeof WebDG_Sketch !== "undefined") {
         WebDG_Sketch.remove(); // This properly disposes of the old instance
-        console.log("Existing WebDG instance destroyed. cya");
+        //console.log("Existing WebDG instance destroyed. cya");
     }
 
-    console.log("A new WebDG instance is being created.");
+    //console.log("A new WebDG instance is being created.");
 
     WebDG_Sketch = new p5(sketch_function);
 
@@ -463,14 +472,25 @@ curve_sketch : function (curveData) {
 }, // This ends create_sketch
 
 // The function ran to build a sketch around a surface
-surface_sketch : function (obj_file) {
+surface_sketch : function (obj_file, colorsJSON, s_nu_validated, s_nv_validated, colorby) {
 
 
     const subject_model = obj_file;
 
+
     //subject
     let subject;
     let cam;
+    let graphicsBuffer;
+    if (typeof colorsJSON === 'string') {
+        try {
+            vertexColors = JSON.parse(colorsJSON);  // Parse the string into an object
+        } catch (e) {
+            console.error('Error parsing colorsJSON:', e);
+        }
+    } else {
+        vertexColors = colorsJSON;  // If it's already an object, use it as is
+    }
 
     // Get the subnamespace to refer to variables more efficiently
     let dg = window.dash_clientside.differential_geometry;
@@ -479,7 +499,7 @@ surface_sketch : function (obj_file) {
 
 
     p.setup = function () {
-        // console.log("Setting up the subject sketch of:", obj_file);
+        // //console.log("Setting up the subject sketch of:", obj_file);
     
         // Run the safe setup function
         dg.safe_setup(p);
@@ -495,6 +515,36 @@ surface_sketch : function (obj_file) {
         cam.lookAt(0, 0, 0);
 
         subject = p.createModel(subject_model, '.obj');
+
+        //console.log("I'm inside the setup of the p5js sketch and I have the colors right here man:", s_nu_validated, s_nv_validated);
+
+        graphicsBuffer = p.createGraphics(s_nu_validated, s_nv_validated);
+
+        // Load the pixels array to initialize it for manipulation
+        graphicsBuffer.loadPixels();
+
+        // Map colors to texture pixels graphics buffer
+        for (let i = 0; i < vertexColors.length; i++) {
+
+            let { u, v, r, g, b, u_index, v_index } = vertexColors[i];
+
+            let index = (u_index - 1 + v_index * graphicsBuffer.width) * 4;
+
+            graphicsBuffer.pixels[index] = r;
+            graphicsBuffer.pixels[index + 1] = g;
+            graphicsBuffer.pixels[index + 2] = b;
+            graphicsBuffer.pixels[index + 3] = 255;  // Alpha
+
+        }
+
+        graphicsBuffer.updatePixels();
+
+        document.addEventListener('wheel', function(event) {
+            if (event.ctrlKey && event.deltaY !== 0) {
+              event.preventDefault();
+            }
+          }, { passive: false });
+
     };
     
     p.draw = function () {
@@ -525,30 +575,44 @@ surface_sketch : function (obj_file) {
             p.sphere(3); // Adjust size as needed
             p.pop();
         }
-    
-        // Set lighting
-        // Set lighting
-        p.ambientLight(dg.ambient_light[0], dg.ambient_light[1], dg.ambient_light[2]); // Ambient light with moderate intensity
 
 
-        p.directionalLight(dg.x_light[0], dg.x_light[1], dg.x_light[2], 1, 0, 0);
-        p.directionalLight(dg.y_light[0], dg.y_light[1], dg.y_light[2], 0, 1, 0);
-        p.directionalLight(dg.z_light[0], dg.z_light[1], dg.z_light[2], 0, 0, 1);
-        p.ambientMaterial(255); // Ensure the model reacts to lighting
-        p.shininess(dg.surfaceShine);       // Make highlights pop
-        p.specularMaterial(255);
-    
+        //  LIGHTING AND COLOR BY
+        if (colorby === "normal") {
+
+            p.normalMaterial();
+            //p.ambientLight(255);
+
+        } else if (colorby === "lighting") {
+
+            // scene lighting
+            p.ambientLight(dg.ambient_light[0], dg.ambient_light[1], dg.ambient_light[2]); // Ambient light with moderate intensity
+
+
+            p.directionalLight(dg.x_light[0], dg.x_light[1], dg.x_light[2], 1, 0, 0);
+            p.directionalLight(dg.y_light[0], dg.y_light[1], dg.y_light[2], 0, 1, 0);
+            p.directionalLight(dg.z_light[0], dg.z_light[1], dg.z_light[2], 0, 0, 1);
+
+            p.shininess(dg.surfaceShine);       // Make highlights pop
+            p.specularMaterial(255);
+
+        } else {
+
+            p.texture(graphicsBuffer);
+            p.ambientLight(255);
+
+        }
+
         p.push(); 
+
         p.rotateX(p.PI);
         
-        p.fill(255);
         p.strokeWeight(0);
 
         p.scale(dg.scaler);
-        
-    
+
         p.model(subject);
-    
+
         p.pop();
 
         p.strokeWeight(1);
@@ -586,10 +650,10 @@ surface_sketch : function (obj_file) {
 
     if (typeof WebDG_Sketch !== "undefined") {
         WebDG_Sketch.remove(); // This properly disposes of the old instance
-        console.log("Existing WebDG instance destroyed. cya");
+        //console.log("Existing WebDG instance destroyed. cya");
     }
 
-    console.log("A new WebDG instance is being created.");
+    //console.log("A new WebDG instance is being created.");
 
     WebDG_Sketch = new p5(sketch_function);
 
@@ -675,16 +739,16 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
         let rendering_alert = document.getElementById('rendering_alert');
         
         if (alert) {
-            console.log('explicitly showing rendering_alert!');
+            //console.log('explicitly showing rendering_alert!');
             rendering_alert.style.display = 'block';
         } else {
-            console.log('rendering_alert not found!');
+            //console.log('rendering_alert not found!');
         }
         
         // Listen for the result from the worker------------------
         worker.onmessage = function(e) {
 
-            console.log('The worker is done! She says:', e.data);
+            //console.log('The worker is done! She says:', e.data);
 
 
 
@@ -697,10 +761,10 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
             rendering_alert = document.getElementById('rendering_alert');
             
             if (alert) {
-                console.log('hide rendering_alert!');
+                //console.log('hide rendering_alert!');
                 rendering_alert.style.display = 'none';
             } else {
-                console.log('rendering_alert not found!');
+                //console.log('rendering_alert not found!');
             }
             
 
@@ -715,7 +779,7 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
                 if (success_alert) {
                     success_alert.style.display = 'block';
                 } else {
-                    console.log('success_alert not found!  (may be normal)');
+                    //console.log('success_alert not found!  (may be normal)');
                 }
                 
                 
@@ -726,7 +790,7 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
                     // far less computationally intense and do not involve lighting
                     dg.curve_sketch(e.data.obj_file);    
                 } else if (triggered_id === "render_surface") {
-                    dg.surface_sketch(e.data.obj_file); 
+                    dg.surface_sketch(e.data.obj_file, e.data.colorJSON, s_nu_validated, s_nv_validated, s_colorby); 
                 } else if (triggered_id === "render_surface") {
                     dg.embedded_curve_sketch(e.data.obj_file); 
                 } 
@@ -741,7 +805,7 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
                         failure_alert.style.display = 'none';
                     }, 5000); // 5000 ms = 5 second timeout for failure
                 } else {
-                    console.log('failure_alert not found!');
+                    //console.log('failure_alert not found!');
                 }
                 
             }
@@ -777,7 +841,7 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
             "s_colorby" : s_colorby
         };
 
-        console.log("Updating store_math with: ", math_store_data);
+        //console.log("Updating store_math with: ", math_store_data);
         
         return [{ display: 'block'}, math_store_data];
     }
@@ -788,7 +852,7 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
 
 render_curve_analytics: function(curve_data) {
 
-    console.log("I've been asked to render analytics of: ", curve_data);
+    //console.log("I've been asked to render analytics of: ", curve_data);
 
     // Get the math expressions
     const x_expr = math.parse(curve_data['c_x_validated']);
@@ -916,7 +980,7 @@ render_curve_analytics: function(curve_data) {
         "position" : positions
     };
 
-    console.log("Computed Curvature, Torsion, and Frenet-Serret Data:", data);
+    //console.log("Computed Curvature, Torsion, and Frenet-Serret Data:", data);
 
     return [
         `\n\n $X(t)=${x_latex}$\n\n$Y(t)=${y_latex}$\n\n$Z(t)=${z_latex}$`,
@@ -947,7 +1011,7 @@ render_curve_analytics: function(curve_data) {
 },
 
 render_surface_analytics: function(surface_data) {
-    console.log("I've been asked to render analytics of: ", surface_data);
+    //console.log("I've been asked to render analytics of: ", surface_data);
 
     // Get the math expressions
     const x_expr = surface_data['s_x_validated'];
@@ -1135,7 +1199,7 @@ render_surface_analytics: function(surface_data) {
         "v" : v_values
     };
 
-    console.log(data);
+    //console.log(data);
 
 
     return [
@@ -1161,6 +1225,14 @@ render_surface_analytics: function(surface_data) {
 
     ];
 
+},
+
+killswitch_engage : function() {
+    //console.log("Killswitch engaged.");
+    if (typeof WebDG_Sketch !== "undefined") {
+        WebDG_Sketch.remove(); // This properly disposes of the old instance
+        //console.log("Existing WebDG instance destroyed. cya");
+    }
 }
 
 }; // This ends the namespace

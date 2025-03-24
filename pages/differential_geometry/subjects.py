@@ -330,6 +330,7 @@ curves = html.Div(
                         {"label": "its speed.", "value": "Speed"},
                         {"label": "its curvature.", "value": "Curvature"},
                         {"label": "its torsion.", "value": "Torsion"},
+                        {"label": "its t coordinates.", "value": "t"},
                         {"label": "its (X,Y,Z) coordinates.", "value": "xyz"},
                         {"label": "this solid color:", "value": "Solid Color"},
                     ],
@@ -608,25 +609,28 @@ clientside_callback(
         te_value = te_value.trim();
         
         let results = {
-            ts: dg.parse_constant("t_{\\text{start}}=", ts_value, ["t"]),
-            te: dg.parse_constant("t_{\\text{end}}=", te_value, ["t"]),
-            nt: dg.parse_constant("n_t=", nt_value, ["t"])
+            ts: dg.parse_constant("t_{\\text{start}}=", ts_value, ["t"])[0],
+            te: dg.parse_constant("t_{\\text{end}}=", te_value, ["t"])[0],
+            nt: dg.parse_constant("n_t=", nt_value, ["t"])[0],
+            START: dg.parse_constant("", ts_value, ["t"])[1],
+            END: dg.parse_constant("", te_value, ["t"])[1],
+            
         };
         
         function isValid(value) {
-            return typeof value === "string" && value.startsWith("$") && !(te_value <= ts_value);
+            return typeof value === "string" && value.startsWith("$");
         }
 
         return [
             results.ts, results.te, results.nt,
-            isValid(results.ts),
-            isValid(results.te),
+            isValid(results.ts) && results.START < results.END,
+            isValid(results.te) && results.START < results.END,
             isValid(results.nt),
-            !isValid(results.ts),
-            !isValid(results.te),
+            !isValid(results.ts) || results.START >= results.END,
+            !isValid(results.te) || results.START >= results.END,
             !isValid(results.nt),
-            isValid(results.ts) ? ts_value : "0",
-            isValid(results.te) ? te_value : "1",
+            isValid(results.ts) && results.START < results.END ? ts_value : "0",
+            isValid(results.te) && results.START < results.END ? te_value : "1",
             isValid(results.nt) ? nt_value : "1"
         ];
     }
@@ -635,12 +639,15 @@ clientside_callback(
         Output("c_tstart_formtext", "children"),
         Output("c_tend_formtext", "children"),
         Output("c_nt_formtext", "children"),
+        
         Output("c_tstart", "valid"),
         Output("c_tend", "valid"),
         Output("c_nt", "valid"),
+        
         Output("c_tstart", "invalid"),
         Output("c_tend", "invalid"),
         Output("c_nt", "invalid"),
+        
         Output("c_tstart_validated", "data"),
         Output("c_tend_validated", "data"),
         Output("c_nt_validated", "data")
@@ -1118,15 +1125,21 @@ surfaces = html.Div(
                 dbc.InputGroupText("Color surface by"),
                 dbc.Select(
                     options=[
-                        {"label": "scene lighting.", "value": "Solid Color"},
+                        {"label": "UV coordinates.", "value": "uv"},
+                        {"label": "XYZ coordinates.", "value": "xyz"},
+                        {"label": "scene lighting.", "value": "lighting"},
+                        {"label": "surface normal.", "value": "normal"},
+                        {"label": "Gaussian curvature.", "value": "gaussian"},
+                        {"label": "mean curvature.", "value": "mean"},
+                        {"label": "principal curvature (k1)", "value": "k1"},
+                        {"label": "principal curvature (k2)", "value": "k2"},
                     ],
-                    value="Solid Color",
+                    value="lighting",
                     id="s_colorby",
                     className="flex-grow-1",
                 )
             ],
-            className="mb-3",
-            style={'display' : 'none'}
+            className="mb-3"
         ),
 
         dcc.Markdown("***"),
@@ -1395,26 +1408,32 @@ clientside_callback(
     function(n_clicks, ts_value, te_value, nt_value) {
         let dg = window.dash_clientside.differential_geometry;
         
+        ts_value = ts_value.trim();
+        te_value = te_value.trim();
+        
         let results = {
-            ts: dg.parse_constant("u_{\\text{start}}=", ts_value, ["t"]),
-            te: dg.parse_constant("u_{\\text{end}}=", te_value, ["t"]),
-            nt: dg.parse_constant("n_u=", nt_value, ["t"])
+            ts: dg.parse_constant("t_{\\text{start}}=", ts_value, ["t"])[0],
+            te: dg.parse_constant("t_{\\text{end}}=", te_value, ["t"])[0],
+            nt: dg.parse_constant("n_t=", nt_value, ["t"])[0],
+            START: dg.parse_constant("", ts_value, ["t"])[1],
+            END: dg.parse_constant("", te_value, ["t"])[1],
+            
         };
         
         function isValid(value) {
-            return typeof value === "string" && value.startsWith("$") && !(te_value <= ts_value);
+            return typeof value === "string" && value.startsWith("$");
         }
 
         return [
             results.ts, results.te, results.nt,
-            isValid(results.ts),
-            isValid(results.te),
+            isValid(results.ts) && results.START < results.END,
+            isValid(results.te) && results.START < results.END,
             isValid(results.nt),
-            !isValid(results.ts),
-            !isValid(results.te),
+            !isValid(results.ts) || results.START >= results.END,
+            !isValid(results.te) || results.START >= results.END,
             !isValid(results.nt),
-            isValid(results.ts) ? ts_value : "0",
-            isValid(results.te) ? te_value : "1",
+            isValid(results.ts) && results.START < results.END ? ts_value : "0",
+            isValid(results.te) && results.START < results.END ? te_value : "1",
             isValid(results.nt) ? nt_value : "1"
         ];
     }
@@ -1450,26 +1469,32 @@ clientside_callback(
     function(n_clicks, ts_value, te_value, nt_value) {
         let dg = window.dash_clientside.differential_geometry;
         
+        ts_value = ts_value.trim();
+        te_value = te_value.trim();
+        
         let results = {
-            ts: dg.parse_constant("v_{\\text{start}}=", ts_value, ["t"]),
-            te: dg.parse_constant("v_{\\text{end}}=", te_value, ["t"]),
-            nt: dg.parse_constant("n_v=", nt_value, ["t"])
+            ts: dg.parse_constant("t_{\\text{start}}=", ts_value, ["t"])[0],
+            te: dg.parse_constant("t_{\\text{end}}=", te_value, ["t"])[0],
+            nt: dg.parse_constant("n_t=", nt_value, ["t"])[0],
+            START: dg.parse_constant("", ts_value, ["t"])[1],
+            END: dg.parse_constant("", te_value, ["t"])[1],
+            
         };
         
         function isValid(value) {
-            return typeof value === "string" && value.startsWith("$") && !(te_value <= ts_value);
+            return typeof value === "string" && value.startsWith("$");
         }
 
         return [
             results.ts, results.te, results.nt,
-            isValid(results.ts),
-            isValid(results.te),
+            isValid(results.ts) && results.START < results.END,
+            isValid(results.te) && results.START < results.END,
             isValid(results.nt),
-            !isValid(results.ts),
-            !isValid(results.te),
+            !isValid(results.ts) || results.START >= results.END,
+            !isValid(results.te) || results.START >= results.END,
             !isValid(results.nt),
-            isValid(results.ts) ? ts_value : "0",
-            isValid(results.te) ? te_value : "1",
+            isValid(results.ts) && results.START < results.END ? ts_value : "0",
+            isValid(results.te) && results.START < results.END ? te_value : "1",
             isValid(results.nt) ? nt_value : "1"
         ];
     }
@@ -1594,7 +1619,7 @@ embedded_curves = html.Div([
 # Embedded Curve callbacks
 
 # RENDER CALLBACK
-# This callback runs the refresh function
+# This renders the p5.js sketch of the requested subject
 clientside_callback(
     ClientsideFunction(namespace="differential_geometry", function_name="render_webdg"),
     [

@@ -323,7 +323,7 @@ clientside_callback(
         
         if (data) {
             dg.TNB_data = data;
-            console.log(data);
+            //console.log(data);
         }
         
         const hide = {'display': 'none'};
