@@ -209,6 +209,12 @@ layout = dbc.Card(
                     
                     dcc.Markdown("***\n### Surfaces",className="my-4"),
                     
+                    dbc.Label(
+                        dcc.Markdown("Shine"),
+                        className="pb-0 mb-0",
+                        style={'user-select': 'none',"fontSize": "1.5em",}
+                    ),
+                            
                     dcc.Slider(
                         min=0, 
                         max=50, 
