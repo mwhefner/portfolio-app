@@ -421,7 +421,7 @@ clientside_callback(
 clientside_callback(
     ClientsideFunction(namespace="differential_geometry", function_name="killswitch_engage"),
     Output("killswitch_dummy_target", "data"),
-    Input("webdg_url", "href")  # Trigger when the URL changes
+    Input("webdg_url", "pathname")  # Trigger when the URL changes
 )
 
 # The following callbacks operate the modals for the Subject,

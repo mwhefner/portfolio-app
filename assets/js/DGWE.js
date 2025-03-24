@@ -1227,9 +1227,9 @@ render_surface_analytics: function(surface_data) {
 
 },
 
-killswitch_engage : function() {
-    //console.log("Killswitch engaged.");
-    if (typeof WebDG_Sketch !== "undefined") {
+killswitch_engage : function(path) {
+    console.log("Killswitch engaged.", path);
+    if (typeof WebDG_Sketch !== "undefined" && path !== "/webdg") {
         WebDG_Sketch.remove(); // This properly disposes of the old instance
         //console.log("Existing WebDG instance destroyed. cya");
     }
