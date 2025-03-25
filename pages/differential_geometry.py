@@ -256,7 +256,7 @@ layout = html.Div(
                     r"""    
                     Made for both students and instructors, WebDG is a free and accessible web app robust enough to interactively explore the differential geometry of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.
                     
-                    **This software is free for anyone to use, to learn, or to teach others about differential geometry. No login, download, license, or subscription is required.**
+                    **This software is free for anyone to use to learn or to teach others about differential geometry. No login, download, license, or subscription is required.**
                     
                     This app costs money to maintain and keep online. People like you can keep this tool free and available for everyone with [a one-time or recurring donation through Buy Me a Coffee.](https://www.buymeacoffee.com/mwhefner) All major credit cards are accepted and no login is required to donate.
                     
