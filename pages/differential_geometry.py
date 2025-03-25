@@ -274,7 +274,7 @@ layout = html.Div(
                     
                     ##### Subjects
                     
-                    WebDG can be used to study either an abstract parametric curve or surface in space. Give WebDG the $\mathbb{R}^3$ parameterization of your differentiable manifold to see an interative visualization and analytics.
+                    WebDG can be used to study either an abstract parametric curve or surface in space. Give WebDG the $\mathbb{R}^3$ parameterization of your differentiable manifold to see an interactive visualization and analytics.
                     
                     """, mathjax=True, className="mb-5"
                 ),
