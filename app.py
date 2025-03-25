@@ -30,9 +30,12 @@ I tackle complex problems and transform data, math and science concepts into int
 
 <br>
 
-If you're looking to turn data or concepts into clear insights—or to build powerful tools to discover and communicate them—
+If you're interested in a collaboration or comission—
 
 ##### I am searching **right now** for new exciting roles and challenges!
+
+You can [Buy Me a Coffee](https://www.buymeacoffee.com/mwhefner) if you would like to support me and the applications I build.
+
 """
 
 # THEME
@@ -155,7 +158,8 @@ app.layout = dbc.Container([
                         ),
                         dbc.Col(
                             [
-                                html.Img(src="/assets/as_webp/webdg.webp", style={"width": "100%", "height": "auto", "borderRadius": "8px"},alt="The webdg logo",className="pe-4"),
+                                html.Img(src="/assets/as_webp/output_image.webp", style={"width": "100%", "height": "auto", "borderRadius": "8px"},alt="A strake showing Gaussian curvature",className="pe-4"),
+                                html.P("Gaussian curvature of a helical strake", style={"textAlign" : "center"})
                             ],
                             md=3,  # Adjust as needed
                         ),

@@ -9,7 +9,7 @@ dash.register_page(
     path="/nyt_best_sellers", 
     name="New York Times Best Sellers: Fiction", 
     title="New York Times Best Sellers: Fiction", 
-    description="Explore the history of New York Times' Best-Selling Fiction.", 
+    description="Explore the history of New York Times' Best-Selling Fiction. Made in under a week for the [Plotly community](https://community.plotly.com/)'s figure friday.", 
     image="assets/as_webp/nyt.webp"
 )
 

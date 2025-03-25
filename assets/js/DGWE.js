@@ -783,7 +783,7 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
                 }
                 
                 
-                // Build P5.js Sketch around recieved data
+                // Build P5.js Sketch around received data
                 
                 if (triggered_id === "render_curve") {
                     // Curves are rendered in real time since they're

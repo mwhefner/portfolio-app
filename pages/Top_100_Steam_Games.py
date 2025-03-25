@@ -11,7 +11,7 @@ dash.register_page(
     path='/Top_100_Steam_Games',
     title='Top 100 Steam Games',
     name='Top 100 Steam Games',
-    description="Interactively explore and compare the top 100 most played games on Steam by multiple tags and price.", 
+    description="Interactively explore and compare the top 100 most played games on Steam by multiple tags and price. Made in under a week for the [Plotly community](https://community.plotly.com/)'s figure friday.", 
     image="/assets/as_webp/Top_100_Steam_Games.webp"
 )
 # At some point I would like to learn to make this dynamic in the app
