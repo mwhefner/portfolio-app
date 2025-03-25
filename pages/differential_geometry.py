@@ -294,7 +294,7 @@ layout = html.Div(
                     
                     with plots for the latter three.
                     
-                    For **surfaces**, WebDG symbolically computes explicit formulas for the:
+                    For **surfaces**, WebDG symbolically computes explicit formulas for:
                     
                     - the Jacobian (all first-order partial derivatives),
                     - the Hessian(s) (all second-order partial derivatives),
