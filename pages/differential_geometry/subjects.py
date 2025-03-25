@@ -1563,7 +1563,6 @@ clientside_callback(
 )
 
 
-
 # EMBEDDED CURVE
 
 embedded_curves = html.Div([
@@ -1655,7 +1654,38 @@ clientside_callback(
     prevent_initial_call=True,
 )
 
-# control layout of subject modal
+# Subject modal layout
+layout = dbc.Card(
+    [
+        dbc.CardHeader(
+            dbc.Tabs(
+                [
+                    dbc.Tab(label="Curves", tab_id="curves"),
+                    dbc.Tab(label="Surfaces", tab_id="surfaces"),
+                    #dbc.Tab(label="Embedded Curves", tab_id="embedded curves"),
+                ],
+                id="subject-tabs",
+                active_tab="curves",
+            )
+        ),
+        dbc.CardBody(
+            html.Div(
+                id="subject-content", className="card-text", 
+                children=[
+                    html.Div(curves, id="curves-content", style={"display": "block"}),
+                    html.Div(surfaces, id="surfaces-content", style={"display": "none"}),
+                    html.Div(embedded_curves, id="embedded-curves-content", style={"display": "none"})
+                ]
+            )
+        ),
+    ],
+    className="px-0"
+)
+
+
+# Keeping the server callback around until I'm fully comfortable with the performance of the
+# clientside replacement below
+"""# control layout of subject modal
 @callback(
     Output("subject-content", "children"), Input("subject-tabs", "active_tab")
 )
@@ -1678,27 +1708,31 @@ def tab_content(active_tab = "curves"):
             [html.Div(curves, style={"display": "block"}),
             html.Div(surfaces, style={"display": "none"}),
             html.Div(embedded_curves, style={"display": "none"})]
-        ) 
+        )"""
 
-# Subject modal layout
-layout = dbc.Card(
-    [
-        dbc.CardHeader(
-            dbc.Tabs(
-                [
-                    dbc.Tab(label="Curves", tab_id="curves"),
-                    dbc.Tab(label="Surfaces", tab_id="surfaces"),
-                ],
-                id="subject-tabs",
-                active_tab="curves",
-            )
-        ),
-        dbc.CardBody(html.Div(tab_content(),id="subject-content", className="card-text")),
-    ],
-    
-    className = "px-0"
-    
+clientside_callback(
+    """
+    function(active_tab) {
+        let hide = {"display": "none"};
+        let show = {"display": "block"};
+
+        let curvesStyle = hide;
+        let surfacesStyle = hide;
+        let embeddedCurvesStyle = hide;
+
+        if (active_tab === "curves") {
+            curvesStyle = show;
+        } else if (active_tab === "surfaces") {
+            surfacesStyle = show;
+        } else if (active_tab === "embedded curves") {
+            embeddedCurvesStyle = show;
+        }
+
+        return [curvesStyle, surfacesStyle, embeddedCurvesStyle];
+    }
+    """,
+    Output("curves-content", "style"),
+    Output("surfaces-content", "style"),
+    Output("embedded-curves-content", "style"),
+    Input("subject-tabs", "active_tab"),
 )
-
-
-

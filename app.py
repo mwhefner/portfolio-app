@@ -150,11 +150,13 @@ app.layout = dbc.Container([
                     dbc.Row(
                         [
                         dbc.Col(
-                            dcc.Markdown(bio_text, dangerously_allow_html=True, style={"textAlign": "center"}),
+                            dcc.Markdown(bio_text, dangerously_allow_html=True, style={"textAlign": "center"}, className = "ps-5"),
                             md=9,  # Adjust as needed
                         ),
                         dbc.Col(
-                            html.Img(src="/assets/as_webp/20250121_151318 2.webp", style={"width": "100%", "height": "auto", "borderRadius": "8px"},alt="My portrait image"),
+                            [
+                                html.Img(src="/assets/as_webp/webdg.webp", style={"width": "100%", "height": "auto", "borderRadius": "8px"},alt="The webdg logo",className="pe-4"),
+                            ],
                             md=3,  # Adjust as needed
                         ),
                         ], align = "center"

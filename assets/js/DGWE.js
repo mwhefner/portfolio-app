@@ -1228,11 +1228,135 @@ render_surface_analytics: function(surface_data) {
 },
 
 killswitch_engage : function(path) {
-    console.log("Killswitch engaged.", path);
+    //console.log("Killswitch engaged.", path);
     if (typeof WebDG_Sketch !== "undefined" && path !== "/webdg") {
         WebDG_Sketch.remove(); // This properly disposes of the old instance
         //console.log("Existing WebDG instance destroyed. cya");
     }
-}
+},
+
+plot_c_kappa_tau: function(curve_data, light) {
+    if (!curve_data) {
+        return {
+            data: [],
+            layout: {}
+        };
+    }
+
+    // Function to round values to 5 decimal places
+    function roundArray(arr) {
+        return arr.map(val => Math.round(val * 1e8) / 1e8);
+    }
+
+    // Extract and round values
+    let speed_values = roundArray(curve_data["speed"]);
+    let curvature_values = roundArray(curve_data["curvature"]);
+    let torsion_values = roundArray(curve_data["torsion"]);
+    let t_values = roundArray(curve_data["t_values"]);
+
+    let theme = light ? "plotly_white" : "plotly_dark";
+
+    // Create traces
+    let traces = [
+        {
+            x: t_values,
+            y: speed_values,
+            mode: "lines+markers",
+            name: "Speed",
+            line: { color: "green" }
+        },
+        {
+            x: t_values,
+            y: curvature_values,
+            mode: "lines+markers",
+            name: "Curvature (κ)",
+            line: { color: "blue" }
+        },
+        {
+            x: t_values,
+            y: torsion_values,
+            mode: "lines+markers",
+            name: "Torsion (τ)",
+            line: { color: "red" }
+        }
+    ];
+
+    // Return figure
+    return {
+        data: traces,
+        layout: {
+            xaxis: { title: "t" },
+            yaxis: { title: "Metric" },
+            legend: { title: { text: "Metrics" } },
+            template: theme,
+            hovermode: "closest"
+        }
+    };
+},
+
+makeSurfaceCurvaturePlot: function(surface_data, light, c) {
+
+    //console.log(surface_data, light, c);
+
+    if (!surface_data) {
+        return { data: [], layout: {} };
+    }
+
+    let theme = light ? "plotly_white" : "plotly_dark";
+    let u = surface_data["u"];
+    let v = surface_data["v"];
+    let z = surface_data[c];
+
+    // Create the Heatmap trace
+    let trace = {
+        x: v,
+        y: u,
+        z: z,
+        type: "heatmap",
+        colorscale: "Cividis",
+        zmid: 0,
+        hovertemplate: 
+            `u: %{x}<br>` +
+            `v: %{y}<br>` +
+            `${c}: %{z:.2f}<extra></extra>`
+    };
+
+    // Return the Plotly figure
+    return {
+        data: [trace],
+        layout: {
+            template: theme,
+            margin: { t: 0, b: 0, l: 0, r: 0 },
+            xaxis: {
+                title: "v",
+                range: [Math.min(...v), Math.max(...v)],
+                scaleanchor: "y"
+            },
+            yaxis: {
+                title: "u",
+                range: [Math.min(...u), Math.max(...u)],
+                scaleanchor: "x",
+                autorange: "reversed"
+            },
+            autosize: true
+        }
+    };
+},
+
+makeSurfaceCurvaturePlot_K: function(surface_data, light) {
+    return this.makeSurfaceCurvaturePlot(surface_data, light, 'K');
+},
+
+makeSurfaceCurvaturePlot_H: function(surface_data, light) {
+    return this.makeSurfaceCurvaturePlot(surface_data, light, 'H');
+},
+
+makeSurfaceCurvaturePlot_k_1: function(surface_data, light) {
+    return this.makeSurfaceCurvaturePlot(surface_data, light, 'k_1');
+},
+
+makeSurfaceCurvaturePlot_k_2: function(surface_data, light) {
+    return this.makeSurfaceCurvaturePlot(surface_data, light, 'k_2');
+},
 
 }; // This ends the namespace

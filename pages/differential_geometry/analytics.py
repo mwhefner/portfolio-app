@@ -815,8 +815,52 @@ clientside_callback(
     Input("analytics_button", "disabled"),
 )
 
+clientside_callback(
+    """
+    function(n_clicks, data) {
+        let hide = {'display': 'none'};
+        let show = {'display': 'block'};
 
-@callback(
+        if (window.dash_clientside.callback_context.triggered.some(t => t.prop_id === "store_math.data")) {
+            return [hide, hide, hide, show, window.dash_clientside.no_update, window.dash_clientside.no_update, window.dash_clientside.no_update, true];
+        }
+
+        if (data && data.rendered) {
+            if (data.subject === "render_curve") {
+                return [show, hide, hide, hide, data, window.dash_clientside.no_update, window.dash_clientside.no_update, false];
+            }
+            if (data.subject === "render_surface") {
+                return [hide, show, hide, hide, window.dash_clientside.no_update, data, window.dash_clientside.no_update, true];
+            }
+            if (data.subject === "render_embedded_curve") {
+                return [hide, hide, show, hide, window.dash_clientside.no_update, window.dash_clientside.no_update, data, true];
+            }
+        }
+
+        return [hide, hide, hide, show, window.dash_clientside.no_update, window.dash_clientside.no_update, window.dash_clientside.no_update, true];
+    }
+    """,
+    Output("curves_analytics_container", "style"),
+    Output("surfaces_analytics_container", "style"),
+    Output("embedded_curves_analytics_container", "style"),
+    Output("not_yet_rendered_analytics_container", "style"),
+    
+    Output("store_curves_data", "data"),
+    Output("store_surfaces_data", "data"),
+    Output("store_embedded_curves_data", "data"),
+    
+    # update TNB selection to enabled when a curve is rendered
+    Output("tnb_select", "disabled"),
+    
+    Input("analytics_button", "n_clicks"),
+
+    Input("store_math", "data"),
+    
+    prevent_initial_callback=True
+)
+
+# Keeping old server callback around until I'm comfortable with the performance of the above
+"""@callback(
     Output("curves_analytics_container", "style"),
     Output("surfaces_analytics_container", "style"),
     Output("embedded_curves_analytics_container", "style"),
@@ -855,9 +899,7 @@ def analytics_content(n_clicks, data) :
         if data['subject'] == "render_embedded_curve" :
             return hide, hide, show, hide, no_update, no_update, data, True
         
-    return hide, hide, hide, show, no_update, no_update, no_update, True
-
-
+    return hide, hide, hide, show, no_update, no_update, no_update, True"""
 
 # callback functions for rendering curve analytics
 clientside_callback(
@@ -886,77 +928,12 @@ clientside_callback(
     prevent_initial_call=True  # This stops it from running on page load
 )
 
-@callback(
+clientside_callback(
+    ClientsideFunction(namespace="differential_geometry", function_name="plot_c_kappa_tau"),
     Output("c_kappa_tau_plot", "figure"),
-    Input("c_kappa_tau_plot_data", "data"),
-    Input('theme-switch', 'value'),
+    [Input("c_kappa_tau_plot_data", "data"),
+     Input("theme-switch", "value")]
 )
-def c_tau_kappa_plot_callback(curve_data, light):
-    
-    if curve_data is None :
-        return go.Figure()
-    
-    # Extract curvature and torsion from curve_data
-    speed_values = curve_data["speed"]
-    curvature_values = curve_data["curvature"]
-    torsion_values = curve_data["torsion"]
-    
-    # Convert to single precision floats (float32)
-    # this is to eliminate annoying (double) precision errors
-    speed_values = np.array(speed_values, dtype=np.float32)
-    curvature_values = np.array(curvature_values, dtype=np.float32)
-    torsion_values = np.array(torsion_values, dtype=np.float32)
-    
-    # Create a list of t values (use range for plotting, or create your own)
-    t_values = curve_data["t_values"]  # Assuming curve_data['curvature'] and ['torsion'] are of same length
-    
-    # Create the figure
-    fig = go.Figure()
-
-    # Plot Speed
-    fig.add_trace(go.Scatter(
-        x=t_values,
-        y=speed_values,
-        mode='lines+markers',
-        name="Speed",
-        line=dict(color='green'),
-    ))
-
-    # Plot Curvature (kappa)
-    fig.add_trace(go.Scatter(
-        x=t_values,
-        y=curvature_values,
-        mode='lines+markers',
-        name="Curvature (κ)",
-        line=dict(color='blue'),
-    ))
-
-    # Plot Torsion (tau)
-    fig.add_trace(go.Scatter(
-        x=t_values,
-        y=torsion_values,
-        mode='lines+markers',
-        name="Torsion (τ)",
-        line=dict(color='red'),
-    ))
-    
-    theme = "plotly_dark"
-    
-    if (light) :
-        theme = "plotly_white"
-
-    # Customize the layout
-    fig.update_layout(
-        xaxis_title="t",
-        yaxis_title="Metric",
-        legend_title="Metrics",
-        template=theme,
-        hovermode="closest"
-    )
-
-    # Return the plotly figure
-    return fig
-
 
 # callback functions for rendering surface analytics
 clientside_callback(
@@ -981,85 +958,38 @@ clientside_callback(
     prevent_initial_call=True  # This stops it from running on page load
 )
 
-def makeSurfaceCurvaturePlot(surface_data, light, c):
-    if surface_data is None:
-        return go.Figure()
-
-    # Set theme
-    theme = "plotly_dark" if not light else "plotly_white"
-    u = np.array(surface_data['u'])
-    v = np.array(surface_data['v'])
-
-    # Create the figure with the Heatmap trace
-    fig = go.Figure(data=go.Heatmap(
-        x=v,
-        y=u,
-        z=surface_data[c],
-        zmid=0,
-        colorscale='Cividis',  # Set the color scale
-        hovertemplate = (
-            f'u: %{{x}}<br>'    # Display the u value
-            f'v: %{{y}}<br>'    # Display the v value
-            f'{c}: %{{z:.2f}}'  # Display the selected column value with 2 decimal places
-            '<extra></extra>'   # Remove the extra trace information
-        )
-
-    ))
-
-    # Ensure the axis labels and ranges are set correctly
-    fig.update_layout(
-        template=theme,
-        margin=dict(t=0, b=0, l=0, r=0),
-        xaxis=dict(
-            title="v",  # Label the x-axis as "u"
-            range=[v.min(), v.max()],  # Set x-axis range to match u
-            scaleanchor="y",  # Lock x-axis to y-axis for equal scaling
-        ),
-        yaxis=dict(
-            title="u",  # Label the y-axis as "v"
-            range=[u.min(), u.max()],  # Set y-axis range to match v
-            scaleanchor="x",  # Lock y-axis to x-axis for equal scaling
-            autorange="reversed"  # Reverse the y-axis as needed
-        ),
-        autosize=True,  # Allow the figure to resize to the container's size
-    )
-
-
-    return fig
-
-
-@callback(
+# Clientside Callback for Gaussian Curvature (K)
+clientside_callback(
+    ClientsideFunction(namespace="differential_geometry", function_name="makeSurfaceCurvaturePlot_K"),
     Output("s_curvature_plot_K", "figure"),
     Input("s_curvature_plot_data", "data"),
     Input('theme-switch', 'value'),
+    prevent_initial_call=True
 )
-def c_tau_kappa_plot_callback(surface_data, light):
-    
-    return makeSurfaceCurvaturePlot(surface_data, light, 'K')
 
-@callback(
+# Clientside Callback for Mean Curvature (H)
+clientside_callback(
+    ClientsideFunction(namespace="differential_geometry", function_name="makeSurfaceCurvaturePlot_H"),
     Output("s_curvature_plot_H", "figure"),
     Input("s_curvature_plot_data", "data"),
     Input('theme-switch', 'value'),
+    prevent_initial_call=True
 )
-def c_tau_kappa_plot_callback(surface_data, light):
-    
-    return makeSurfaceCurvaturePlot(surface_data, light, 'H')
 
-@callback(
+# Clientside Callback for Principal Curvature k1
+clientside_callback(
+    ClientsideFunction(namespace="differential_geometry", function_name="makeSurfaceCurvaturePlot_k_1"),
     Output("s_curvature_plot_k1", "figure"),
     Input("s_curvature_plot_data", "data"),
     Input('theme-switch', 'value'),
+    prevent_initial_call=True
 )
-def c_tau_kappa_plot_callback(surface_data, light):
-    
-    return makeSurfaceCurvaturePlot(surface_data, light, 'k_1')
 
-@callback(
+# Clientside Callback for Principal Curvature k2
+clientside_callback(
+    ClientsideFunction(namespace="differential_geometry", function_name="makeSurfaceCurvaturePlot_k_2"),
     Output("s_curvature_plot_k2", "figure"),
     Input("s_curvature_plot_data", "data"),
     Input('theme-switch', 'value'),
+    prevent_initial_call=True
 )
-def c_tau_kappa_plot_callback(surface_data, light):
-    
-    return makeSurfaceCurvaturePlot(surface_data, light, 'k_2')

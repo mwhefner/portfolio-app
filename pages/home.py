@@ -23,6 +23,7 @@ dash.register_page(
 )
 
 def makeCard(page):
+    
     tags_dict = {
         "/Top_100_Steam_Games": {"web app", "games", "trending", "plotly figure friday", "interactive"},
         "/nyt_best_sellers": {"web app", "books", "trending", "plotly figure friday", "interactive"},
@@ -32,6 +33,7 @@ def makeCard(page):
         "/mix_paper": {"journal paper","climate change", "applied science", "research"},
         "/briggs": {"journal paper","climate change", "applied science", "research"},
         "/cdiac": {"education","climate change", "applied science", "research"},
+        "/webdg": {"web app", "education", "interactive"},
     }
 
     tag_colors = {
@@ -63,13 +65,31 @@ def makeCard(page):
         '/cdiac' : 'https://rieee.appstate.edu/projects-programs/cdiac/',
     }
     
+    last_updated = {
+        "/ggea" : "Last Updated 3.2024",
+        "/webdg" : "Last Updated 3.2025",
+        "/tonetornado" : "Last Updated 10.2024",
+        "/everest" : "Last Updated 4.2024",
+        "/mix_paper" : "",
+        '/briggs' : '',
+        '/cdiac' : 'Last Updated 11.2024',
+        "/Top_100_Steam_Games": "Last Updated 2.2025",
+        "/nyt_best_sellers": "Last Updated 2.2025",
+        
+    }
+    
+    last_update = ""
+    
     page_path = page["path"]
+    
+    if page_path in last_updated :
+        last_update = last_updated[page_path]
     
     if page_path in those_that_link :
         page_path = those_that_link[page_path]
-        
     
     badges = []
+    
     if page["path"] in tags_dict:
         badges = [
             dbc.Badge(tag, color=tag_colors.get(tag, "light"), className="m-1")
@@ -77,6 +97,7 @@ def makeCard(page):
         ]
     
     image = []
+    
     if page['image'] != "" :
         image = html.A(
             dbc.CardImg(alt=page.get("description", "/static/images/placeholder286x180.png"),src=page.get("image", "/static/images/placeholder286x180.png"), top=True),
@@ -94,18 +115,18 @@ def makeCard(page):
                         className="text-decoration-none"  # Optional styling
                     ),
                     html.Div(badges, className="mb-2"),  # Display badges between H4 and P
-                    html.P(
+                    dcc.Markdown(
                         page.get("description", "No description available."),
                         className="card-text",
                     ),
                     dbc.Button("Visit", color="primary", href=page_path),
                 ]
             ),
+            
+            html.P([html.I(last_update)], className="my-0 ps-3") if last_update is not "" else None
         ],
         className="me-3 mb-3 p-3 custom-shadow-card"
     )
-
-
 
 # Empty layout to be populated by a callback
 layout = dbc.Row(
@@ -113,7 +134,11 @@ layout = dbc.Row(
     className="justify-content-center"
 )
 
-excluded_pages = ["/not-found-404", "/"] + ["/gregg", "/webdg"]
+excluded_pages = ["/not-found-404", "/"] + ["/gregg"]
+
+column_one_paths = ["/webdg", "/mix_paper", "/tonetornado"]
+column_two_paths = ["/ggea", "/everest", "/Top_100_Steam_Games"]
+column_three_paths = ["/cdiac", "/briggs", "/nyt_best_sellers"]
 
 # Callback to populate the layout on app startup
 @dash.callback(
@@ -124,6 +149,13 @@ def populate_cards(_):
 
     pages = [page for page in dash.page_registry.values() if (page["path"] not in excluded_pages)]
     
+    # Create a dictionary for easy lookup
+    page_dict = {page["path"]: makeCard(page) for page in pages}
+    
+    # Create lists of pages that match the paths, maintaining the specified order
+    column_one_pages = [page_dict[path] for path in column_one_paths if path in page_dict]
+    column_two_pages = [page_dict[path] for path in column_two_paths if path in page_dict]
+    column_three_pages = [page_dict[path] for path in column_three_paths if path in page_dict]
     
     return dbc.Col([
         
@@ -139,9 +171,9 @@ def populate_cards(_):
 
         
         dbc.Row([
-            dbc.Col([makeCard(page) for i, page in enumerate(pages) if i % 3 == 0], className = "p-0"),
-            dbc.Col([makeCard(page) for i, page in enumerate(pages) if i % 3 == 1], className = "p-0"),
-            dbc.Col([makeCard(page) for i, page in enumerate(pages) if i % 3 == 2], className = "p-0")
+            dbc.Col(column_one_pages, className = "p-0"),
+            dbc.Col(column_two_pages, className = "p-0"),
+            dbc.Col(column_three_pages, className = "p-0")
         ],
                 
     )],style={'overflowY': 'auto', 'height': '100vh'})
