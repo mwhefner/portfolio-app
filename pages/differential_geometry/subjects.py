@@ -36,6 +36,8 @@ curves = html.Div(
             - Use "Parse" to have WebDG process, understand, and validate an input. 
 
             - Once all inputs have valid parses, use "Render Subject" at the bottom to begin computing the approximation of your curve from the parsed inputs.
+            
+            The Frenet-Serret frame can be shown using the Settings menu after rendering analytics.
 
             ***
 
@@ -765,8 +767,11 @@ surfaces = html.Div(
                         {"label": "Torus", "value": "Torus"},
                         {"label": "Helical Strake", "value": "Helical Strake"},
                         {"label": "Cone", "value": "Cone"},
-                        {"label": 'Möbius strip', "value": "Mobius"},
-                        {"label": '"Figure 8" Immersion of Klein Bottle', "value": "Klein Bottle"},
+                        {"label": 'Möbius Strip', "value": "Mobius"},
+                        {"label": 'Enneper Surface', "value": "Enneper"},
+                        {"label": "Dini's Surface", "value": "Dini"},
+                        {"label": "Helicatenoid", "value": "Helicatenoid"},
+                        {"label": '"Figure 8" Immersion of a Klein Bottle', "value": "Klein Bottle"},
                     ],
                     persistence=True,
                     persistence_type = "memory",
@@ -1232,6 +1237,39 @@ clientside_callback(
                     "s_vstart": "1",
                     "s_vend": "3",
                     "s_nv": 30
+                },
+                "Enneper": {
+                    "s_xcomponent": "(1/3) * u * (1 - (1/3) * u^2 + v^2)",
+                    "s_ycomponent": "(1/3) * v * (1 - (1/3) * v^2 + u^2)",
+                    "s_zcomponent": "(1/3) * (u^2 - v^2)",
+                    "s_ustart": "-2.5",
+                    "s_uend": "2.5",
+                    "s_nu": 75,
+                    "s_vstart": "-2.5",
+                    "s_vend": "2.5",
+                    "s_nv": 75
+                },
+                "Dini": {
+                    "s_xcomponent": "cos(u) sin(v)",
+                    "s_ycomponent": "cos(v) log(tan(v/2)) + 0.2 u",
+                    "s_zcomponent": "sin(u) sin(v)",
+                    "s_ustart": "-8 pi",
+                    "s_uend": "8 pi",
+                    "s_nu": 200,
+                    "s_vstart": "0.1",
+                    "s_vend": "1",
+                    "s_nv": 100
+                },
+                "Helicatenoid": {
+                    "s_xcomponent": "cos(pi / 4) * (3 cosh( u / 3) cos(v)) + sin(pi / 4) * (3 * sinh(u / 3) sin(v))",
+                    "s_ycomponent": "-cos(pi / 4) * (3 cosh( u / 3) cos(v)) + sin(pi / 4) * (3 * sinh(u / 3) cos(v))",
+                    "s_zcomponent": "cos(pi / 4) * u + sin(pi / 4) * 3 v",
+                    "s_ustart": "-pi",
+                    "s_uend": "pi",
+                    "s_nu": 200,
+                    "s_vstart": "-2 pi",
+                    "s_vend": "pi",
+                    "s_nv": 100
                 },
                 "Mobius": {
                     "s_xcomponent": "3 * (1 + (v / 2) * cos((u) / 2)) * cos(u)",

@@ -231,7 +231,7 @@ layout = html.Div(
                 dcc.Markdown(
                     r"""          
                     
-                    Version 1.0.0
+                    Version 1.0.1
                     
                     _A free **Web** application for **D**ifferential **G**eometry education._
                     
