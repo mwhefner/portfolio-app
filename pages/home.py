@@ -28,7 +28,7 @@ def makeCard(page):
         "/Top_100_Steam_Games": {"web app", "games", "trending", "plotly figure friday", "interactive"},
         "/nyt_best_sellers": {"web app", "books", "trending", "plotly figure friday", "interactive"},
         "/ggea": {"web app", "education", "climate change", "applied science", "research", "interactive"},
-        "/tonetornado": {"web app", "music", "education", "interactive"},
+        "/spectrawhorl": {"web app", "music", "education", "interactive"},
         "/everest": {"web app", "education","climate change", "applied science", "research"},
         "/mix_paper": {"journal paper","climate change", "applied science", "research"},
         "/briggs": {"journal paper","climate change", "applied science", "research"},
@@ -58,17 +58,17 @@ def makeCard(page):
     
     those_that_link = {
         "/ggea" : "https://datadash.appstate.edu/cdiac",
-        "/tonetornado" : "https://www.tonetornado.com",
         "/everest" : "https://datadash.appstate.edu/high-altitude-climate/lb",
         "/mix_paper" : "https://link.springer.com/article/10.1007/s11027-024-10149-x",
         '/briggs' : 'https://doi.org/10.1017/eds.2023.38',
         '/cdiac' : 'https://rieee.appstate.edu/projects-programs/cdiac/',
+        '/spectrawhorl' : 'https://www.tonetornado.com/',
     }
     
     last_updated = {
         "/ggea" : "Last Updated 3.2024",
         "/webdg" : "Last Updated 3.2025",
-        "/tonetornado" : "Last Updated 10.2024",
+        "/spectrawhorl" : "Last Updated 3.2025",
         "/everest" : "Last Updated 4.2024",
         "/mix_paper" : "",
         '/briggs' : '',
@@ -136,7 +136,7 @@ layout = dbc.Row(
 
 excluded_pages = ["/not-found-404", "/"] + ["/gregg"]
 
-column_one_paths = ["/webdg", "/mix_paper", "/tonetornado"]
+column_one_paths = ["/webdg", "/mix_paper", "/spectrawhorl"]
 column_two_paths = ["/ggea", "/everest", "/Top_100_Steam_Games"]
 column_three_paths = ["/cdiac", "/briggs", "/nyt_best_sellers"]
 
