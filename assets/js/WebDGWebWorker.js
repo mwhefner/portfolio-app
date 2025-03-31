@@ -1181,17 +1181,15 @@ function createLevelSurfaceOBJ(params) {
     
         // Calculate and add normals
         let normal = calculateNormal(triangle.p[0], triangle.p[1], triangle.p[2]);
-        triangleVertices.forEach(() => {
-            normals.push(`vn ${normal}`);
-        });
+        normals.push(`vn ${normal}`);
         
         // Create face entries with both vertex and normal indices
-        let face = `f ${vertexIndex}//${normalIndex} ${vertexIndex + 1}//${normalIndex + 1} ${vertexIndex + 2}//${normalIndex + 2}`;
+        let face = `f ${vertexIndex}//${normalIndex} ${vertexIndex + 1}//${normalIndex} ${vertexIndex + 2}//${normalIndex}`;
         faces.push(face);
 
         // Update the indices for the next triangle
         vertexIndex += 3;
-        normalIndex += 3;
+        normalIndex += 1;
 
       });
 
@@ -1199,8 +1197,10 @@ function createLevelSurfaceOBJ(params) {
     let objString = "# Generated OBJ file\n";
     
     objString += vertices.map(v => `v ${v}`).join("\n") + "\n";
-    objString += normals.map(n => `vn ${n}`).join("\n") + "\n";
+    objString += normals.map(n => `${n}`).join("\n") + "\n";
     objString += faces.join("\n") + "\n";
+
+    console.log(objString);
 
     return [objString];
 }
