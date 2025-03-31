@@ -29,7 +29,7 @@ layout = html.Div(
                          
                          This update modal is new to version 1.0.2.
                          
-                         **March 29, 2025**
+                         **March 31, 2025**
                          
                          """),
             ],  
