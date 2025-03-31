@@ -7,9 +7,9 @@ layout = html.Div([
     
     dcc.Markdown(
         r"""
-        #### Level Surfaces (a.k.a. "Isosurfaces")
+        #### Level Surfaces (a.k.a. "Isosurfaces" or "Implicit Surfaces")
 
-        Consider as the subject of study a **level surface** $S$ defined by the equation
+        Consider as the subject of study a **level surface** $S$ defined implicitly by the equation
 
         $$
         F(x,y,z)=0
