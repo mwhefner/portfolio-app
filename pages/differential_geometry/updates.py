@@ -25,9 +25,9 @@ layout = html.Div(
                          
                          If you have a surface to recommend as a preset, let me know!
                          
-                         2. I've listened to the fantastic feedback I've received, and I've streamlined the input process. **There is no longer and need to parse inputs;** this is now done automatically with type-responsive feedback.
+                         I've listened to the fantastic feedback I've received, and I've streamlined the input process. **There is no longer and need to parse inputs;** this is now done automatically with type-responsive feedback.
                          
-                         3. This update modal is new to version 1.0.2.
+                         This update modal is new to version 1.0.2.
                          
                          **March 29, 2025**
                          

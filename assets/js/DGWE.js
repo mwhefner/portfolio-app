@@ -757,7 +757,7 @@ level_surface_sketch : function(obj_file, colorby) {
 
         p.rotateX(p.PI);
 
-        //p.rotateY(p.frameCount * p.PI / 500);
+        //p.rotateY(p.frameCount * p.PI / 200);
         
         p.strokeWeight(0);
 
