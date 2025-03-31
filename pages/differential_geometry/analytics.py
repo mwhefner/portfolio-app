@@ -752,6 +752,20 @@ embedded_curves = html.Div(
     
 )
 
+level_surfaces = html.Div(
+    
+    [
+        
+        "Sorry, but no analytics are available for level surfaces at this time. Please try curves or parametric surfaces."
+        
+    ],
+    
+    id = "level_surfaces_analytics_container",
+    
+    style = {'display' : 'none'}
+    
+)
+
 layout = dbc.Card(
     [
         dbc.CardBody(
@@ -769,6 +783,7 @@ layout = dbc.Card(
                         curves,
                         surfaces,
                         embedded_curves,
+                        level_surfaces
 
                     ]
                 )
@@ -822,27 +837,31 @@ clientside_callback(
         let show = {'display': 'block'};
 
         if (window.dash_clientside.callback_context.triggered.some(t => t.prop_id === "store_math.data")) {
-            return [hide, hide, hide, show, window.dash_clientside.no_update, window.dash_clientside.no_update, window.dash_clientside.no_update, true];
+            return [hide, hide, hide, hide, show, window.dash_clientside.no_update, window.dash_clientside.no_update, window.dash_clientside.no_update, true];
         }
 
         if (data && data.rendered) {
             if (data.subject === "render_curve") {
-                return [show, hide, hide, hide, data, window.dash_clientside.no_update, window.dash_clientside.no_update, false];
+                return [show, hide, hide, hide, hide, data, window.dash_clientside.no_update, window.dash_clientside.no_update, false];
             }
             if (data.subject === "render_surface") {
-                return [hide, show, hide, hide, window.dash_clientside.no_update, data, window.dash_clientside.no_update, true];
+                return [hide, show, hide, hide, hide, window.dash_clientside.no_update, data, window.dash_clientside.no_update, true];
             }
             if (data.subject === "render_embedded_curve") {
-                return [hide, hide, show, hide, window.dash_clientside.no_update, window.dash_clientside.no_update, data, true];
+                return [hide, hide, show, hide, hide, window.dash_clientside.no_update, window.dash_clientside.no_update, data, true];
+            }
+            if (data.subject === "render_level_surface") {
+                return [hide, hide, hide, show, hide, window.dash_clientside.no_update, window.dash_clientside.no_update, data, true];
             }
         }
 
-        return [hide, hide, hide, show, window.dash_clientside.no_update, window.dash_clientside.no_update, window.dash_clientside.no_update, true];
+        return [hide, hide, hide, hide, show, window.dash_clientside.no_update, window.dash_clientside.no_update, window.dash_clientside.no_update, true];
     }
     """,
     Output("curves_analytics_container", "style"),
     Output("surfaces_analytics_container", "style"),
     Output("embedded_curves_analytics_container", "style"),
+    Output("level_surfaces_analytics_container", "style"),
     Output("not_yet_rendered_analytics_container", "style"),
     
     Output("store_curves_data", "data"),

@@ -474,9 +474,10 @@ curve_sketch : function (curveData) {
 // The function ran to build a sketch around a surface
 surface_sketch : function (obj_file, colorsJSON, s_nu_validated, s_nv_validated, colorby) {
 
+    // Get the subnamespace to refer to variables more efficiently
+    let dg = window.dash_clientside.differential_geometry;
 
-    const subject_model = obj_file;
-
+    let sketch_function = function (p) {
 
     //subject
     let subject;
@@ -491,12 +492,6 @@ surface_sketch : function (obj_file, colorsJSON, s_nu_validated, s_nv_validated,
     } else {
         vertexColors = colorsJSON;  // If it's already an object, use it as is
     }
-
-    // Get the subnamespace to refer to variables more efficiently
-    let dg = window.dash_clientside.differential_geometry;
-
-    let sketch_function = function (p) {
-
 
     p.setup = function () {
         // //console.log("Setting up the subject sketch of:", obj_file);
@@ -514,7 +509,12 @@ surface_sketch : function (obj_file, colorsJSON, s_nu_validated, s_nv_validated,
         // Point it at the origin.
         cam.lookAt(0, 0, 0);
 
-        subject = p.createModel(subject_model, '.obj');
+        subject = p.createModel(obj_file, '.obj');
+
+        if (typeof obj_file !== "undefined") {
+            //console.log("Getting rid of obj to clear up mem.");
+            obj_file = null;
+        }
 
         //console.log("I'm inside the setup of the p5js sketch and I have the colors right here man:", s_nu_validated, s_nv_validated);
 
@@ -661,9 +661,162 @@ surface_sketch : function (obj_file, colorsJSON, s_nu_validated, s_nv_validated,
 
 }, // This ends create_sketch
 
-render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_validated, c_tstart_validated, c_tend_validated, c_nt_validated, c_colorby, c_colorpicker, s_x_validated, s_y_validated, s_z_validated, s_ustart_validated, s_uend_validated, s_nu_validated, s_vstart_validated, s_vend_validated, s_nv_validated, s_colorby) {
+level_surface_sketch : function(obj_file, colorby) {
 
-    if (n_clicks > 0 || n_2 > 0) {
+    // Get the subnamespace to refer to variables more efficiently
+    let dg = window.dash_clientside.differential_geometry;
+
+    let sketch_function = function (p) {
+
+    //subject
+    let subject;
+    let cam;
+
+    p.setup = function () {
+    
+        // Run the safe setup function
+        dg.safe_setup(p);
+    
+        p.setAttributes('antialias', true);
+
+        cam = p.createCamera();
+    
+        // Place the camera at the top-right.
+        cam.setPosition(400, -400, 800);
+      
+        // Point it at the origin.
+        cam.lookAt(0, 0, 0);
+
+        subject = p.createModel(obj_file, '.obj');
+
+        if (typeof obj_file !== "undefined") {
+            //console.log("Getting rid of obj to clear up mem.");
+            obj_file = null;
+        }
+
+        document.addEventListener('wheel', function(event) {
+            if (event.ctrlKey && event.deltaY !== 0) {
+              event.preventDefault();
+            }
+          }, { passive: false });
+
+    };
+    
+    p.draw = function () {
+
+        dg.drawBackground(p);
+
+        // Draw the XYZ axes
+        if (dg.showAxis) {
+            p.strokeWeight(1);
+            p.stroke(128);
+            p.debugMode(dg.scaler * 100, 100, 0, 0, 0);
+        } else {
+            p.noDebugMode();
+        }
+
+        // Orbit control to allow mouse interaction
+        // Only allow orbit control when no modal is open
+        if (dg.orbitControlled) {
+            p.orbitControl();
+        }
+
+        // Draw a gray dot at the focal point of the camera
+        if (dg.showFocalPoint) {
+            p.push();
+            p.translate(cam.centerX, cam.centerY, cam.centerZ);
+            p.fill(255, 255, 255);
+            p.noStroke();
+            p.sphere(3); // Adjust size as needed
+            p.pop();
+        }
+
+
+        //  LIGHTING AND COLOR BY
+        if (colorby === "normal") {
+
+            p.normalMaterial();
+            //p.ambientLight(255);
+
+        } else {
+
+            // scene lighting
+            p.ambientLight(dg.ambient_light[0], dg.ambient_light[1], dg.ambient_light[2]); // Ambient light with moderate intensity
+
+
+            p.directionalLight(dg.x_light[0], dg.x_light[1], dg.x_light[2], 1, 0, 0);
+            p.directionalLight(dg.y_light[0], dg.y_light[1], dg.y_light[2], 0, 1, 0);
+            p.directionalLight(dg.z_light[0], dg.z_light[1], dg.z_light[2], 0, 0, 1);
+
+            p.shininess(dg.surfaceShine);       // Make highlights pop
+            p.specularMaterial(255);
+
+        }
+
+        p.push(); 
+
+        p.rotateX(p.PI);
+
+        p.rotateY(p.frameCount * p.PI / 500);
+        
+        p.strokeWeight(0);
+
+        p.scale(dg.scaler);
+
+        p.model(subject);
+
+        p.pop();
+
+        p.strokeWeight(1);
+
+        if (p.keyIsDown(p.LEFT_ARROW) === true) {
+            cam.move(-dg.movementSpeed, 0, 0);
+        }
+    
+        if (p.keyIsDown(p.RIGHT_ARROW) === true) {
+            cam.move(dg.movementSpeed, 0, 0);
+        }
+    
+        if (p.keyIsDown(p.UP_ARROW) === true) {
+
+            if (p.keyIsDown(p.SHIFT)) {
+                cam.move(0, 0, -dg.movementSpeed);
+            } else {
+                cam.move(0, -dg.movementSpeed, 0);
+            }
+            
+        }
+    
+        if (p.keyIsDown(p.DOWN_ARROW) === true) {
+
+            if (p.keyIsDown(p.SHIFT)) {
+                cam.move(0, 0, dg.movementSpeed);
+            } else {
+                cam.move(0, dg.movementSpeed, 0);
+            }
+
+        }
+    };
+    
+    } // This ends the sketch function
+
+    if (typeof WebDG_Sketch !== "undefined") {
+        WebDG_Sketch.remove(); // This properly disposes of the old instance
+        //console.log("Existing WebDG instance destroyed. cya");
+    }
+
+    //console.log("A new WebDG instance is being created.");
+
+    WebDG_Sketch = new p5(sketch_function);
+
+    return "Completed sketch setup.";
+},
+
+render_webdg : function(n_clicks, n_2, n_3, c_x_validated, c_y_validated,  c_z_validated, c_tstart_validated, c_tend_validated, c_nt_validated, c_colorby, c_colorpicker, s_x_validated, s_y_validated, s_z_validated, s_ustart_validated, s_uend_validated, s_nu_validated, s_vstart_validated, s_vend_validated, s_nv_validated, s_colorby, ls_f_validated, ls_xstart_validated, ls_xend_validated, ls_nx_validated, ls_ystart_validated, ls_yend_validated, ls_ny_validated, ls_zstart_validated, ls_zend_validated, ls_nz_validated, ls_colorby
+    ) {
+
+    // EASY TO MISS!! LOOK AT ME!!!
+    if (n_clicks > 0 || n_2 > 0 || n_3 > 0) {
         
         // Access Dash's callback context to find 
         // which button was clicked-----------------------------
@@ -728,6 +881,22 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
                 s_colorby
                 
                 },
+
+            ls_params: {
+            
+                ls_f_validated,
+                ls_xstart_validated,
+                ls_xend_validated,
+                ls_nx_validated,
+                ls_ystart_validated,
+                ls_yend_validated,
+                ls_ny_validated,
+                ls_zstart_validated,
+                ls_zend_validated,
+                ls_nz_validated,
+                ls_colorby
+                
+                }
                 
         };
         
@@ -791,8 +960,8 @@ render_webdg : function(n_clicks, n_2, c_x_validated, c_y_validated,  c_z_valida
                     dg.curve_sketch(e.data.obj_file);    
                 } else if (triggered_id === "render_surface") {
                     dg.surface_sketch(e.data.obj_file, e.data.colorJSON, s_nu_validated, s_nv_validated, s_colorby); 
-                } else if (triggered_id === "render_surface") {
-                    dg.embedded_curve_sketch(e.data.obj_file); 
+                } else if (triggered_id === "render_level_surface") {
+                    dg.level_surface_sketch(e.data.obj_file, ls_colorby); 
                 } 
                 
             } else {

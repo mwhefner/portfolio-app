@@ -1,9 +1,9 @@
-import dash
 from dash import html, dcc, Input, Output, State, clientside_callback, register_page, ClientsideFunction
 import dash_bootstrap_components as dbc
 import pages.differential_geometry.subjects as dg_subjects
 import pages.differential_geometry.analytics as dg_analytics
 import pages.differential_geometry.settings as dg_settings
+import pages.differential_geometry.updates as dg_updates
 
 register_page(
     __name__, 
@@ -203,6 +203,33 @@ layout = html.Div(
         size="lg"
     ),
     
+    # Updates Modal
+    dbc.Modal(
+        [
+
+            dbc.ModalHeader(dbc.ModalTitle("Updates")),
+            dbc.ModalBody(
+                dg_updates.layout
+            ),
+            dbc.ModalFooter(
+
+                dbc.Row([
+                    dbc.Button(
+                        "Close",
+                        id="close-updates-modal",
+                        className="ms-auto",
+                        n_clicks=0,
+                    )
+                ], justify="center", style={"textAlign": "center"}, className = "gap-3")
+
+            ),
+        ],
+        is_open=False,
+        id="updates-modal",
+        centered=True,
+        size="lg"
+    ),
+    
     # Help Modal
     dbc.Modal(
         [
@@ -228,10 +255,13 @@ layout = html.Div(
                         style={"height": "200px", "display": "block", "margin": "0 auto", "marginBottom": "1.5rem"},
                         alt="A Klein bottle at an angle."),
                 
+                dbc.Row(
+                    dbc.Col(dbc.Button("Version 1.0.2", id="updates-button", color="info"), width="auto"),
+                    justify="center", className="m-4"
+                ),
+                
                 dcc.Markdown(
                     r"""          
-                    
-                    Version 1.0.1
                     
                     _A free **Web** application for **D**ifferential **G**eometry education._
                     
@@ -258,7 +288,7 @@ layout = html.Div(
                     
                     **This software is free for anyone to use to learn or to teach others about differential geometry. No login, download, license, or subscription is required.**
                     
-                    This app costs money to maintain and keep online. People like you can keep this tool free and available for everyone with [a one-time or recurring donation through Buy Me a Coffee.](https://www.buymeacoffee.com/mwhefner) All major credit cards are accepted and no login is required to donate.
+                    This app costs money to maintain and keep online. People like you can keep this tool free and available for everyone with a one-time or recurring donation through [Buy Me a Coffee.](https://www.buymeacoffee.com/mwhefner) All major credit cards are accepted and no login is required to donate.
                     
                     **You can also show your support by sharing this app!**
                     
@@ -274,7 +304,9 @@ layout = html.Div(
                     
                     ##### Subjects
                     
-                    WebDG can be used to study either an abstract parametric curve or surface in space. Give WebDG the $\mathbb{R}^3$ parameterization of your differentiable manifold to see an interactive visualization and analytics.
+                    WebDG can be used to study 3 abstract *subjects*: **curves**, **parametric surfaces**, or **level surfaces** (a.k.a. "isosurfaces"). 
+                    
+                    Use the Subjects menu to chose and define a subject to study. Once you finish defining and "render" your subject, WebDG will create an interactive visualization of it.
                     
                     """, mathjax=True, className="mb-5"
                 ),
@@ -294,15 +326,17 @@ layout = html.Div(
                     
                     with plots for the latter three.
                     
-                    For **surfaces**, WebDG symbolically computes explicit formulas for:
+                    For **parametric surfaces**, WebDG symbolically computes explicit formulas for:
                     
                     - the Jacobian (all first-order partial derivatives),
                     - the Hessian(s) (all second-order partial derivatives),
                     - the First Fundamental Form coefficients,
                     - the Second Fundamental Form coefficients,
-                    - and the Gaussian, mean, and principal curvatues
+                    - and the Gaussian, mean, and principal curvatures
                     
                     with plots for the three curvatures.
+                    
+                    Analytics are not currently available for level surfaces.
                     
                     ***
                     
@@ -489,11 +523,25 @@ clientside_callback(
     prevent_initial_call=False,
 )
 
+## Updates
 clientside_callback(
     """
-    function(subject, analytics, settings, theme, portfolio, help) {
+    function(n_clicks, n_2, is_open) {
+        return !is_open;
+    }
+    """,
+    Output("updates-modal", "is_open"),
+    [Input("updates-button", "n_clicks"), Input("close-updates-modal", "n_clicks")],
+    State("updates-modal", "is_open"),
+    prevent_initial_call=True,
+)
+
+# Halt orbit control open modal open
+clientside_callback(
+    """
+    function(subject, analytics, settings, theme, portfolio, help, updates) {
         let dg = window.dash_clientside.differential_geometry;
-        let allClosed = !subject && !analytics && !settings && !theme && !portfolio && !help;
+        let allClosed = !subject && !analytics && !settings && !theme && !portfolio && !help && !updates;
         dg.orbitControlled = allClosed;
         return "";
     }
@@ -505,4 +553,5 @@ clientside_callback(
     Input("theme-modal", "is_open"),
     Input("portfolio-modal", "is_open"),
     Input("help-modal", "is_open"),
+    Input("updates-modal", "is_open"),
 )

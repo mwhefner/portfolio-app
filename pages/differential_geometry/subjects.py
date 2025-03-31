@@ -1,6 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import html, Output, Input, dcc,clientside_callback,State, ClientsideFunction
-from pages.differential_geometry.subject_tabs import curves, surfaces, embedded_curves, minimal_surfaces
+from pages.differential_geometry.subject_tabs import curves, level_surfaces, surfaces, embedded_curves
 
 # RENDER CALLBACK
 # This renders the p5.js sketch of the requested subject
@@ -13,6 +13,7 @@ clientside_callback(
     [
         Input("render_curve", "n_clicks"),
         Input("render_surface", "n_clicks"),
+        Input("render_level_surface", "n_clicks"),
     ],
     [
         State("c_x_validated", "data"),
@@ -34,8 +35,19 @@ clientside_callback(
         State("s_vstart_validated", "data"),
         State("s_vend_validated", "data"),
         State("s_nv_validated", "data"),
-        State("s_colorby", "value")
+        State("s_colorby", "value"),
         
+        State("ls_f_validated", "data"),
+        State("ls_xstart_validated", "data"),
+        State("ls_xend_validated", "data"),
+        State("ls_nx_validated", "data"),
+        State("ls_ystart_validated", "data"),
+        State("ls_yend_validated", "data"),
+        State("ls_ny_validated", "data"),
+        State("ls_zstart_validated", "data"),
+        State("ls_zend_validated", "data"),
+        State("ls_nz_validated", "data"),
+        State("ls_colorby", "value")
         
     ],
     prevent_initial_call=True,
@@ -48,9 +60,9 @@ layout = dbc.Card(
             dbc.Tabs(
                 [
                     dbc.Tab(label="Curves", tab_id="curves"),
-                    dbc.Tab(label="Surfaces", tab_id="surfaces"),
+                    dbc.Tab(label="Parametric Surfaces", tab_id="surfaces"),
                     #dbc.Tab(label="Embedded Curves", tab_id="embedded curves"),
-                    #dbc.Tab(label="Minimal Surfaces", tab_id="minimal surfaces"),
+                    dbc.Tab(label="Level Surfaces", tab_id="minimal surfaces"),
                 ],
                 id="subject-tabs",
                 active_tab="curves",
@@ -59,11 +71,11 @@ layout = dbc.Card(
         dbc.CardBody(
             html.Div(
                 id="subject-content", className="card-text", 
-                children=[
+                children = [
                     html.Div(curves.layout, id="curves-content", style={"display": "block"}),
                     html.Div(surfaces.layout, id="surfaces-content", style={"display": "none"}),
                     html.Div(embedded_curves.layout, id="embedded-curves-content", style={"display": "none"}),
-                    html.Div(minimal_surfaces.layout, id="minimal-surfaces-content", style={"display": "none"}),
+                    html.Div(level_surfaces.layout, id="minimal-surfaces-content", style={"display": "none"}),
                 ]
             )
         ),

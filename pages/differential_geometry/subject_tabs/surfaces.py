@@ -12,7 +12,7 @@ layout = html.Div(
 
             #### Theory of Surfaces  
 
-            Consider as the subject of study a **surface** $S$ defined by the parametric representation  
+            Consider as the subject of study a **parametric surface** $S$ defined by the parametric representation  
 
             $$
             S = \big( X(u,v), Y(u,v), Z(u,v) \big)
@@ -34,16 +34,14 @@ layout = html.Div(
 
             - Use the forms below to define these functions and values. 
 
-            - Use "Parse" to have WebDG process, understand, and validate an input. 
-
-            - Once all inputs have valid parses, use "Render Subject" at the bottom to begin computing the mesh approximation of your surface from the parsed inputs.
+            - When all inputs have been validated (✅), use "Render Subject" at the bottom to begin computing the approximation of your surface.
 
             ***
 
             #### Presets
 
-            Using a preset means overwriting the form inputs below with the definitions for the selected preset surface. **Selecting 'Use' will erase any information currently in these forms.** Preset inputs must be parsed like any other.
-
+            **Selecting 'Use' will erase any information currently in the forms below.**
+            
             """, id="s_define", mathjax=True),
 
         # presets
@@ -56,11 +54,11 @@ layout = html.Div(
                     options=[
                         {"label": "Plane", "value": "Plane"},
                         {"label": "Torus", "value": "Torus"},
-                        {"label": "Helical Strake", "value": "Helical Strake"},
                         {"label": "Cone", "value": "Cone"},
+                        {"label": "Helical Strake", "value": "Helical Strake"},
+                        {"label": "Dini's Surface", "value": "Dini"},
                         {"label": 'Möbius Strip', "value": "Mobius"},
                         {"label": 'Enneper Surface', "value": "Enneper"},
-                        {"label": "Dini's Surface", "value": "Dini"},
                         {"label": "Helicatenoid", "value": "Helicatenoid"},
                         {"label": '"Figure 8" Immersion of a Klein Bottle', "value": "Klein Bottle"},
                     ],
@@ -101,19 +99,13 @@ layout = html.Div(
                 
                 dbc.Input(value = "u", id="s_xcomponent", persistence=True, persistence_type = "memory"), 
                 
-                dbc.Button("Parse", color="info", id="s_xcomponent_parse")
+                dbc.Button("Parse", color="info", id="s_xcomponent_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
             className="mb-3"
             
         ),
-        
-        dcc.Markdown(r"""
-                     
-                     $X$ (the $x$-component of the surface $S$) has been parsed as: 
-                     
-                     """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Markdown(r"Please parse input for $X$", id="s_xcomponent_formtext", 
             mathjax=True, 
@@ -141,19 +133,13 @@ layout = html.Div(
                 
                 dbc.Input(value = "v", id="s_ycomponent", persistence=True, persistence_type = "memory",), 
                 
-                dbc.Button("Parse", color="info", id="s_ycomponent_parse")
+                dbc.Button("Parse", color="info", id="s_ycomponent_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
             className="mb-3"
             
         ),
-        
-        dcc.Markdown(r"""
-                     
-                     $Y$ (the $y$-component of the surface $S$) has been parsed as: 
-                     
-                     """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Markdown(r"Please parse input for $Y$", id="s_ycomponent_formtext", 
             mathjax=True, 
@@ -181,19 +167,13 @@ layout = html.Div(
                 
                 dbc.Input(value = "0", id="s_zcomponent", persistence=True, persistence_type = "memory",), 
                 
-                dbc.Button("Parse", color="info", id="s_zcomponent_parse")
+                dbc.Button("Parse", color="info", id="s_zcomponent_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
             className="mb-3"
             
         ),
-        
-        dcc.Markdown(r"""
-                     
-                     $Z$ (the $z$-component of the surface $S$) has been parsed as: 
-                     
-                     """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Markdown(r"Please parse input for $Z$", id="s_zcomponent_formtext", 
             mathjax=True, 
@@ -210,7 +190,23 @@ layout = html.Div(
             }
         ),
         
-        dcc.Markdown("***"),
+        dcc.Markdown(r"""
+                     
+                    ***
+                    
+                    ### UV Parameters
+                    
+                    These parameters for numerical evaluation must each evaluate to a constant. 
+                    
+                    `pi` and `e` are allowed constants. 
+                    
+                    For example: "`4.28`" and "`3 + 8 * pi`" are valid, but "`4t`" and "`x * y`" are not valid.
+                    
+                    $n_u$ and $n_v$ must be a positive whole numbers.
+                    
+                    ***
+                     
+                    """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Store(id="s_ustart_validated"),
         dcc.Store(id="s_uend_validated"),
@@ -245,27 +241,13 @@ layout = html.Div(
                 
                 dbc.Input(id="s_nu", type="number", value=10, min=1, step=1, persistence=True, persistence_type = "memory",), 
                 
-                dbc.Button("Parse", color="info", id="s_u_parse")
+                dbc.Button("Parse", color="info", id="s_u_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
             className="mb-3"
             
         ),
-        
-        dcc.Markdown(r"""
-                     
-                    These parameters for numerical evaluation must each evaluate to a constant. 
-                    
-                    `pi` and `e` are allowed constants. 
-                    
-                    For example: "`4.28`" and "`3 + 8 * pi`" are valid, but "`4t`" and "`x * y`" are not valid.
-                    
-                    $n_u$ must be a positive whole number.
-                    
-                    The $u$ numerical parameters have been parsed as:
-                     
-                    """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Markdown(r"Please parse input for $u_{\text{start}}$", id="s_ustart_formtext", 
             mathjax=True, 
@@ -312,8 +294,6 @@ layout = html.Div(
             }
         ),
         
-        dcc.Markdown("***"),
-        
 		dcc.Store(id="s_vstart_validated"),
         dcc.Store(id="s_vend_validated"),
         dcc.Store(id="s_nv_validated"),
@@ -347,27 +327,13 @@ layout = html.Div(
                 
                 dbc.Input(id="s_nv", type="number", value=10, min=1, step=1, persistence=True, persistence_type = "memory",), 
                 
-                dbc.Button("Parse", color="info", id="s_v_parse")
+                dbc.Button("Parse", color="info", id="s_v_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
             className="mb-3"
             
         ),
-        
-        dcc.Markdown(r"""
-                     
-                    These parameters for numerical evaluation must each evaluate to a constant. 
-                    
-                    `pi` and `e` are allowed constants. 
-                    
-                    For example: "`4.28`" and "`3 + 8 * pi`" are valid, but "`4t`" and "`x * y`" are not valid.
-                    
-                    $n_v$ must be a positive whole number.
-                    
-                    The $v$ numerical parameters have been parsed as:
-                     
-                    """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Markdown(r"Please parse input for $v_{\text{start}}$", id="s_vstart_formtext", 
             mathjax=True, 
@@ -414,7 +380,7 @@ layout = html.Div(
             }
         ),
         
-        ##dcc.Markdown("***"),
+        dcc.Markdown("***"),
             
         dbc.InputGroup(
             [
@@ -679,6 +645,30 @@ clientside_callback(
 
 clientside_callback(
     r"""
+    function(value, n_1, active_tab, inv, validated, parse_times) {
+        
+        if ((active_tab !== "surfaces") || (value === validated && !inv)) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("s_xcomponent_parse", "n_clicks"),
+    
+    Input("s_xcomponent", "value"), 
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("s_xcomponent", "invalid"),
+    State("s_x_validated", "data"),
+    State("s_xcomponent_parse", "n_clicks")
+)
+
+clientside_callback(
+    r"""
     function(n_clicks, value) {
         
         let dg = window.dash_clientside.differential_geometry;
@@ -706,6 +696,30 @@ clientside_callback(
 
 clientside_callback(
     r"""
+    function(value, n_1, active_tab, inv, validated, parse_times) {
+        
+        if ((active_tab !== "surfaces") || (value === validated && !inv)) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("s_ycomponent_parse", "n_clicks"),
+    
+    Input("s_ycomponent", "value"), 
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("s_ycomponent", "invalid"),
+    State("s_y_validated", "data"),
+    State("s_ycomponent_parse", "n_clicks")
+)
+
+clientside_callback(
+    r"""
     function(n_clicks, value) {
         
         let dg = window.dash_clientside.differential_geometry;
@@ -729,6 +743,30 @@ clientside_callback(
     Input("s_zcomponent_parse", "n_clicks"),
     State("s_zcomponent", "value"),
     prevent_initial_call=True
+)
+
+clientside_callback(
+    r"""
+    function(value, n_1, active_tab, inv, validated, parse_times) {
+        
+        if ((active_tab !== "surfaces") || (value === validated && !inv)) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("s_zcomponent_parse", "n_clicks"),
+    
+    Input("s_zcomponent", "value"), 
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("s_zcomponent", "invalid"),
+    State("s_z_validated", "data"),
+    State("s_zcomponent_parse", "n_clicks")
 )
 
 # for u
@@ -851,6 +889,98 @@ clientside_callback(
         State("s_nv", "value"),
     ],
     prevent_initial_call=True
+)
+
+clientside_callback(
+    r"""
+    function(s_value, e_value, n_value, n_1, active_tab, s_inv, s_validated, e_inv, e_validated, n_inv, n_validated, parse_times) {
+        
+        if ((active_tab !== "surfaces")) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (s_value === s_validated && !s_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (e_value === e_validated && !e_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (n_value === n_validated && !n_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("s_u_parse", "n_clicks"),
+    
+    Input("s_ustart", "value"),
+    Input("s_uend", "value"),
+    Input("s_nu", "value"),
+    
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("s_ustart_validated", "data"),
+    State("s_ustart", "invalid"),
+    
+    State("s_uend_validated", "data"),
+    State("s_uend", "invalid"),
+
+    State("s_nu_validated", "data"),
+    State("s_nu", "invalid"),    
+    
+    State("s_u_parse", "n_clicks"),
+)
+
+clientside_callback(
+    r"""
+    function(s_value, e_value, n_value, n_1, active_tab, s_inv, s_validated, e_inv, e_validated, n_inv, n_validated, parse_times) {
+        
+        if ((active_tab !== "surfaces")) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (s_value === s_validated && !s_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (e_value === e_validated && !e_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (n_value === n_validated && !n_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("s_v_parse", "n_clicks"),
+    
+    Input("s_vstart", "value"),
+    Input("s_vend", "value"),
+    Input("s_nv", "value"),
+    
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("s_vstart_validated", "data"),
+    State("s_vstart", "invalid"),
+    
+    State("s_vend_validated", "data"),
+    State("s_vend", "invalid"),
+
+    State("s_nv_validated", "data"),
+    State("s_nv", "invalid"),    
+    
+    State("s_v_parse", "n_clicks"),
 )
 
 # render readiness callback

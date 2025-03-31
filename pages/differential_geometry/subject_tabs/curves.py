@@ -32,17 +32,15 @@ layout = html.Div(
 
             - Use the forms below to define these functions and values. 
 
-            - Use "Parse" to have WebDG process, understand, and validate an input. 
+            - When all inputs have been validated (✅), use "Render Subject" at the bottom to begin computing the approximation of your curve.
 
-            - Once all inputs have valid parses, use "Render Subject" at the bottom to begin computing the approximation of your curve from the parsed inputs.
-            
-            The Frenet-Serret frame can be shown using the Settings menu after rendering analytics.
+            *Tip: Frenet-Serret (TNB) frame visibility can be toggled in the Settings menu.*
 
             ***
 
             #### Presets
 
-            Using a preset means overwriting the form inputs below with the definitions for the selected preset curve. **Selecting 'Use' will erase any information currently in these forms.** Preset inputs must be parsed like any other.
+            **Selecting 'Use' will erase any information currently in the forms below.**
 
             """, id="c_define", mathjax=True),
 
@@ -102,19 +100,13 @@ layout = html.Div(
                 
                 dbc.Input(value = "cos(t)", id="c_xcomponent", persistence=True, persistence_type = "memory"), 
                 
-                dbc.Button("Parse", color="info", id="c_xcomponent_parse")
+                dbc.Button("Parse", color="info", id="c_xcomponent_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
             className="mb-3"
             
         ),
-        
-        dcc.Markdown(r"""
-                     
-                     $X$ (the $x$-component of the curve $\alpha$) has been parsed as: 
-                     
-                     """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Markdown(r"Please parse input for $X$", id="c_xcomponent_formtext", 
             mathjax=True, 
@@ -144,19 +136,13 @@ layout = html.Div(
                 
                 dbc.Input(value = "sin(t)", id="c_ycomponent", persistence=True, persistence_type = "memory",), 
                 
-                dbc.Button("Parse", color="info", id="c_ycomponent_parse")
+                dbc.Button("Parse", color="info", id="c_ycomponent_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
             className="mb-3"
             
         ),
-        
-        dcc.Markdown(r"""
-                     
-                     $Y$ (the $y$-component of the curve $\alpha$) has been parsed as: 
-                     
-                     """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Markdown(r"Please parse input for $Y$", id="c_ycomponent_formtext", 
             mathjax=True, 
@@ -186,19 +172,13 @@ layout = html.Div(
                 
                 dbc.Input(value = "0", id="c_zcomponent", persistence=True, persistence_type = "memory",), 
                 
-                dbc.Button("Parse", color="info", id="c_zcomponent_parse")
+                dbc.Button("Parse", color="info", id="c_zcomponent_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
             className="mb-3"
             
         ),
-        
-        dcc.Markdown(r"""
-                     
-                     $Z$ (the $z$-component of the curve $\alpha$) has been parsed as: 
-                     
-                     """, mathjax=True, className="mx-4 text-wrap", style={"textAlign" : "center"}),
         
         dcc.Markdown(
             r"Please parse input for $Z$", 
@@ -254,7 +234,7 @@ layout = html.Div(
                 
                 dbc.Input(id="c_nt", type="number", value=100, min=1, step=1, persistence=True, persistence_type = "memory",), 
                 
-                dbc.Button("Parse", color="info", id="c_t_parse")
+                dbc.Button("Parse", color="info", id="c_t_parse", n_clicks=0, style={'display' : 'none'})
                 
             ],
             
@@ -548,6 +528,30 @@ clientside_callback(
 
 clientside_callback(
     r"""
+    function(value, n_1, active_tab, inv, validated, parse_times) {
+        
+        if ((active_tab !== "curves") || (value === validated && !inv)) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("c_xcomponent_parse", "n_clicks"),
+    
+    Input("c_xcomponent", "value"), 
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("c_xcomponent", "invalid"),
+    State("c_x_validated", "data"),
+    State("c_xcomponent_parse", "n_clicks")
+)
+
+clientside_callback(
+    r"""
     function(n_clicks, value) {
         
         let dg = window.dash_clientside.differential_geometry;
@@ -575,6 +579,30 @@ clientside_callback(
 
 clientside_callback(
     r"""
+    function(value, n_1, active_tab, inv, validated, parse_times) {
+        
+        if ((active_tab !== "curves") || (value === validated && !inv)) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("c_ycomponent_parse", "n_clicks"),
+    
+    Input("c_ycomponent", "value"), 
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("c_ycomponent", "invalid"),
+    State("c_y_validated", "data"),
+    State("c_ycomponent_parse", "n_clicks")
+)
+
+clientside_callback(
+    r"""
     function(n_clicks, value) {
         
         let dg = window.dash_clientside.differential_geometry;
@@ -598,6 +626,30 @@ clientside_callback(
     Input("c_zcomponent_parse", "n_clicks"),
     State("c_zcomponent", "value"),
     prevent_initial_call=True
+)
+
+clientside_callback(
+    r"""
+    function(value, n_1, active_tab, inv, validated, parse_times) {
+        
+        if ((active_tab !== "curves") || (value === validated && !inv)) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("c_zcomponent_parse", "n_clicks"),
+    
+    Input("c_zcomponent", "value"), 
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("c_zcomponent", "invalid"),
+    State("c_z_validated", "data"),
+    State("c_zcomponent_parse", "n_clicks")
 )
 
 # for t
@@ -662,6 +714,52 @@ clientside_callback(
         State("c_nt", "value"),
     ],
     prevent_initial_call=True
+)
+
+clientside_callback(
+    r"""
+    function(s_value, e_value, n_value, n_1, active_tab, s_inv, s_validated, e_inv, e_validated, n_inv, n_validated, parse_times) {
+        
+        if ((active_tab !== "curves")) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (s_value === s_validated && !s_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (e_value === e_validated && !e_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        if (n_value === n_validated && !n_inv) {
+            return window.dash_clientside.no_update;
+        }
+        
+        return parse_times + 1; // this should trigger a parse
+        
+    }
+    """,
+    
+    Output("c_t_parse", "n_clicks"),
+    
+    Input("c_tstart", "value"),
+    Input("c_tend", "value"),
+    Input("c_nt", "value"),
+    
+    Input("subject", "n_clicks"), 
+    Input("subject-tabs", "active_tab"),
+    
+    State("c_tstart_validated", "data"),
+    State("c_tstart", "invalid"),
+    
+    State("c_tend_validated", "data"),
+    State("c_tend", "invalid"),
+
+    State("c_nt_validated", "data"),
+    State("c_nt", "invalid"),    
+    
+    State("c_t_parse", "n_clicks"),
 )
 
 # for color
