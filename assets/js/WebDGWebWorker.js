@@ -989,6 +989,23 @@ function createLevelSurfaceOBJ(params) {
         ls_nz_validated: nz
     } = params;
 
+    // helper functions to simplify geom
+    class XYZ {
+        // Represents a 3D point or vector with x, y, and z coordinates
+        constructor(x = 0, y = 0, z = 0) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+    }
+
+    class Triangle {
+        // Represents a triangle consisting of three vertices
+        constructor() {
+            this.p = [new XYZ(0, 0, 0), new XYZ(0, 0, 0), new XYZ(0, 0, 0)];
+        }
+    }
+
     const cornerIndex = [0, 4, 3, 7, 1, 5, 2, 6];
 
     // Convert bounds and steps to numbers
@@ -1003,26 +1020,14 @@ function createLevelSurfaceOBJ(params) {
     // Compile the function
     const f = math.compile(f_expr);
 
-    let vertices = [];
-    let faces = [];
-    let normals = [];
-
     function evalF(x, y, z) {
         return f.evaluate({ x, y, z });
     }
 
-    class XYZ {
-        // Represents a 3D point or vector with x, y, and z coordinates
-        constructor(x = 0, y = 0, z = 0) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-    }
-    
     const fValues = new Float32Array(nx * ny * nz);
     const positions = new Array(nx * ny * nz); // Store XYZ objects to avoid repeated creation
-    
+
+    // function evaluations
     for (let i = 0; i < nx; i++) {
         for (let j = 0; j < ny; j++) {
             for (let k = 0; k < nz; k++) {
@@ -1033,13 +1038,6 @@ function createLevelSurfaceOBJ(params) {
                 positions[idx] = new XYZ(x, y, z);
                 fValues[idx] = evalF(x, y, z); // Compute once and store
             }
-        }
-    }
-
-    class Triangle {
-        // Represents a triangle consisting of three vertices
-        constructor() {
-            this.p = [new XYZ(0, 0, 0), new XYZ(0, 0, 0), new XYZ(0, 0, 0)];
         }
     }
     
@@ -1125,7 +1123,37 @@ function createLevelSurfaceOBJ(params) {
         return triangles; // Return the number of triangles generated
     }
 
-    let all_triangles = [];
+    function calculateNormal(v1, v2, v3) {
+        let v21 = new XYZ(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z);
+        let v31 = new XYZ(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z);
+    
+        // Cross product
+        let nx = v21.y * v31.z - v21.z * v31.y;
+        let ny = v21.z * v31.x - v21.x * v31.z;
+        let nz = v21.x * v31.y - v21.y * v31.x;
+    
+        // Normalize the normal
+        let length = Math.sqrt(nx * nx + ny * ny + nz * nz);
+        return `${nx / length} ${ny / length} ${nz / length}`;
+    }
+
+    // Simple spatial hashing to reduce comparisons
+    function getHashKey(vertex) {
+        // Create a key based on the vertex coordinates, adjusted by a scale factor
+        let scale = 1 / threshold; // Scale factor to group nearby vertices
+        let x = Math.floor(vertex.x * scale);
+        let y = Math.floor(vertex.y * scale);
+        let z = Math.floor(vertex.z * scale);
+        return `${x},${y},${z}`; // Return the hash key
+    }
+
+    let vertexIndex = 1; // Start at 1 for 1-indexing in OBJ format
+    let normalIndex = 1; // Start at 1 for 1-indexing in OBJ format
+    const threshold = 0.001; // Define the threshold for distance comparison (TODO: you can adjust this)
+    let vertexMap = new Map(); // Map to track the unique vertices and their indices
+    let vertices = [];
+    let faces = [];
+    let normals = [];
 
     // March through the grid
     for (let i = 0; i < nx - 1; i++) {
@@ -1148,59 +1176,54 @@ function createLevelSurfaceOBJ(params) {
                 let these_triangles = Polygonise(gridCell);
     
                 if (these_triangles.length > 0) {
-                    all_triangles.push(...these_triangles);
+
+                    let triangleVertices;
+                    let triangleVertexIndices;
+
+                    these_triangles.forEach(triangle => {
+	
+                        triangleVertices = triangle.p;
+                        triangleVertexIndices = [];
+                    
+                        triangleVertices.forEach(vertex => {
+                            const hashKey = getHashKey(vertex);
+                            
+                            // Check if this hash key already exists (i.e., vertex already exists within the threshold)
+                            if (!vertexMap.has(hashKey)) {
+                                // If vertex is unique, add it to the vertices array and map
+                                vertices.push(`${vertex.x} ${vertex.y} ${vertex.z}`);
+                                vertexMap.set(hashKey, vertexIndex); // Track the vertex with its index
+                                triangleVertexIndices.push(vertexIndex);
+                                vertexIndex += 1; // Update vertex index for the next unique vertex
+                            } else {
+                                // If vertex is a duplicate, use the existing index
+                                triangleVertexIndices.push(vertexMap.get(hashKey));
+                            }
+                        });
+                    
+                        // Calculate and add normals
+                        normals.push(`${calculateNormal(triangle.p[0], triangle.p[1], triangle.p[2])}`);
+                        
+                        // Create face entries with both vertex and normal indices
+                        faces.push(`f ${triangleVertexIndices[0]}//${normalIndex} ${triangleVertexIndices[1]}//${normalIndex} ${triangleVertexIndices[2]}//${normalIndex}`);
+                    
+                        // Update the normal index for the next triangle
+                        normalIndex += 1;
+                        
+                    });
                 }
             }
         }
     }
 
-    function calculateNormal(v1, v2, v3) {
-        let v21 = new XYZ(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z);
-        let v31 = new XYZ(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z);
-    
-        // Cross product
-        let nx = v21.y * v31.z - v21.z * v31.y;
-        let ny = v21.z * v31.x - v21.x * v31.z;
-        let nz = v21.x * v31.y - v21.y * v31.x;
-    
-        // Normalize the normal
-        let length = Math.sqrt(nx * nx + ny * ny + nz * nz);
-        return `${nx / length} ${ny / length} ${nz / length}`;
-    }
-
-    let vertexIndex = 1; // Start at 1 for 1-indexing in OBJ format
-    let normalIndex = 1; // Start at 1 for 1-indexing in OBJ format
-
-    all_triangles.forEach(triangle => {
-        let triangleVertices = triangle.p;
-
-        // Add the vertices
-        triangleVertices.forEach(vertex => {
-            vertices.push(`${vertex.x} ${vertex.y} ${vertex.z}`);
-        });
-    
-        // Calculate and add normals
-        let normal = calculateNormal(triangle.p[0], triangle.p[1], triangle.p[2]);
-        normals.push(`vn ${normal}`);
-        
-        // Create face entries with both vertex and normal indices
-        let face = `f ${vertexIndex}//${normalIndex} ${vertexIndex + 1}//${normalIndex} ${vertexIndex + 2}//${normalIndex}`;
-        faces.push(face);
-
-        // Update the indices for the next triangle
-        vertexIndex += 3;
-        normalIndex += 1;
-
-      });
-
     // Create OBJ file content
     let objString = "# Generated OBJ file\n";
     
     objString += vertices.map(v => `v ${v}`).join("\n") + "\n";
-    objString += normals.map(n => `${n}`).join("\n") + "\n";
+    objString += normals.map(n => `vn ${n}`).join("\n") + "\n";
     objString += faces.join("\n") + "\n";
 
-    console.log(objString);
+    //console.log(objString);
 
     return [objString];
 }
