@@ -172,9 +172,9 @@ app.layout = dbc.Container([
                             
                             {"key": "2", "src": "/assets/webp/images/webdg4.webp", "caption" : "A Frenet-Serret Frame on a Torus Knot"},
                             
-                            {"key": "3", "src": "/assets/webp/images/webdg3.webp", "caption" : "A Figure-8 Immersion of a Klein Bottle"},
+                            {"key": "3", "src": "/assets/webp/images/webdg3.webp", "caption" : "A Gyroid"},
                             
-                            {"key": "5", "src": "/assets/webp/images/Global Time Series - Second Draft.webp", "caption" : ""},
+                            {"key": "5", "src": "/assets/webp/images/Global Time Series - Second Draft.webp"},
                             
                             {"key": "6", "src": "/assets/webp/images/tonetornado_still.webp", "caption" : "The Harmonic Series at Middle C"},
 
