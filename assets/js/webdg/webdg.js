@@ -395,6 +395,10 @@ curve_sketch : function (curveData) {
         // account for y pointing down at the start
         p.rotateX(p.PI);
     
+        if (dg.rotate_toggle) {
+            p.rotateY(p.frameCount * dg.rotation_speed);
+        }
+
         // Draw text at the origin
         p.push(); // Save the current transformation matrix
 
@@ -417,9 +421,7 @@ curve_sketch : function (curveData) {
         p.strokeWeight(dg.strokeW);
         p.noFill();
 
-        if (dg.rotate_toggle) {
-            p.rotateY(p.frameCount * dg.rotation_speed);
-        }
+
 
         p.beginShape();
         for (let i = 0; i < curveData.vertices.length; i++) {
