@@ -87,5 +87,12 @@ body {
 }
 
 .carousel-caption {
-    color : white !important;
+    color: white !important;
+    font-weight: bolder;
+    text-shadow: 
+    2px 2px 4px black,   /* Main shadow */
+    -1px -1px 2px black, /* Upper-left shadow */
+    1px -1px 2px black,  /* Upper-right shadow */
+    -1px 1px 2px black,  /* Lower-left shadow */
+    1px 1px 2px black;   /* Lower-right shadow */
 }

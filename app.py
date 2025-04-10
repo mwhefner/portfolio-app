@@ -168,15 +168,15 @@ app.layout = dbc.Container([
                     dbc.Carousel(
                         items=[
                             
-                            {"key": "1", "src": "/assets/webp/images/webdg9.webp", "caption" : "A Cross Section Schwarz Surface"},
+                            {"key": "1", "src": "/assets/webp/images/webdg9.webp", "caption" : "A Cross Section of a Schwarz Surface"},
                             
                             {"key": "2", "src": "/assets/webp/images/webdg4.webp", "caption" : "A Frenet-Serret Frame on a Torus Knot"},
                             
                             {"key": "3", "src": "/assets/webp/images/webdg3.webp", "caption" : "A Gyroid"},
                             
-                            {"key": "5", "src": "/assets/webp/images/Global Time Series - Second Draft.webp"},
+                            {"key": "5", "src": "/assets/webp/images/Global Time Series - Second Draft.webp", "caption" : "Carbon Emissions Inventory Research"},
                             
-                            {"key": "6", "src": "/assets/webp/images/tonetornado_still.webp", "caption" : "The Harmonic Series at Middle C"},
+                            {"key": "6", "src": "/assets/webp/images/tonetornado_still.webp", "caption" : "The Harmonic Series at C3"},
 
                         ],
                         controls=True,
