@@ -1,5 +1,5 @@
 from app import app
-
-# Running the app locally
+# Use `python ./develop.py` to run a development server on your local host machine.
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=False) # optional debugging with many useful features
+    

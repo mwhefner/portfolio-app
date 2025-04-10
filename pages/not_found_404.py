@@ -1,3 +1,14 @@
+"""
+
+not_found_404.py
+
+This defines the app's 404 page.
+
+M W Hefner, 2025
+MIT License
+
+"""
+
 import dash
 from dash import html
 

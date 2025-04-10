@@ -1,3 +1,14 @@
+"""
+
+home.py
+
+This defines the home, "landing" or "index" page of the portfolio.
+
+M W Hefner, 2025
+MIT License
+
+"""
+
 import dash
 from dash import html, dcc, Output, Input
 import dash_bootstrap_components as dbc
@@ -8,7 +19,7 @@ dash.register_page(
     name="Portfolio",
     title="Data Science & Interactive Analytics Portfolio",
     description="Transforming complex data, math, and science concepts into interactive and pedagogically-informed software solutions. Explore publications, web projects and interactive dashboards.",
-    image="as_webp/thumbnail.webp",
+    image="webp/thumbnails/thumbnail.webp",
     meta_tags=[
         {"charset": "UTF-8"},
         {"name": "viewport", "content": "width=device-width, initial-scale=1.0, viewport-fit=cover"},
@@ -16,7 +27,7 @@ dash.register_page(
         {"name": "keywords", "content": "Data Science, Dash Apps, Interactive Analytics, Machine Learning, Data Visualization, Research Software"},
         {"name": "author", "content": "Matt Hefner"},
         {"property": "og:type", "content": "website"},
-        {"property": "og:image", "content": "as_webp/thumbnail.webp"},
+        {"property": "og:image", "content": "webp/thumbnail.webp"},
         {"property": "og:url", "content": "{%url%}"},
         {"rel": "canonical", "href": "{%url%}"}
     ]
@@ -24,18 +35,20 @@ dash.register_page(
 
 def makeCard(page):
     
+    # define tags manually here
     tags_dict = {
         "/Top_100_Steam_Games": {"web app", "games", "trending", "plotly figure friday", "interactive"},
         "/nyt_best_sellers": {"web app", "books", "trending", "plotly figure friday", "interactive"},
         "/ggea": {"web app", "education", "climate change", "applied science", "research", "interactive"},
-        "/spectrawhorl": {"web app", "music", "education", "interactive"},
+        "/spectrawhorl": {"music", "web app", "education", "interactive"},
         "/everest": {"web app", "education","climate change", "applied science", "research"},
         "/mix_paper": {"journal paper","climate change", "applied science", "research"},
         "/briggs": {"journal paper","climate change", "applied science", "research"},
         "/cdiac": {"education","climate change", "applied science", "research"},
-        "/webdg": {"web app", "education", "interactive"},
+        "/webdg": {"math", "web app", "education", "interactive"},
     }
 
+    # set the color of a tag here
     tag_colors = {
         "journal paper" : "primary", 
         "web app": "warning",
@@ -44,6 +57,7 @@ def makeCard(page):
         "games": "success",
         "books": "success",
         "music": "success",
+        "math": "success",
         
         "climate change": "danger",
         
@@ -56,6 +70,7 @@ def makeCard(page):
 
     }
     
+    # if a page is just a link, specify the link here
     those_that_link = {
         "/ggea" : "https://datadash.appstate.edu/cdiac",
         "/everest" : "https://datadash.appstate.edu/high-altitude-climate/lb",
@@ -65,10 +80,11 @@ def makeCard(page):
         '/spectrawhorl' : 'https://www.tonetornado.com/',
     }
     
+    # if the page has a "last updated", specify it here
     last_updated = {
         "/ggea" : "Last Updated 3.2024",
-        "/webdg" : "Last Updated 3.2025",
-        "/spectrawhorl" : "Last Updated 3.2025",
+        "/webdg" : "Last Updated 4.2025",
+        "/spectrawhorl" : "Last Updated 4.2025",
         "/everest" : "Last Updated 4.2024",
         "/mix_paper" : "",
         '/briggs' : '',
@@ -78,18 +94,15 @@ def makeCard(page):
         
     }
     
+    # Get page attributes for card
     last_update = ""
-    
     page_path = page["path"]
-    
     if page_path in last_updated :
         last_update = last_updated[page_path]
-    
     if page_path in those_that_link :
         page_path = those_that_link[page_path]
     
     badges = []
-    
     if page["path"] in tags_dict:
         badges = [
             dbc.Badge(tag, color=tag_colors.get(tag, "light"), className="m-1")
@@ -97,13 +110,13 @@ def makeCard(page):
         ]
     
     image = []
-    
     if page['image'] != "" :
         image = html.A(
             dbc.CardImg(alt=page.get("description", "/static/images/placeholder286x180.png"),src=page.get("image", "/static/images/placeholder286x180.png"), top=True),
             href=page_path
         )
 
+    # Finally, piece together the card for the page
     return dbc.Card(
         [
             image,
@@ -123,7 +136,7 @@ def makeCard(page):
                 ]
             ),
             
-            html.P([html.I(last_update)], className="my-0 ps-3") if last_update is not "" else None
+            html.P([html.I(last_update)], className="my-0 ps-3") if last_update != "" else None
         ],
         className="me-3 mb-3 p-3 custom-shadow-card"
     )
@@ -134,10 +147,11 @@ layout = dbc.Row(
     className="justify-content-center"
 )
 
+# I just manually specify the layout here for now
+# and I'll make something more complicated if I need it
 excluded_pages = ["/not-found-404", "/"] + ["/gregg"]
-
-column_one_paths = ["/webdg", "/mix_paper", "/spectrawhorl"]
-column_two_paths = ["/ggea", "/everest", "/Top_100_Steam_Games"]
+column_one_paths = ["/webdg", "/mix_paper", "/everest"]
+column_two_paths = ["/spectrawhorl", "/ggea", "/Top_100_Steam_Games"]
 column_three_paths = ["/cdiac", "/briggs", "/nyt_best_sellers"]
 
 # Callback to populate the layout on app startup
@@ -158,23 +172,14 @@ def populate_cards(_):
     column_three_pages = [page_dict[path] for path in column_three_paths if path in page_dict]
     
     return dbc.Col([
-        
-        html.Div([
-            html.H1([
-                "Web Portfolio", 
-                html.Br(), 
-                html.I(className="fa-solid fa-newspaper mt-2 mb-2"), 
-            ], className="m-0"),
-            
-            html.Strong("Updated Weekly", className="m-0")
-        ], style={"textAlign": "center"}, className="mt-3 mb-3"),
+
 
         
         dbc.Row([
             dbc.Col(column_one_pages, className = "p-0"),
             dbc.Col(column_two_pages, className = "p-0"),
             dbc.Col(column_three_pages, className = "p-0")
-        ],
+        ], className = "mt-3",
                 
     )],style={'overflowY': 'auto', 'height': '100vh'})
 

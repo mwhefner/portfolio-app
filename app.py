@@ -1,6 +1,17 @@
-import dash
+"""
+
+app.py
+
+This is the script that the server machine runs with the specified python environment. It defines and configures the Dash application `app` and its layout `app.layout`. Specifically, the Creator and UI theme buttons and modals are defined. The creator modal contains a contact form the communicates with an external mysql server that should be defined in `database.conf` in the application's root directory. The server machine's WSGI entry point is `app.server`.
+
+M W Hefner, 2025
+MIT License
+
+"""
+
+# Needed packages
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, dcc, html, _dash_renderer
+from dash import Dash, Input, Output, State, dcc, html, clientside_callback, page_container, no_update
 import mysql.connector
 import sshtunnel
 import socket
@@ -12,36 +23,31 @@ import time
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
 
 # Initialize application
-app = dash.Dash(
+app = Dash(
     __name__,
     external_stylesheets=[dbc.themes.LUX, dbc_css, dbc.icons.FONT_AWESOME],
     title = "M W Hefner's Web Portfolio",
     suppress_callback_exceptions=True,
     update_title = "thinkin' hard...",
-    use_pages=True)
+    use_pages=True
+)
 
-# Bio text
+# Bio text string
 bio_text = """
 I tackle complex problems and transform data, math and science concepts into interactive, pedagogically-informed software solutions.
 
 <br>
 
-##### Your feedback is strongly encouraged in the form below—it helps me improve!
+I built this app to share my work. You can find the [source code on GitHub.](https://github.com/mwhefner/portfolio-app) Your feedback is strongly encouraged in the form below. It helps me improve. Also feel free to reach out with any questions or if you're interested in a collaboration or commission.
 
-<br>
-
-If you're interested in a collaboration or comission—
-
-##### I am searching **right now** for new exciting roles and challenges!
-
-You can [Buy Me a Coffee](https://www.buymeacoffee.com/mwhefner) if you would like to support me and the applications I build.
+You can [Buy Me a Coffee](https://www.buymeacoffee.com/mwhefner) if you would like to support the applications I build.
 
 """
 
 # THEME
 
 # Light / Dark toggle callback
-dash.clientside_callback(
+clientside_callback(
     """
     function (switchOn) {
        document.documentElement.setAttribute("data-bs-theme", switchOn ? "light" : "dark");
@@ -52,6 +58,8 @@ dash.clientside_callback(
     Input("theme-switch", "value"),  # Pass the stored mapping
 )
 
+# Just organizes the names of the themes and
+# associates each one with a theme dictionary url
 dbc_themes_url = {
     item: getattr(dbc.themes, item)
     for item in dir(dbc.themes)
@@ -65,7 +73,7 @@ def template_from_url(url):
     return url_dbc_themes.get(url, "bootstrap").lower()
 
 # Theme name callback updates the store component with stylesheet data
-dash.clientside_callback(
+clientside_callback(
     """
     function(theme_name, themeMap) {
         if (themeMap && theme_name.toUpperCase() in themeMap) {
@@ -81,7 +89,9 @@ dash.clientside_callback(
 )
 
 # Theme url callback updates the theme stylesheet
-dash.clientside_callback(
+# This can be improved. It must be changed
+# when the css paths are changed.
+clientside_callback(
     """
     function(theme_url) {
 
@@ -102,11 +112,15 @@ dash.clientside_callback(
         // Append the new theme stylesheet
         document.head.appendChild(link);
 
-        // Now, create a link element for your universal CSS
+
+
+        // Now, create a link element to universal CSS
         const customLink = document.createElement('link');
         customLink.rel = 'stylesheet';
-        customLink.href = 'assets/universal.css';  // Replace with your universal CSS URL
+        customLink.href = 'assets/css/universal.css';  // **Replace with universal CSS URL**
         customLink.id = "universal-stylesheet";
+
+
 
         // Remove any existing universal stylesheets
         const oldCustomLink = document.getElementById("universal-stylesheet");
@@ -138,7 +152,7 @@ app.layout = dbc.Container([
     dcc.Store(id="feedback-dummy-target"),
 
     # This holds whatever page is being displayed
-    dash.page_container,
+    page_container,
 
     # The rest of this will retain across all pages or
     # "subapps" of the application, as I think of it
@@ -149,27 +163,43 @@ app.layout = dbc.Container([
             dbc.ModalHeader(dbc.ModalTitle("M W Hefner")),
             dbc.ModalBody(
                 [
-                    html.H1("Welcome!", style={"textAlign": "center"}, className="m-5"),
+                    html.H1("Welcome", style={"textAlign": "center"}, className="m-5"),
+                    
+                    dbc.Carousel(
+                        items=[
+                            
+                            {"key": "1", "src": "/assets/webp/images/webdg9.webp", "caption" : "A Cross Section Schwarz Surface"},
+                            
+                            {"key": "2", "src": "/assets/webp/images/webdg4.webp", "caption" : "A Frenet-Serret Frame on a Torus Knot"},
+                            
+                            {"key": "3", "src": "/assets/webp/images/webdg3.webp", "caption" : "A Figure-8 Immersion of a Klein Bottle"},
+                            
+                            {"key": "5", "src": "/assets/webp/images/Global Time Series - Second Draft.webp", "caption" : ""},
+                            
+                            {"key": "6", "src": "/assets/webp/images/tonetornado_still.webp", "caption" : "The Harmonic Series at Middle C"},
+
+                        ],
+                        controls=True,
+                        indicators=False,
+                        className="carousel-fade mb-5",
+                        interval=3000
+                    ),
+                
                     dbc.Row(
                         [
                         dbc.Col(
-                            dcc.Markdown(bio_text, dangerously_allow_html=True, style={"textAlign": "center"}, className = "ps-5"),
-                            md=9,  # Adjust as needed
-                        ),
-                        dbc.Col(
-                            [
-                                html.Img(src="/assets/as_webp/output_image.webp", style={"width": "100%", "height": "auto", "borderRadius": "8px"},alt="A strake showing Gaussian curvature",className="pe-4"),
-                                html.P("Gaussian curvature of a helical strake", style={"textAlign" : "center"})
-                            ],
-                            md=3,  # Adjust as needed
+                            dcc.Markdown(bio_text, dangerously_allow_html=True, style={"textAlign": "center"}, className = "px-5"),
+                            md=12,  # Adjust as needed
                         ),
                         ], align = "center"
                     ),
+                    
+                    # Button to link to home
                     dbc.Row(
                         dbc.Col(
                                 dbc.Button(
                                     dbc.Row([
-                                            dbc.Col(html.Span("Web Portfolio", className="fw-bold"), width="auto"),
+                                            dbc.Col(html.Span("Portfolio", className="fw-bold"), width="auto"),
                                             dbc.Col(html.I(className="fa-solid fa-images"), width="auto", className="text-end")
                                         ]),
                                     id="portfolio-btn",
@@ -180,11 +210,13 @@ app.layout = dbc.Container([
                             ),
                         justify="center", className="m-5"
                     ),
-                    html.H1("Thank you for visiting.", style={"textAlign": "center"}, className="m-5"),
+                    html.H4("Thank you for visiting.", style={"textAlign": "center"}, className="m-5"),
+                    
+                    # Contact form
                     dbc.Card(
                         dbc.CardBody(
                             [
-                                html.H4("Say hello!", className="card-title", style={"textAlign": "center"}),
+                                html.H4("Contact", className="card-title", style={"textAlign": "center"}),
                                 dbc.Form(
                                     [
                                         dbc.Row(
@@ -209,6 +241,8 @@ app.layout = dbc.Container([
                                             dbc.Textarea(id="message", placeholder="Enter your comment or question here", style={"height": "100px"}),
                                             dbc.Label("Message"),
                                         ]),
+                                        
+                                        # contact form submit button
                                         dbc.Row(
                                             dbc.Col(dbc.Button("Submit Message", id="submit-btn", color="primary", href="/"), width="auto"),
                                             justify="center", className="m-4"
@@ -338,17 +372,6 @@ app.layout = dbc.Container([
 
 ])
 
-"""
-        dbc.Button(
-            dbc.Row([
-                dbc.Col(html.Span("Share", className="fw-bold"), width="auto"),
-                dbc.Col(html.I(className="fa-solid fa-share"), width="auto", className="text-end")
-            ], className="d-flex justify-content-between align-items-center", align="center"),
-            id="share-button",
-            color="secondary"
-        ),
-"""
-
 # Portfolio modal callback
 @app.callback(
     Output("portfolio-modal", "is_open"),
@@ -359,6 +382,7 @@ app.layout = dbc.Container([
 def toggle_portfolio_modal(n_clicks, n_2, n_3, is_open):
     return not is_open
 
+# Theme modal callback
 app.clientside_callback(
     """
     function(n_clicks, n_2, is_open) {
@@ -371,7 +395,11 @@ app.clientside_callback(
     prevent_initial_call=True,
 )
 
-# Database connectivity for form input
+# get database configuration from `database.conf`
+# and submit the form information to the database.
+# the print()s in this section will print on the server log -
+# my intent is to catch any messages that may fail
+
 def load_db_credentials(conf_file="database.conf"):
     """Reads database and SSH credentials from a .conf file."""
     config = configparser.ConfigParser()
@@ -503,13 +531,13 @@ def save_feedback(n_clicks, name, email, message):
 )
 def submit_feedback(n_clicks, name, email, message):
 
-    """Callback to handle feedback submission."""
+    """Main callback to handle feedback submission."""
 
     if not name or not email or not message:
 
         print(f"Form data incomplete: name = {name}, email = {email}, message = {message}")
 
-        return "Please fill all fields ❌", "danger", False, dash.no_update
+        return "Please fill all fields ❌", "danger", False, no_update
 
     try:
         print(f"Attempting to save feedback: name = {name}, email = {email}, message = {message}")
@@ -524,5 +552,5 @@ def submit_feedback(n_clicks, name, email, message):
         print(f"Message contents:REPLY EMAIL:{email}")
         print(f"Message contents:MESSAGE{message}")
 
-        return "Error: Try Again ❌", "danger", False, dash.no_update
+        return "Error: Try Again ❌", "danger", False, no_update
 

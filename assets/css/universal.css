@@ -1,0 +1,91 @@
+/* Hide scrollbar when inactive */
+::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+#react-entry-point {
+    position:absolute;
+}
+
+body {
+    background-image: url("../background_asset.svg");
+    width: 100vw;
+    height: 100vh;
+}
+
+.false-body {
+    background-color: var(--bs-body-bg) !important;
+}
+
+.custom-shadow-card {
+    box-shadow: 2px 2px 4px var(--bs-primary);
+}
+
+/* Show scrollbar when scrolling */
+.scroll-container:hover::-webkit-scrollbar {
+    width: 8px; /* Adjust as needed */
+    height: 8px;
+}
+
+
+.form-select {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-info) !important;
+    font-weight: bold !important;
+}
+
+.dbc .Select-placeholder {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-info) !important;
+    font-weight: bold !important;
+}
+
+.LaTeX-p p {
+    margin-bottom: 0px;
+}
+
+#theme-switch {
+    margin:0;
+}
+
+.btn-group .form-select, .btn-group .form-check-label {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Highlight all books with the same ISBN class when hovering over any of them */
+[class^="ISBN_"]:hover {
+    border: 2px solid --bs-info;
+}
+
+/* Style all elements with the same ISBN class to be highlighted when hovering over any book */
+[class^="ISBN_"]:hover,
+[class^="ISBN_"]:hover ~ [class^="ISBN_"] {
+    border: 2px solid --bs-info; /* Apply border to all elements with the same class */
+}
+
+
+.webdg_slider .rc-slider {
+    height: 1.5em !important;
+}
+
+.webdg_slider .rc-slider-rail {
+    height: 1.5em !important;
+}
+
+.webdg_slider .rc-slider-handle {
+    width: 1.5em !important;
+    height: 1.5em !important;
+    margin-top: 0em !important;
+}
+
+.webdg_slider .rc-slider-track {
+    height: 1.5em !important;
+}
+
+.carousel-caption {
+    color : white !important;
+}
