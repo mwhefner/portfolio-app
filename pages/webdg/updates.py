@@ -23,7 +23,7 @@ layout = html.Div(
                 
             Version 1.0.3 brings with it a number of  exciting changes:
 
-            - As with the rest of my portfolio, WebDG is now completely open source under the MIT licence. You can find the [source code on GitHub.](https://github.com/mwhefner/portfolio-app)
+            - As with the rest of my portfolio, WebDG is now completely open source under the MIT license. You can find the [source code on GitHub.](https://github.com/mwhefner/portfolio-app)
             - Users can now control the orbit control sensitivity.
             - Subjects can now be automatically rotated using the settings.
             - Feedback to the user from the rendering procedure for all subjects has been made more accurate and descriptive.
