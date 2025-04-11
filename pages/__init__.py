@@ -56,7 +56,7 @@ def makeCard(page):
         "/mix_paper" : "https://link.springer.com/article/10.1007/s11027-024-10149-x",
         '/briggs' : 'https://doi.org/10.1017/eds.2023.38',
         '/cdiac' : 'https://rieee.appstate.edu/projects-programs/cdiac/',
-        #'/spectrawhorl' : 'https://www.tonetornado.com/',
+        '/spectrawhorl' : 'https://www.tonetornado.com/',
     }
     
     # if the page has a "last updated", specify it here
