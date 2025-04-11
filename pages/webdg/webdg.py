@@ -302,13 +302,13 @@ layout = html.Div(
                 
                 dcc.Markdown(
                     r"""    
-                    Made for both students and instructors, WebDG is a free and accessible web app robust enough to interactively explore the differential geometry of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.
+                    WebDG is for anyone studying, teaching, or just curious about [differential geometry](https://www.britannica.com/science/differential-geometry). It is an open-source web app robust enough to explore interactive 3D visualizations and analyses of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.
                     
-                    **This software is free for anyone to use to learn or to teach others about differential geometry. No login, download, license, or subscription is required.**
+                    **WebDG is free for everyone. No login, download, license, or subscription is required.**
                     
-                    This app costs money to maintain and keep online. People like you can keep this tool free and available for everyone with a one-time or recurring donation through [Buy Me a Coffee.](https://www.buymeacoffee.com/mwhefner) All major credit cards are accepted and no login is required to donate.
+                    I create, maintain, and host this open-source educational tool as a labor of love, freely available to everyone. If you find it useful and would like to support its continued development and hosting, you’re welcome to make a small, optional donation via Buy Me a Coffee. No account is needed, and all major credit cards are accepted. Thank you for helping keep this resource online and accessible!
                     
-                    **You can also show your support by sharing this app!**
+                    **You can also show your support by simply sharing this app!**
                     
                     ***
                     
@@ -320,41 +320,41 @@ layout = html.Div(
                 dcc.Markdown(
                     r"""    
                     
-                    ##### Subjects
+                    WebDG can be used to study 3 abstract *subjects*: 
                     
-                    WebDG can be used to study 3 abstract *subjects*: **curves**, **parametric surfaces**, or **level surfaces** (a.k.a. "isosurfaces" or "implicit surfaces").
+                    - **curves**, 
+                    - **parametric surfaces**,
+                    - and **level surfaces** (a.k.a. "isosurfaces" or "implicit surfaces").
                     
-                    Use the Subjects menu to chose and define a subject to study. Curves and parametric surfaces are defined parametrically, and level surfaces are defined implicitly (by equation). Once you finish defining and "render" your subject, WebDG will create an interactive visualization of it.
+                    Use the Subjects menu to choose and define a subject to study. Curves and parametric surfaces are defined parametrically, and level surfaces are defined implicitly. Once you finish defining and "render" your subject, WebDG will create an interactive visualization of it.
                     
-                    """, mathjax=True, className="mb-5"
-                ),
-                
-                dcc.Markdown(
-                    r"""    
+                    ***
                     
-                    ##### Analytics
-                    
-                    For **curves**, WebDG symbolically computes explicit formulas for:
+                    **Curves** are defined by parametric equations (i.e. $x$, $y$, and $z$ are defined in terms of $t$) and can be colored by speed, curvature, torsion, t coordinate, or x-y-z coordinates. As analytics, WebDG symbolically computes these explicit expressions for curves:
                     
                     - the first, second, and third derivatives;
                     - the Frenet-Serret frame;
                     - the speed;
                     - the curvature;
                     - and the torsion
-                    
+
                     with plots for the latter three.
                     
-                    For **parametric surfaces**, WebDG symbolically computes explicit formulas for:
+                    ***
+                    
+                    **Parametric surfaces** are defined by parametric equations also (i.e. $x$, $y$, and $z$ are defined in terms of $u$, and $v$) and can be colored by u-v coordinates, x-y-z coordinates, scene lighting, surface normal, Gaussian curvature, mean curvature, or principal curvature (k1 or k2). As analytics, WebDG symbolically computes these explicit expressions for parametric surfaces:
                     
                     - the Jacobian (all first-order partial derivatives),
                     - the Hessian(s) (all second-order partial derivatives),
                     - the First Fundamental Form coefficients,
                     - the Second Fundamental Form coefficients,
                     - and the Gaussian, mean, and principal curvatures
-                    
+
                     with plots for the three curvatures.
                     
-                    Analytics are not currently available for level surfaces.
+                    ***
+                    
+                    **Level surfaces** (a.k.a. "isosurfaces" or "implicit surfaces") can be defined implicitly (i.e. defined by a function $f$ assuming $f(x,y,z)=0$). They can be colored by scene lighting or surface normal. Analytics are not currently available for level surfaces.
                     
                     ***
                     
