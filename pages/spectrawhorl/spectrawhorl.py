@@ -9,7 +9,7 @@ MIT License
 
 """
 
-from dash import register_page, html, dcc, clientside_callback, Input, Output, State
+from dash import register_page, html, dcc, clientside_callback, Input, Output, State, ClientsideFunction
 import dash_bootstrap_components as dbc
 
 register_page(
@@ -27,6 +27,8 @@ layout = html.Div(
 
         # A location object tracks the address bar url
         dcc.Location(id='spectrawhorl_url'),
+        
+        dcc.Store(id = "spectrawhorl_refresh_dummy_target"),
         
         # Help menu button
         dbc.Stack([
@@ -99,9 +101,40 @@ layout = html.Div(
                 html.Button([html.I(className="fa-solid fa-up-right-and-down-left-from-center"),], id = "fullscreenToggle", className = "B_TRANS",
                 title = "Toggle fullscreen viewer"),
                 
-            ]
+            ],
+            
+            id = "spectrawhorl_viewer"
         ),
     ]
+)
+
+# This callback creates, refreshes, or kills (when exiting) the sketch
+clientside_callback(
+    """
+    function (path) {
+        let sw = window.spectrawhorl_namespace;
+        
+        if (typeof spectrawhorl_sketch !== "undefined") {
+            // This properly disposes of the old instance
+            spectrawhorl_sketch.remove();
+        }
+        
+        if (path === "/spectrawhorl") {
+            // Create a fresh sketch
+            spectrawhorl_sketch = new p5(sw.build_sketch);   
+        }
+        
+        if (typeof spectrawhorl_sketch !== "undefined" && path !== "/spectrawhorl") {
+            // Get rid of the instance if you leave the page
+            spectrawhorl_sketch.remove();
+        }
+        
+        return "";
+    
+    }    
+    """,
+    Output("spectrawhorl_refresh_dummy_target", "data"),
+    Input("spectrawhorl_url", "pathname")
 )
 
 ## Help modal open/close
@@ -114,5 +147,5 @@ clientside_callback(
     Output("spectrawhorl-help-modal", "is_open"),
     [Input("spectrawhorl-help-button", "n_clicks"), Input("close-spectrawhorl-help-modal", "n_clicks")],
     State("spectrawhorl-help-modal", "is_open"),
-    prevent_initial_call=False,
+    prevent_initial_call=True,
 )
