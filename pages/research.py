@@ -1,25 +1,25 @@
 """
 
-home.py
+research.py
 
-This defines the home, "landing" or "index" page of the portfolio.
+This defines the research "landing" or "index" page of the portfolio.
 
 M W Hefner, 2025
 MIT License
 
 """
 
-from dash import html, dcc, Output, Input, register_page, callback, page_registry
+from dash import html, dcc, Output, Input, page_registry, register_page, callback
 import dash_bootstrap_components as dbc
 from pages import makeCard
 
 register_page(
     __name__,
-    path="/",
-    name="Portfolio",
-    title="Data Science & Interactive Analytics Portfolio",
-    description="Transforming complex data, math, and science concepts into interactive and pedagogically-informed software solutions. Explore publications, web projects and interactive dashboards.",
-    image="webp/thumbnails/thumbnail.webp",
+    path="/research",
+    name="Research",
+    title="M. W. Hefner's Research",
+    description="Research groups, papers, and datasets.",
+    image="assets/webp/thumbnails/mix_paper.webp",
     meta_tags=[
         {"charset": "UTF-8"},
         {"name": "viewport", "content": "width=device-width, initial-scale=1.0, viewport-fit=cover"},
@@ -35,23 +35,20 @@ register_page(
 
 # Empty layout to be populated by a callback
 layout = dbc.Row(
-    id="card-container", 
+    id="research-cc", 
     className="justify-content-center"
 )
 
-# I just manually specify the layout here for now
-# and I'll make something more complicated if I need it
-
-column_one_paths = ["/webdg"]
-column_two_paths = ["/research", "/dashboards"]
-column_three_paths = ["/spectrawhorl"]
+column_one_paths = ["/mix_paper"]
+column_two_paths = ["/briggs"]
+column_three_paths = ["/cdiac"]
 
 # Callback to populate the layout on app startup
 @callback(
-    Output("card-container", "children"),
-    Input("card-container", "id")  # Triggers once at startup
+    Output("research-cc", "children"),
+    Input("research-cc", "id")  # Triggers once at startup
 )
-def populate_cards(_):
+def populate_research_cards(_):
     
     pages = [page for page in page_registry.values()]
     
@@ -64,6 +61,10 @@ def populate_cards(_):
     column_three_pages = [page_dict[path] for path in column_three_paths if path in page_dict]
     
     return dbc.Col([
+        dbc.Row(
+            dbc.Col(dbc.Button("Back", color="primary", href="/"), width="auto"),
+            justify="center", className="m-4"
+        ),
         dbc.Row([
             dbc.Col(column_one_pages, className = "p-0"),
             dbc.Col(column_two_pages, className = "p-0"),
