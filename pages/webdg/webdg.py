@@ -60,7 +60,7 @@ layout = html.Div(
                 dbc.Button(
                     dbc.Row([
                         
-                        dbc.Col(html.Span("Reset 3D Engine", className="fw-bold"), width="auto"),
+                        dbc.Col(html.Span("Reset", className="fw-bold"), width="auto"),
                         
                         dbc.Col(html.I(className="fa-solid fa-rotate"), width="auto", className="text-end")
                         

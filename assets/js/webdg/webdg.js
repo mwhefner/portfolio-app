@@ -438,32 +438,34 @@ curve_sketch : function (curveData) {
         
         p.strokeWeight(1);
 
-        if (p.keyIsDown(p.LEFT_ARROW) === true) {
-            cam.move(-dg.movementSpeed, 0, 0);
-        }
-    
-        if (p.keyIsDown(p.RIGHT_ARROW) === true) {
-            cam.move(dg.movementSpeed, 0, 0);
-        }
-    
-        if (p.keyIsDown(p.UP_ARROW) === true) {
-
-            if (p.keyIsDown(p.SHIFT)) {
-                cam.move(0, 0, -dg.movementSpeed);
-            } else {
-                cam.move(0, -dg.movementSpeed, 0);
+        if (dg.orbitControlled) {
+            if (p.keyIsDown(p.LEFT_ARROW) === true) {
+                cam.move(-dg.movementSpeed, 0, 0);
             }
-            
-        }
-    
-        if (p.keyIsDown(p.DOWN_ARROW) === true) {
-
-            if (p.keyIsDown(p.SHIFT)) {
-                cam.move(0, 0, dg.movementSpeed);
-            } else {
-                cam.move(0, dg.movementSpeed, 0);
+        
+            if (p.keyIsDown(p.RIGHT_ARROW) === true) {
+                cam.move(dg.movementSpeed, 0, 0);
             }
-
+        
+            if (p.keyIsDown(p.UP_ARROW) === true) {
+    
+                if (p.keyIsDown(p.SHIFT)) {
+                    cam.move(0, 0, -dg.movementSpeed);
+                } else {
+                    cam.move(0, -dg.movementSpeed, 0);
+                }
+                
+            }
+        
+            if (p.keyIsDown(p.DOWN_ARROW) === true) {
+    
+                if (p.keyIsDown(p.SHIFT)) {
+                    cam.move(0, 0, dg.movementSpeed);
+                } else {
+                    cam.move(0, dg.movementSpeed, 0);
+                }
+    
+            }
         }
 
     };
@@ -643,32 +645,34 @@ surface_sketch : function (obj_file, colorsJSON, s_nu_validated, s_nv_validated,
 
         p.strokeWeight(1);
 
-        if (p.keyIsDown(p.LEFT_ARROW) === true) {
-            cam.move(-dg.movementSpeed, 0, 0);
-        }
-    
-        if (p.keyIsDown(p.RIGHT_ARROW) === true) {
-            cam.move(dg.movementSpeed, 0, 0);
-        }
-    
-        if (p.keyIsDown(p.UP_ARROW) === true) {
-
-            if (p.keyIsDown(p.SHIFT)) {
-                cam.move(0, 0, -dg.movementSpeed);
-            } else {
-                cam.move(0, -dg.movementSpeed, 0);
+        if (dg.orbitControlled) {
+            if (p.keyIsDown(p.LEFT_ARROW) === true) {
+                cam.move(-dg.movementSpeed, 0, 0);
             }
-            
-        }
-    
-        if (p.keyIsDown(p.DOWN_ARROW) === true) {
-
-            if (p.keyIsDown(p.SHIFT)) {
-                cam.move(0, 0, dg.movementSpeed);
-            } else {
-                cam.move(0, dg.movementSpeed, 0);
+        
+            if (p.keyIsDown(p.RIGHT_ARROW) === true) {
+                cam.move(dg.movementSpeed, 0, 0);
             }
-
+        
+            if (p.keyIsDown(p.UP_ARROW) === true) {
+    
+                if (p.keyIsDown(p.SHIFT)) {
+                    cam.move(0, 0, -dg.movementSpeed);
+                } else {
+                    cam.move(0, -dg.movementSpeed, 0);
+                }
+                
+            }
+        
+            if (p.keyIsDown(p.DOWN_ARROW) === true) {
+    
+                if (p.keyIsDown(p.SHIFT)) {
+                    cam.move(0, 0, dg.movementSpeed);
+                } else {
+                    cam.move(0, dg.movementSpeed, 0);
+                }
+    
+            }
         }
     };
     
@@ -804,32 +808,34 @@ level_surface_sketch : function(obj_file, colorby) {
 
         p.strokeWeight(1);
 
-        if (p.keyIsDown(p.LEFT_ARROW) === true) {
-            cam.move(-dg.movementSpeed, 0, 0);
-        }
-    
-        if (p.keyIsDown(p.RIGHT_ARROW) === true) {
-            cam.move(dg.movementSpeed, 0, 0);
-        }
-    
-        if (p.keyIsDown(p.UP_ARROW) === true) {
-
-            if (p.keyIsDown(p.SHIFT)) {
-                cam.move(0, 0, -dg.movementSpeed);
-            } else {
-                cam.move(0, -dg.movementSpeed, 0);
+        if (dg.orbitControlled) {
+            if (p.keyIsDown(p.LEFT_ARROW) === true) {
+                cam.move(-dg.movementSpeed, 0, 0);
             }
-            
-        }
-    
-        if (p.keyIsDown(p.DOWN_ARROW) === true) {
-
-            if (p.keyIsDown(p.SHIFT)) {
-                cam.move(0, 0, dg.movementSpeed);
-            } else {
-                cam.move(0, dg.movementSpeed, 0);
+        
+            if (p.keyIsDown(p.RIGHT_ARROW) === true) {
+                cam.move(dg.movementSpeed, 0, 0);
             }
-
+        
+            if (p.keyIsDown(p.UP_ARROW) === true) {
+    
+                if (p.keyIsDown(p.SHIFT)) {
+                    cam.move(0, 0, -dg.movementSpeed);
+                } else {
+                    cam.move(0, -dg.movementSpeed, 0);
+                }
+                
+            }
+        
+            if (p.keyIsDown(p.DOWN_ARROW) === true) {
+    
+                if (p.keyIsDown(p.SHIFT)) {
+                    cam.move(0, 0, dg.movementSpeed);
+                } else {
+                    cam.move(0, dg.movementSpeed, 0);
+                }
+    
+            }
         }
     };
     
