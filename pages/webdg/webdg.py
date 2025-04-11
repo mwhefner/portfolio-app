@@ -306,7 +306,7 @@ layout = html.Div(
                     
                     **WebDG is free for everyone. No login, download, license, or subscription is required.**
                     
-                    I create, maintain, and host this open-source educational tool as a labor of love, freely available to everyone. If you find it useful and would like to support its continued development and hosting, you’re welcome to make a small, optional donation via Buy Me a Coffee. No account is needed, and all major credit cards are accepted. Thank you for helping keep this resource online and accessible!
+                    I create, maintain, and host this open-source educational tool as a labor of love, freely available to everyone. If you find it useful and would like to support its continued development and hosting, you’re welcome to make a small, optional donation via [Buy Me a Coffee](https://www.buymeacoffee.com/mwhefner). No account is needed, and all major credit cards are accepted. Thank you for helping keep this resource online and accessible!
                     
                     **You can also show your support by simply sharing this app!**
                     
