@@ -358,6 +358,10 @@ layout = html.Div(
                     
                     ***
                     
+                    *Tip: In WebDG, as in computer graphics, the $y$-axis points up in space. This is different from the $z$-up representation traditionally encountered in math contexts.*
+                    
+                    ***
+                    
                     #### Citation
                     """, mathjax=True, className="mb-5"
                 ),
