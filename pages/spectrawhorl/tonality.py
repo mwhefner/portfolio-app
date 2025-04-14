@@ -88,7 +88,7 @@ layout = [
                                     # Scale degree name (e.g. "Mediant")
                                     html.I("IV. LOADING TEXT",id = "spectrawhorl-scale_degree_4_title_1"),
                                     
-                                    html.Img(id = "spectrawhorl-scale_degree_4_svg"),
+                                    html.Img(id = "spectrawhorl-scale_degree_4_svg", draggable="false"),
                                     
                                     # Title 1: Roman numeral, Tonic Note, Mode (e.g. "iii. E Phyrigian")
                                     html.H4("LOADING TEXT",id = "spectrawhorl-scale_degree_4_title_2"),
@@ -99,7 +99,7 @@ layout = [
                                 children = [
                                     html.I("V. LOADING TEXT",id = "spectrawhorl-scale_degree_5_title_1"),
                                     
-                                    html.Img(id = "spectrawhorl-scale_degree_5_svg"),
+                                    html.Img(id = "spectrawhorl-scale_degree_5_svg", draggable="false"),
                                     
                                     html.H4("LOADING TEXT",id = "spectrawhorl-scale_degree_5_title_2"),
                                 ],
@@ -114,7 +114,7 @@ layout = [
                                 children = [
                                     html.I("III. LOADING TEXT",id = "spectrawhorl-scale_degree_3_title_1"),
                                     
-                                    html.Img(id = "spectrawhorl-scale_degree_3_svg"),
+                                    html.Img(id = "spectrawhorl-scale_degree_3_svg", draggable="false"),
                                     
                                     html.H4("LOADING TEXT",id = "spectrawhorl-scale_degree_3_title_2"),
                                 ],
@@ -124,7 +124,7 @@ layout = [
                                 children = [
                                     html.I("I. LOADING TEXT",id = "spectrawhorl-scale_degree_1_title_1"),
                                     
-                                    html.Img(id = "spectrawhorl-scale_degree_1_svg"),
+                                    html.Img(id = "spectrawhorl-scale_degree_1_svg", draggable="false"),
                                     
                                     html.H4("LOADING TEXT",id = "spectrawhorl-scale_degree_1_title_2"),
                                 ],
@@ -134,7 +134,7 @@ layout = [
                                 children = [
                                     html.I("VI. LOADING TEXT",id = "spectrawhorl-scale_degree_6_title_1"),
                                     
-                                    html.Img(id = "spectrawhorl-scale_degree_6_svg"),
+                                    html.Img(id = "spectrawhorl-scale_degree_6_svg", draggable="false"),
                                     
                                     html.H4("LOADING TEXT",id = "spectrawhorl-scale_degree_6_title_2"),
                                 ],
@@ -149,7 +149,7 @@ layout = [
                                 children = [
                                     html.I("II. LOADING TEXT",id = "spectrawhorl-scale_degree_2_title_1"),
                                     
-                                    html.Img(id = "spectrawhorl-scale_degree_2_svg"),
+                                    html.Img(id = "spectrawhorl-scale_degree_2_svg", draggable="false"),
                                     
                                     html.H4("LOADING TEXT",id = "spectrawhorl-scale_degree_2_title_2"),
                                 ],
@@ -159,7 +159,7 @@ layout = [
                                 children = [
                                     html.I("VII. LOADING TEXT",id = "spectrawhorl-scale_degree_7_title_1"),
                                     
-                                    html.Img(id = "spectrawhorl-scale_degree_7_svg"),
+                                    html.Img(id = "spectrawhorl-scale_degree_7_svg", draggable="false"),
                                     
                                     html.H4("LOADING TEXT",id = "spectrawhorl-scale_degree_7_title_2"),
                                 ],

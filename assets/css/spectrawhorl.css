@@ -134,14 +134,6 @@
     text-decoration: none;
 }
 
-.spectrawhorl-sd_Dark {
-    border: dashed 1px var(--bs-primary) !important;
-}
-
-.spectrawhorl-sd_Light {
-    border: dashed 1px var(--bs-primary) !important;
-}
-
 .spectrawhorl-sd_Dark_selected {
     box-shadow: inset 0 0 30px 5px var(--bs-success);
 }
@@ -154,11 +146,11 @@
     height: 7vw;
     margin: 5px;
     border-radius: 50%;
-    box-shadow: inset 0 0 5px 5px gray;
+    box-shadow: inset 0 0 5px 5px var(--bs-info);
 }
 
 #spectrawhorl-scale_degree_1_svg:hover, #spectrawhorl-scale_degree_2_svg:hover, #spectrawhorl-scale_degree_3_svg:hover, #spectrawhorl-scale_degree_4_svg:hover, #spectrawhorl-scale_degree_5_svg:hover, #spectrawhorl-scale_degree_6_svg:hover, #spectrawhorl-scale_degree_7_svg:hover {
-    box-shadow: 0 0 10px 10px rgba(128, 128, 128, 0.5);
+    box-shadow: 0 0 10px 10px var(--bs-info);
     height: 8vw;
 }
 
@@ -170,4 +162,16 @@
 #spectrawhorl-keyMode {
     padding-right: 2.5rem !important;
     padding-left: 0.25rem !important;
+}
+
+/* Menu Opacity */
+:root {
+    --spectrawhorl-menu-opacity: 1;
+}
+
+#spectrawhorl-menu-modal,
+#spectrawhorl-menu-content,
+#spectrawhorl-menu-body {
+    background-color: var(--bs-bg-color);
+    opacity: var(--spectrawhorl-menu-opacity);
 }

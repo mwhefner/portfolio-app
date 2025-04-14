@@ -66,15 +66,36 @@ layout = html.Div(
                         }
                     ),
                     
-                dbc.Carousel(
-                    items=[
-                        {"key": "6", "src": "/assets/webp/images/tonetornado_still.webp", "caption" : "The Harmonic Series at C3"},
-                    ],
-                    controls=True,
-                    indicators=False,
-                    className="carousel-fade",
-                    interval=3000,
-                ),
+                    dcc.Markdown(
+                        r"""          
+                        
+                        Version 1.0.0
+                        
+                        """,
+                        style={
+                            "textAlign": "center"
+                        }
+                        
+                    ),
+                    
+                    dbc.Carousel(
+                        items=[
+                            {"key": "6", "src": "/assets/webp/images/tonetornado_still.webp", "caption" : "The Harmonic Series at C3"},
+                        ],
+                        controls=True,
+                        indicators=False,
+                        className="carousel-fade",
+                        interval=3000,
+                    ),
+                    
+                    dcc.Markdown(
+                        r"""    
+                        **SpectraWhorl** is a [**spectrogram**](https://en.wikipedia.org/wiki/Spectrogram) in a [**whorled pattern.**](https://en.wikipedia.org/wiki/Whorl)
+
+                        Like all spectrograms, SpectraWhorl plots pitch (or the frequency **spectrum**) from the sound source. What makes SpectraWhorl different is that it does so in clock-like **whorled** pattern where *one 360° rotation represents rising (counter-clockwise) or falling (clockwise) an octave.*
+                        
+                        """, mathjax=True, className="m-5", style = {'textAlign' : 'center', 'fontSize' : '1.25em'}
+                    ),
                     
                     ]
                 ),
@@ -99,13 +120,6 @@ layout = html.Div(
         # Viewer
         html.Div(
             id = "spectrawhorl_viewer"
-        ),
-        
-        # theme popover
-        dbc.Popover(
-            dbc.PopoverBody(html.Em("expand the spectrawhorl menu")),
-            target="spectrawhorl-menu",
-            trigger="hover",
         ),
 
         # Floating button using Affix-like positioning MENU BUTTON
@@ -234,7 +248,8 @@ layout = html.Div(
                             ),
                         ],
                         className="px-0"
-                    )
+                    ),
+                    id="spectrawhorl-menu-body"
                 ),
                 dbc.ModalFooter(
 

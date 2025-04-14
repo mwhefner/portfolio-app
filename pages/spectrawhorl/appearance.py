@@ -9,7 +9,7 @@ MIT License
 
 """
 
-from dash import html, dcc
+from dash import html, dcc, clientside_callback, Output, Input
 import dash_bootstrap_components as dbc
 
 # EVERYTHING COLOR PALETTES
@@ -147,6 +147,25 @@ controlSetName = 'THEME'
 layout = html.Div(
     
     children = [
+        
+        dcc.Markdown("***"),
+        
+        dbc.Label('Menu Opacity', className = "spectrawhorl-label mb-5"),
+
+        dcc.Slider(
+            id='spectrawhorl-menuTransparency',
+            min=0.4,
+            max=1,
+            step=0.01,
+            value=1,
+            marks={
+                0.4: 'Phantom',
+                1: 'Opaque',
+            },
+            included=True,
+            updatemode='drag',
+            className = "spectrawhorl-slider mb-5 w-75 mx-auto"
+        ),
 
         dcc.Markdown("***"),
 
@@ -419,4 +438,16 @@ layout = html.Div(
     ],
 
     id=controlSetName + "Controls",
+)
+
+clientside_callback(
+    """
+    function(opacity) {
+        console.log(opacity);
+        document.documentElement.style.setProperty('--spectrawhorl-menu-opacity', opacity);
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-menuTransparency', 'value'),
+    Input('spectrawhorl-menuTransparency', 'value')
 )
