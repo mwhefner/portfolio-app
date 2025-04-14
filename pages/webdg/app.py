@@ -4,6 +4,11 @@ webdg.py
 
 This defines the home, "landing" or "index" page of the portfolio.
 
+In addition to structuring the Dash application properly,
+to run this application on its own, all one must do is replace
+the page registration below with the multipage app with an app
+initialization and define the app.layout to be the layout below.
+
 M W Hefner, 2025
 MIT License
 
@@ -16,6 +21,7 @@ import pages.webdg.analytics as dg_analytics
 import pages.webdg.settings as dg_settings
 import pages.webdg.updates as dg_updates
 
+# Page registration
 register_page(
     __name__, 
     path="/webdg", 

@@ -1,0 +1,13 @@
+<!-- Copyright 2024. All rights reserved.  DO NOT DUPLICATE OR REDISTRIBUTE. -->
+<svg width="104" height="104" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="95.30127018922192" cy="77.00000000000003" r="3" fill="black" />
+  <circle cx="95.30127018922195" cy="27.000000000000036" r="3" fill="black" />
+  <circle cx="52.000000000000014" cy="2.0" r="3" fill="black" />
+  <circle cx="8.698729810778062" cy="27.00000000000001" r="3" fill="black" />
+  <circle cx="2.0" cy="51.99999999999998" r="3" fill="black" />
+  <circle cx="26.999999999999932" cy="95.3012701892219" r="3" fill="black" />
+  <circle cx="76.99999999999996" cy="95.30127018922195" r="3" fill="black" />
+  <line x1="52" y1="52" x2="95.30127018922192" y2="77.00000000000003" stroke="black" stroke-width="10"  />
+  <line x1="52" y1="52" x2="52.000000000000014" y2="2.0" stroke="#e41a1c" stroke-width="10" stroke-dasharray="1,2" />
+  <line x1="52" y1="52" x2="2.0" y2="51.99999999999998" stroke="#4daf4a" stroke-width="10" stroke-dasharray="10,5" />
+</svg>

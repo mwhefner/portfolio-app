@@ -94,34 +94,6 @@ layout = dbc.Card(
     className="px-0"
 )
 
-
-# Keeping the server callback around until I'm fully comfortable with the performance of the
-# clientside replacement below
-"""# control layout of subject modal
-@callback(
-    Output("subject-content", "children"), Input("subject-tabs", "active_tab")
-)
-def tab_content(active_tab = "curves"):
-    if active_tab == "surfaces":
-        return html.Div(
-                [html.Div(curves, style={"display": "none"}),
-                html.Div(surfaces, style={"display": "block"}),
-                html.Div(embedded_curves, style={"display": "none"})]
-            )  # Make the surface tab visible and the others not
-    if active_tab == "embedded curves":
-        return html.Div(
-                [html.Div(curves, style={"display": "none"}),
-                html.Div(surfaces, style={"display": "none"}),
-                html.Div(embedded_curves, style={"display": "block"})]
-            )  # Make the surface tab visible and the others not
-    
-    # Make the curves tab visible and the others not
-    return html.Div(
-            [html.Div(curves, style={"display": "block"}),
-            html.Div(surfaces, style={"display": "none"}),
-            html.Div(embedded_curves, style={"display": "none"})]
-        )"""
-
 clientside_callback(
     """
     function(active_tab) {

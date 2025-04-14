@@ -16,7 +16,7 @@ dash.register_page(
 # Data Wrangling----------------------
 
 # Read the CSV and treat ISBN as a string to prevent conversion errors
-df = pd.read_csv("assets/data/bestsellers.csv", dtype={'ISBN': str})
+df = pd.read_csv("assets/csv/bestsellers.csv", dtype={'ISBN': str})
 
 # Get images later
 

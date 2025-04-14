@@ -115,21 +115,33 @@ clientside_callback(
 
 
         // Now, create a link element to universal CSS
-        const customLink = document.createElement('link');
-        customLink.rel = 'stylesheet';
-        customLink.href = 'assets/css/universal.css';  // **Replace with universal CSS URL**
-        customLink.id = "universal-stylesheet";
+        const universal_css = document.createElement('link');
+        universal_css.rel = 'stylesheet';
+        universal_css.href = 'assets/css/universal.css';  // **Replace with universal CSS URL**
+        universal_css.id = "universal-stylesheet";
+        
+        // Now, create a link element to universal CSS
+        const spectrawhorl_css = document.createElement('link');
+        spectrawhorl_css.rel = 'stylesheet';
+        spectrawhorl_css.href = 'assets/css/spectrawhorl.css';  // **Replace with universal CSS URL**
+        spectrawhorl_css.id = "spectrawhorl-stylesheet";
 
-
-
-        // Remove any existing universal stylesheets
-        const oldCustomLink = document.getElementById("universal-stylesheet");
-        if (oldCustomLink) {
-            document.head.removeChild(oldCustomLink);
+        // Remove any existing stylesheets
+        const olduniversal_css = document.getElementById("universal-stylesheet");
+        const oldspectrawhorl_css = document.getElementById("spectrawhorl-stylesheet");
+        
+        if (olduniversal_css) {
+            document.head.removeChild(olduniversal_css);
+        }
+        
+        if (oldspectrawhorl_css) {
+            document.head.removeChild(oldspectrawhorl_css);
         }
 
         // Append the universal stylesheet after the theme
-        document.head.appendChild(customLink);
+        document.head.appendChild(universal_css);
+        
+        document.head.appendChild(spectrawhorl_css);
 
         return window.dash_clientside.no_update;
     }
@@ -363,7 +375,7 @@ app.layout = dbc.Container([
         dbc.Button(
             dbc.Row([
                 dbc.Col(html.Span("Creator", className="fw-bold"), width="auto"),
-                dbc.Col(html.I(className="fa-solid fa-bars"), width="auto", className="text-end")
+                dbc.Col(html.I(className="fa-solid fa-chalkboard-user"), width="auto", className="text-end")
             ], className="d-flex justify-content-between align-items-center", align="center"),
             id="library-hamburger",
             color="primary"

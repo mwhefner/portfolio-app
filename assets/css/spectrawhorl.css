@@ -1,0 +1,173 @@
+/* For various controls */
+
+.spectrawhorl-palette .form-check-label {
+    width: 100%;
+}
+
+.spectrawhorl-label {
+    text-align: center;
+    width: 100%;
+    font-size: 1.35em;
+}
+
+.spectrawhorl-check {
+    font-size: 1.25em;
+}
+
+.spectrawhorl-inner-label {
+    font-size: 1em;
+    margin-bottom: 16px;
+    text-wrap: nowrap;
+}
+
+.spectrawhorl-slider .rc-slider-track {
+    background-color : var(--bs-info);
+}
+
+.spectrawhorl-slider .rc-slider-rail {
+    background-color : var(--bs-secondary);
+}
+
+.spectrawhorl-slider .rc-slider-dot {
+    background-color : var(--bs-secondary);
+    border-color : var(--bs-secondary);
+}
+
+.spectrawhorl-slider .rc-slider-dot-active {
+    background-color : var(--bs-secondary);
+    border-color : var(--bs-primary);
+}
+
+.spectrawhorl-slider .rc-slider-handle {
+    background-color : var(--bs-primary);
+    border-color : var(--bs-info);
+    height : 20px;
+    width : 20px;
+    border-radius: 50%;
+}
+
+.spectrawhorl-slider .rc-slider-mark-text {
+    font-size: 1.5em;
+    user-select: none;
+    margin-top: 10px;
+}
+
+/* UPLOAD BOX */
+
+#spectrawhorl-uploadBoxContainer {
+    width: 100%;
+}
+
+#spectrawhorl-uploadBox {
+    width: 100%;
+    border-width: 2px;
+
+    padding-bottom: 8px;
+
+}
+
+#spectrawhorl-uploadBoxInside {
+    width: 100%;
+    
+    border-width: 2px;
+    border-style: dashed;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+
+    padding-top: 30px;
+    padding-bottom: 30px;
+    text-decoration: underline;
+}
+
+/* MEDIA PLAYER */
+
+#spectrawhorl-mediaPlayer {
+    display:flex;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+#spectrawhorl-playPauseButton, #spectrawhorl-stopButton {
+    margin-top: 0px;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+/* TONALITY CONTROLS */
+
+#spectrawhorl-tc_base {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+#spectrawhorl-tc_column_1, #spectrawhorl-tc_column_2, #spectrawhorl-tc_column_3 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#spectrawhorl-scale_degree_1, #spectrawhorl-scale_degree_2, #spectrawhorl-scale_degree_3, #spectrawhorl-scale_degree_4, #spectrawhorl-scale_degree_5, #spectrawhorl-scale_degree_6, #spectrawhorl-scale_degree_7 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    cursor: pointer;
+    /*transition: background-color 0.3s;*/
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10%;
+    background-color: transparent;
+}
+
+#spectrawhorl-scale_degree_1 h4, #spectrawhorl-scale_degree_2 h4, #spectrawhorl-scale_degree_3 h4, #spectrawhorl-scale_degree_4 h4, #spectrawhorl-scale_degree_5 h4, #spectrawhorl-scale_degree_6 h4, #spectrawhorl-scale_degree_7 h4{
+    margin: 0px;
+    font-size: 12px;
+    /*white-space: nowrap !important;*/
+    text-decoration: none;
+}
+
+.spectrawhorl-sd_Dark {
+    border: dashed 1px var(--bs-primary) !important;
+}
+
+.spectrawhorl-sd_Light {
+    border: dashed 1px var(--bs-primary) !important;
+}
+
+.spectrawhorl-sd_Dark_selected {
+    box-shadow: inset 0 0 30px 5px var(--bs-success);
+}
+
+.spectrawhorl-sd_Light_selected {
+    box-shadow: inset 0 0 30px 5px var(--bs-success);
+}
+
+#spectrawhorl-scale_degree_1_svg, #spectrawhorl-scale_degree_2_svg, #spectrawhorl-scale_degree_3_svg, #spectrawhorl-scale_degree_4_svg, #spectrawhorl-scale_degree_5_svg, #spectrawhorl-scale_degree_6_svg, #spectrawhorl-scale_degree_7_svg {
+    height: 7vw;
+    margin: 5px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 5px 5px gray;
+}
+
+#spectrawhorl-scale_degree_1_svg:hover, #spectrawhorl-scale_degree_2_svg:hover, #spectrawhorl-scale_degree_3_svg:hover, #spectrawhorl-scale_degree_4_svg:hover, #spectrawhorl-scale_degree_5_svg:hover, #spectrawhorl-scale_degree_6_svg:hover, #spectrawhorl-scale_degree_7_svg:hover {
+    box-shadow: 0 0 10px 10px rgba(128, 128, 128, 0.5);
+    height: 8vw;
+}
+
+#spectrawhorl-keyNote {
+    padding-right: 2.5rem !important;
+    padding-left: 0.25rem !important;
+}
+
+#spectrawhorl-keyMode {
+    padding-right: 2.5rem !important;
+    padding-left: 0.25rem !important;
+}

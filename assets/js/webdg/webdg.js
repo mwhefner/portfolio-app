@@ -3,7 +3,7 @@
 window.dash_clientside = window.dash_clientside || {};
 window.dash_clientside.differential_geometry = {
 
-// These variables are manipulated back clienside callbacks in the settings
+// These variables are manipulated by clienside callbacks in the settings
 showAxis : true,
 showFocalPoint : true,
 movementSpeed : 1,

@@ -9,7 +9,7 @@
 }
 
 body {
-    background-image: url("../background_asset.svg");
+    background-image: url("../svg/background_asset.svg");
     width: 100vw;
     height: 100vh;
 }

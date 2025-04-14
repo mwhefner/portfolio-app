@@ -71,4 +71,3 @@ def populate_cards(_):
         ], className = "mt-3",
                 
     )],style={'overflowY': 'auto', 'height': '100vh'})
-
