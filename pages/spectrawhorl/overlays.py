@@ -31,9 +31,19 @@ layout = html.Div(
                 ],
                 id="noteOverlayType",
                 value='ALL',
-                className = "spectrawhorl-check mb-5 w-75 mx-auto",
+                className = "spectrawhorl-check mb-3 w-75 mx-auto",
                 inline=False,  # stack vertically; set to True if you prefer inline
                 labelClassName="spectrawhorl-inner-label",  # spacing between stacked items
+            ),
+            
+            dbc.Label("Color",className="spectrawhorl-label mb-3"),
+            
+            dbc.Input(
+                type="color",
+                id="noteOverlay_colorpicker",
+                value="#ffffff",
+                className="p-0 mb-5 w-75 mx-auto",
+                style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
             ),
             
 #            dbc.Label('CHORD FACTORS', className = "spectrawhorl-label mb-5"),
@@ -68,9 +78,7 @@ layout = html.Div(
                 labelClassName="spectrawhorl-inner-label",  # spacing between stacked items
             ),
             
-            dcc.Markdown("***", className="w-75 mx-auto"),
-            
-            dbc.Label('Harmonic Series Fundamental Frequency', className = "spectrawhorl-label mb-5"),
+            dbc.Label('Fundamental Frequency', className = "spectrawhorl-label mb-5"),
             
             dcc.Slider(
                 id='seriesFundamentalSlider',
@@ -92,6 +100,16 @@ layout = html.Div(
                 included=True,
                 updatemode='drag',
                 className="spectrawhorl-slider w-75 mb-5 mx-auto"
+            ),
+            
+            dbc.Label("Color",className="spectrawhorl-label mb-3"),
+            
+            dbc.Input(
+                type="color",
+                id="harmonicSeriesOverlay_colorpicker",
+                value="#ffffff",
+                className="p-0 mb-5 w-75 mx-auto",
+                style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
             ),
             
             #html.P("Read about inharmonicity."), #https://en.wikipedia.org/wiki/Inharmonicity

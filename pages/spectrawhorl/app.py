@@ -90,9 +90,19 @@ layout = html.Div(
                     
                     dcc.Markdown(
                         r"""    
-                        **SpectraWhorl** is a [**spectrogram**](https://en.wikipedia.org/wiki/Spectrogram) in a [**whorled pattern.**](https://en.wikipedia.org/wiki/Whorl)
+                        **SpectraWhorl** is a [**free and open-source**](https://github.com/mwhefner/portfolio-app/blob/main/LICENSE) [**spectrogram**](https://en.wikipedia.org/wiki/Spectrogram) in a [**whorled pattern.**](https://en.wikipedia.org/wiki/Whorl)
 
-                        Like all spectrograms, SpectraWhorl plots pitch (or the frequency **spectrum**) from the sound source. What makes SpectraWhorl different is that it does so in clock-like **whorled** pattern where *one 360° rotation represents rising (counter-clockwise) or falling (clockwise) an octave.*
+                        Like many spectrograms, SpectraWhorl plots pitch (or the frequency **spectrum**) of different sound sources (e.g., your microphone, an uploaded file, etc). What makes SpectraWhorl different is that it does so in a clock-like **whorled** pattern where one 360° rotation represents rising (counter-clockwise) or falling (clockwise) an octave.  This creates a real-time geometric conceptual lens through which to view and learn about the physics of sound and the math of harmony.
+                        
+                        Use the menu to customize overlays and the spectragram's source, audio processing parameters, and appearance.
+                        
+                        **WebDG is free for everyone. No login, download, license, or subscription is required.**
+                    
+                        I created, maintain, and host this open-source educational tool as a labor of love, freely available to everyone. If you find it useful and would like to support its continued development and hosting, you’re welcome to make a small, optional donation via [Buy Me a Coffee](https://www.buymeacoffee.com/mwhefner). No account is needed, and all major credit cards are accepted. Thank you for helping keep this resource online and accessible!
+                        
+                        **You can also show your support by simply sharing this app!**
+                        
+                        New here? This video should help you get started.
                         
                         """, mathjax=True, className="m-5", style = {'textAlign' : 'center', 'fontSize' : '1.25em'}
                     ),
@@ -143,7 +153,9 @@ layout = html.Div(
         ),
         
         # Floating button using Affix-like positioning VOUME CONTROLS
+        
         dbc.Stack(
+            dbc.Alert(
             [
                 # Decide which volume container to show based on
                 # input source via none/block style toggle in
@@ -154,7 +166,7 @@ layout = html.Div(
 
                     children = [
                         
-                        html.H3('Volume', style={'textAlign':'center', 'width' : '305px'}),
+                        dbc.Label('Volume', style={'textAlign':'center', 'width' : '305px', 'fontSize' : '1.25em'}, className = "spectrawhorl-label mb-2"),
                         
                         dcc.Slider(
                             id='spectrawhorlVolumeSlider',
@@ -183,7 +195,7 @@ layout = html.Div(
                     
                     children = [
                         
-                        html.H3('Monitor Volume', style={'textAlign':'center', 'width' : '305px'}),
+                        dbc.Label('Monitor Volume', style={'textAlign':'center', 'width' : '305px', 'fontSize' : '1.25em'}, className = "spectrawhorl-label mb-2"),
                         
                         dcc.Slider(
                             id='micMonitorVolumeSlider',
@@ -206,9 +218,9 @@ layout = html.Div(
                     id = "spectrawhorl-micMonitorVolumeLayout"
                     
                     ),
-            ], 
+            ], color="secondary", className = "p-3 pb-4 pt-2"), 
             gap=3, 
-            className = "position-fixed top-0 end-0 m-3 justify-content-end"
+            className = "position-fixed top-0 end-0 m-0 justify-content-end"
         ),
         
         # Menu Modal

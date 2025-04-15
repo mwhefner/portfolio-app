@@ -451,3 +451,17 @@ clientside_callback(
     Output('spectrawhorl-menuTransparency', 'value'),
     Input('spectrawhorl-menuTransparency', 'value')
 )
+
+# Controls callbacks
+clientside_callback(
+    """
+    function(bg_colorpicker) {
+
+        window.spectrawhorl_namespace.viewerBackground = bg_colorpicker;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('bg_colorpicker', 'value'),
+    Input('bg_colorpicker', 'value')
+)
