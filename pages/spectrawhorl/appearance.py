@@ -443,7 +443,7 @@ layout = html.Div(
 clientside_callback(
     """
     function(opacity) {
-        console.log(opacity);
+        //console.log(opacity);
         document.documentElement.style.setProperty('--spectrawhorl-menu-opacity', opacity);
         return window.dash_clientside.no_update;
     }

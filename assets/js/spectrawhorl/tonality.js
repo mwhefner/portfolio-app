@@ -165,7 +165,7 @@ window.spectrawhorl_namespace.updateScaleDegrees = function (keyNoteValue, keyMo
 
     let themeValue = themeBoolean ? "Light" : "Dark";
 
-    console.log(keyNoteValue, keyModeValue, themeValue);
+    //console.log(keyNoteValue, keyModeValue, themeValue);
 
     window.spectrawhorl_namespace.cancelScheduledNotes();
 

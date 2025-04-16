@@ -144,28 +144,28 @@ clientside_callback(
 
         window.spectrawhorl_namespace.inputSource = value;
 
-        console.log("Change in input source detected. Switching to:", window.spectrawhorl_namespace.inputSource);
+        //console.log("Change in input source detected. Switching to:", window.spectrawhorl_namespace.inputSource);
 
         if (window.spectrawhorl_namespace.inputSource === "MICROPHONE") {
-            console.log("Detected request to switch to microphone.");
+            //console.log("Detected request to switch to microphone.");
             window.spectrawhorl_namespace.switchToMic();
         } else if (window.spectrawhorl_namespace.inputSource === "SAMPLE") {
-            console.log("Detected request to switch to sample.");
+            //console.log("Detected request to switch to sample.");
             if (window.spectrawhorl_namespace.sampleMusic === "SCHUBERT") {
-                console.log("Schubert.");
+                //console.log("Schubert.");
                 window.spectrawhorl_namespace.switchToSoundFile(1);
             } else if (window.spectrawhorl_namespace.sampleMusic === "BACH") {
-                console.log("Bach.");
+                //console.log("Bach.");
                 window.spectrawhorl_namespace.switchToSoundFile(2);
             } else {
-                console.log("Coste.");
+                //console.log("Coste.");
                 window.spectrawhorl_namespace.switchToSoundFile(0);
             }
         } else if (window.spectrawhorl_namespace.inputSource === "GENERATOR") {
-            console.log("Detected request to switch to the generator.");
+            //console.log("Detected request to switch to the generator.");
             window.spectrawhorl_namespace.switchToGenerator();
         } else if (window.spectrawhorl_namespace.inputSource === "UPLOAD") {
-            console.log("Detected request to switch to the file upload source.");
+            //console.log("Detected request to switch to the file upload source.");
             window.spectrawhorl_namespace.switchToUploadedFile();
         }
         

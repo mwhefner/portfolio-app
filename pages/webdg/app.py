@@ -27,7 +27,7 @@ register_page(
     path="/webdg", 
     name="WebDG 1.0.3", 
     title="WebDG 1.0.3", 
-    description="WebDG is a free web application for differential geometry education. WebDG provides students and instructors a free and accessible web app robust enough to interactively explore abstract differentiable curves and surfaces without the substantial overhead of learning to script computer algebra systems.", 
+    description="""WebDG is for anyone studying, teaching, or just curious about differential geometry. It is a free, open-source web app robust enough to explore interactive 3D visualizations and analyses of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.""",
     image="/assets/webp/thumbnails/webdg.webp"
 )
 

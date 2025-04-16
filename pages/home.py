@@ -17,9 +17,9 @@ register_page(
     __name__,
     path="/",
     name="Portfolio",
-    title="Data Science & Interactive Analytics Portfolio",
-    description="Transforming complex data, math, and science concepts into interactive and pedagogically-informed software solutions. Explore publications, web projects and interactive dashboards.",
-    image="webp/thumbnails/thumbnail.webp",
+    title="M. W. Hefner",
+    description="I tackle complex problems and transform data, math and science concepts into interactive, pedagogically-informed software solutions.",
+    image="webp/images/webdg9.webp",
     meta_tags=[
         {"charset": "UTF-8"},
         {"name": "viewport", "content": "width=device-width, initial-scale=1.0, viewport-fit=cover"},

@@ -19,9 +19,9 @@ from pages.spectrawhorl.tonality import layout as tonality
 register_page(
     __name__, 
     path="/spectrawhorl", 
-    name="tonetornado", 
-    title="tonetornado", 
-    description="tonetornado is a free and interactive web tool that circularly visualizes (and makes) sound (and useful overlays) for learning (and fun!)", 
+    name="SpectraWhorl", 
+    title="SpectraWhorl", 
+    description="SpectraWhorl is a free and open-source spectrogram in a whorled pattern. This creates a real-time geometric conceptual lens through which to view and learn about the physics of sound and the math of harmony.", 
     image="/assets/webp/thumbnails/SpectraWhorl.webp"
 )
 
@@ -125,6 +125,7 @@ layout = html.Div(
             ],
             id="spectrawhorl-help-modal",
             centered=True,
+            is_open = True,
             size="lg"
         ),
         

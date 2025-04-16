@@ -196,7 +196,7 @@ clientside_callback(
     function(value) {
         const show = {'display' : 'block'};
         const hide = {'display' : 'none'};
-        console.log(value);
+        //console.log(value);
         if (value === "midi") {
             return [hide, show];
         } else {

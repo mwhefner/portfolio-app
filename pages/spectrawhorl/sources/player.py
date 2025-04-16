@@ -153,9 +153,9 @@ clientside_callback(
             return window.dash_clientside.no_update;
         }
         
-        console.log("Input source is SAMPLE and sample music changed:");
+        //console.log("Input source is SAMPLE and sample music changed:");
         window.spectrawhorl_namespace.sampleMusic = value;
-        console.log(window.spectrawhorl_namespace.sampleMusic);
+        //console.log(window.spectrawhorl_namespace.sampleMusic);
         
         if (window.spectrawhorl_namespace.sampleMusic === "SCHUBERT") {
             window.spectrawhorl_namespace.switchToSoundFile(1);
@@ -183,14 +183,14 @@ clientside_callback(
 
         let triggered = dash_clientside.callback_context.triggered;
         
-        console.log(current);
+        //console.log(current);
         
         if (triggered.length > 0 && triggered[0].prop_id === 'spectrawhorl-playPauseButton.n_clicks') {
             
             if (current.startsWith('Play')) {
                 // Play
                 if (window.spectrawhorl_namespace.currentSource === "soundfile") {
-                    console.log("Detected request to PLAY player.");
+                    //console.log("Detected request to PLAY player.");
                     window.spectrawhorl_namespace.soundFile.loop();
                     window.spectrawhorl_namespace.soundFile.rate(window.spectrawhorl_namespace.playRate);
                 }
@@ -198,14 +198,14 @@ clientside_callback(
             } else {
                 // Pause
                 if (window.spectrawhorl_namespace.currentSource === "soundfile") {
-                    console.log("Detected request to PAUSE player.");
+                    //console.log("Detected request to PAUSE player.");
                     window.spectrawhorl_namespace.soundFile.pause();
                 }
                 return ['Play', "fa-solid fa-play"];
             }
         }
         // Stop
-        console.log("Detected request to STOP player.");
+        //console.log("Detected request to STOP player.");
         if (window.spectrawhorl_namespace.currentSource === "soundfile") {
             window.spectrawhorl_namespace.stopAllSources();
         }
