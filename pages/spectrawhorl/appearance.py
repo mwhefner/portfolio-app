@@ -174,7 +174,7 @@ layout = html.Div(
         dbc.Input(
             type="color",
             id="bg_colorpicker",
-            value="#2e2e2e",
+            value="#738d72",
             className="p-0 mb-5 w-75 mx-auto",
             style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
         ),
@@ -189,7 +189,7 @@ layout = html.Div(
                 {'label': 'Concentric Circles', 'value': 'CIRCLES'},
                 {'label': 'Radial from Point', 'value': 'POINT'},
             ],
-            id="spectrogramType",
+            id="spectrawhorl-spectrogramType",
             value='SPIRAL',
             className = "spectrawhorl-check mb-5 w-75 mx-auto",
             inline=False,  # stack vertically; set to True if you prefer inline
@@ -205,7 +205,7 @@ layout = html.Div(
                 {'label': "Color by Octave", 'value': "OCTAVE"},
                 {'label': "Color by Note", 'value': "NOTE"},
             ],
-            id="colorBy",
+            id="spectrawhorl-colorBy",
             value="OCTAVE",
             className = "spectrawhorl-check mb-5 w-75 mx-auto",
             inline=False,  # stack vertically; set to True if you prefer inline
@@ -218,7 +218,7 @@ layout = html.Div(
                 {'label': "Default Order", 'value': "DEFAULT"},
                 {'label': "Reverse Order", 'value': "REVERSE"},
             ],
-            id="colorPaletteOrder",
+            id="spectrawhorl-colorPaletteOrder",
             value="DEFAULT",
             className = "spectrawhorl-check mb-5 w-75 mx-auto",
             inline=False,  # stack vertically; set to True if you prefer inline
@@ -231,7 +231,7 @@ layout = html.Div(
             persistence=True,
             options = [{'label': showPalette(i), 'value': i} for i in range(len(palettes))],
 
-            id="octaveColorPalette",
+            id="spectrawhorl-octaveColorPalette",
             value=0,
             className = "spectrawhorl-check mb-5 w-75 mx-auto spectrawhorl-palette",
             inline=False,  # stack vertically; set to True if you prefer inline
@@ -244,7 +244,7 @@ layout = html.Div(
             persistence=True,
             options = [{'label': showPalette(i,type="NOTE"), 'value': i} for i in range(len(note_palettes))],
 
-            id="noteColorPalette",
+            id="spectrawhorl-noteColorPalette",
             value=0,
             className = "spectrawhorl-check mb-5 w-75 mx-auto spectrawhorl-palette",
             inline=False,  # stack vertically; set to True if you prefer inline
@@ -259,9 +259,9 @@ layout = html.Div(
             [
                 dbc.Col(
                     dbc.Checklist(
-                        options=[{'label': f"Octave {index + 1}", 'value': index} for index in range(10)],
-                        id="octaveLegendSelection",
-                        value=[i for i in range(10)],
+                        options=[{'label': f"Octave {index + 1}", 'value': index + 1} for index in range(10)],
+                        id="spectrawhorl-octaveLegendSelection",
+                        value=[i + 1 for i in range(10)],
                         className = "spectrawhorl-check mb-5 w-75 mx-auto spectrawhorl-palette",
                         inline=False,  # stack vertically; set to True if you prefer inline
                         labelClassName="spectrawhorl-inner-label",  # spacing between stacked items
@@ -271,7 +271,7 @@ layout = html.Div(
                 dbc.Col(
                     dbc.Checklist(
                         options=[{'label': note_mapping[index], 'value': index} for index in range(12)],
-                        id="noteLegendSelection",
+                        id="spectrawhorl-noteLegendSelection",
                         value=[i for i in range(12)],
                         className = "spectrawhorl-check mb-5 w-75 mx-auto spectrawhorl-palette",
                         inline=False,  # stack vertically; set to True if you prefer inline
@@ -288,7 +288,7 @@ layout = html.Div(
         dbc.Label('Line Width', className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='lineWidthSlider',
+            id='spectrawhorl-lineWidthSlider',
             min=1,
             max=30,
             step=1,
@@ -307,7 +307,7 @@ layout = html.Div(
         dbc.Label('Detection Threshold', className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='thresholdSlider',
+            id='spectrawhorl-thresholdSlider',
             min=0,
             max=1,
             step=0.01,
@@ -326,7 +326,7 @@ layout = html.Div(
         dbc.Label('Width Between Octaves', className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='octaveWidthSlider',
+            id='spectrawhorl-octaveWidthSlider',
             min=0,
             max=1,
             step=0.01,
@@ -345,7 +345,7 @@ layout = html.Div(
         dbc.Label('Radial Height', className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='octaveHeightSlider',
+            id='spectrawhorl-octaveHeightSlider',
             min=0.01,
             max=10,
             step=0.01,
@@ -364,7 +364,7 @@ layout = html.Div(
         dbc.Label('Peak Balance Transform', className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='peakAccentuationSlider',
+            id='spectrawhorl-peakAccentuationSlider',
             min=0,
             max=16,
             step=0.1,
@@ -383,7 +383,7 @@ layout = html.Div(
         dbc.Label('Visual Opacity', className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='fadeSlider',
+            id='spectrawhorl-fadeSlider',
             min=0,
             max=1,
             step=0.01,
@@ -402,7 +402,7 @@ layout = html.Div(
         dbc.Label('FFT Bin Density', className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='binDensitySlider',
+            id='spectrawhorl-binDensitySlider',
             min=8,
             max=14,
             step=1,
@@ -421,10 +421,10 @@ layout = html.Div(
         dbc.Label('Time-Averaged Smoothing', className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='timeSmoothingSlider',
+            id='spectrawhorl-timeSmoothingSlider',
             min=0,
             max=0.9,
-            step=0.1,
+            step=0.01,
             value=0,
             marks={
                 0: 'NONE',
@@ -452,7 +452,7 @@ clientside_callback(
     Input('spectrawhorl-menuTransparency', 'value')
 )
 
-# Controls callbacks
+# Color picker
 clientside_callback(
     """
     function(bg_colorpicker) {
@@ -464,4 +464,188 @@ clientside_callback(
     """,
     Output('bg_colorpicker', 'value'),
     Input('bg_colorpicker', 'value')
+)
+
+# FFT bin density
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.binDensitySlider = value;
+        
+        window.spectrawhorl_namespace.fftSize = Math.pow(2, window.spectrawhorl_namespace.binDensitySlider);
+        
+        if (window.spectrawhorl_namespace.currentSource === "mic") {
+            window.spectrawhorl_namespace.initFFT(window.spectrawhorl_namespace.mic);
+        } else {
+            window.spectrawhorl_namespace.initFFT();
+        }
+        
+        window.spectrawhorl_namespace.REINIT_SPECTROGRAM = true;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-binDensitySlider', 'value'),
+    Input('spectrawhorl-binDensitySlider', 'value')
+)
+
+# FFT bin density
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.timeSmoothing = value;
+
+        if (window.spectrawhorl_namespace.currentSource === "mic") {
+            window.spectrawhorl_namespace.initFFT(window.spectrawhorl_namespace.mic);
+        } else {
+            window.spectrawhorl_namespace.initFFT();
+        }
+        
+        window.spectrawhorl_namespace.REINIT_SPECTROGRAM = true;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-timeSmoothingSlider', 'value'),
+    Input('spectrawhorl-timeSmoothingSlider', 'value')
+)
+
+# thresholdSlider
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.threshold = value;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-thresholdSlider', 'value'),
+    Input('spectrawhorl-thresholdSlider', 'value')
+)
+
+# spectrogramType
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.spectrogramType = value;
+        window.spectrawhorl_namespace.REINIT_SPECTROGRAM = true;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-spectrogramType', 'value'),
+    Input('spectrawhorl-spectrogramType', 'value')
+)
+
+# spectrogramLineWidth
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.spectrogramLineWidth = value;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-lineWidthSlider', 'value'),
+    Input('spectrawhorl-lineWidthSlider', 'value')
+)
+
+# octaveHeightSlider
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.octaveHeight = value;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-octaveHeightSlider', 'value'),
+    Input('spectrawhorl-octaveHeightSlider', 'value')
+)
+
+# octaveWidthSlider
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.octaveWidth = value;
+        window.spectrawhorl_namespace.REINIT_SPECTROGRAM = true;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-octaveWidthSlider', 'value'),
+    Input('spectrawhorl-octaveWidthSlider', 'value')
+)
+
+# fadeSlider
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.fade = value;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-fadeSlider', 'value'),
+    Input('spectrawhorl-fadeSlider', 'value')
+)
+
+# peakAccentuationSlider
+clientside_callback(
+    """
+    function(value) {
+
+        window.spectrawhorl_namespace.peakAccentuation = value;
+
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-peakAccentuationSlider', 'value'),
+    Input('spectrawhorl-peakAccentuationSlider', 'value')
+)
+
+# peakAccentuationSlider
+clientside_callback(
+    """
+    function(colorBy, colorPaletteOrder, octaveColorPalette, noteColorPalette, octaveLegendSelection, noteLegendSelection) {
+        
+        let pal;
+        
+        if (colorBy === 'NOTE') {
+            if (colorPaletteOrder === 'DEFAULT') {
+                pal = window.spectrawhorl_namespace.NOTE_PALETTES[noteColorPalette];
+            } else {
+                pal = window.spectrawhorl_namespace.REVERSED_NOTE_PALETTES[noteColorPalette];
+            }
+        } else {
+            if (colorPaletteOrder === 'DEFAULT') {
+                pal = window.spectrawhorl_namespace.PALETTES[octaveColorPalette];
+            } else {
+                pal = window.spectrawhorl_namespace.REVERSED_PALETTES[octaveColorPalette];
+            }
+        }
+        
+        window.spectrawhorl_namespace.palette = pal;
+        window.spectrawhorl_namespace.colorBy = colorBy;
+        window.spectrawhorl_namespace.noteLegendPalette = noteLegendSelection;
+        window.spectrawhorl_namespace.octaveLegendPalette = octaveLegendSelection;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output("spectrawhorl-colorBy", 'value'),
+    Input("spectrawhorl-colorBy", 'value'),
+    Input("spectrawhorl-colorPaletteOrder", 'value'),
+    Input("spectrawhorl-octaveColorPalette", 'value'),
+    Input("spectrawhorl-noteColorPalette", 'value'),
+    Input("spectrawhorl-octaveLegendSelection", 'value'),
+    Input("spectrawhorl-noteLegendSelection", 'value'),
 )

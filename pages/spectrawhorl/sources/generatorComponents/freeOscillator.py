@@ -9,7 +9,7 @@ MIT License
 
 """
 
-from dash import html, dcc
+from dash import html, dcc, clientside_callback, Output, Input
 import dash_bootstrap_components as dbc
 
 controlSetName = 'OSCILLATOR'
@@ -21,7 +21,7 @@ layout = html.Div(
         dbc.Label('Amplitude', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='amplitudeSlider',
+            id='spectrawhorl-amplitudeSlider',
             min=0,
             max=0.5,
             step=0.001,
@@ -41,7 +41,7 @@ layout = html.Div(
         dbc.Label('Frequency', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='fundamentalSlider',
+            id='spectrawhorl-fundamentalSlider',
             min=24,
             max=108,
             step=0.001,
@@ -74,7 +74,7 @@ layout = html.Div(
                 {'label': 'Tonality Menu: Key', 'value': 'KEY'},
                 {'label': "Tonality Menu: Triad", 'value': 'TRIAD'},
             ],
-            id="freeSnapTo",
+            id="spectrawhorl-freeSnapTo",
             value='NONE',
             className = "spectrawhorl-check mb-5 w-75 mx-auto",
             inline=False,  # stack vertically; set to True if you prefer inline
@@ -88,4 +88,48 @@ layout = html.Div(
 
     id=controlSetName + "Controls",
 
+)
+
+# Oscillator amp
+clientside_callback(
+    """
+    function(value) {
+	
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+		
+        window.spectrawhorl_namespace.freeOscillatorAmplitude = value;
+
+        window.spectrawhorl_namespace.freeOscillator.amp(window.spectrawhorl_namespace.freeOscillatorAmplitude);
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-amplitudeSlider', 'value'),
+    Input('spectrawhorl-amplitudeSlider', 'value')
+)
+
+# Oscillator fundamental
+clientside_callback(
+    """
+    function(slider, snap) {
+	
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+		
+        window.spectrawhorl_namespace.freeOscillatorFundamental = slider;
+        window.spectrawhorl_namespace.snapToState = snap;
+
+        window.spectrawhorl_namespace.freeOscillator.freq(
+            window.spectrawhorl_namespace.snapFreqTo(window.spectrawhorl_namespace.noteToFreq(Number(window.spectrawhorl_namespace.freeOscillatorFundamental)))
+        );
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-fundamentalSlider', 'value'),
+    Input('spectrawhorl-fundamentalSlider', 'value'),
+    Input("spectrawhorl-freeSnapTo", 'value'),
 )

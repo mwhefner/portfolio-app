@@ -9,7 +9,7 @@ MIT License
 
 """
 
-from dash import html, dcc
+from dash import html, dcc, clientside_callback, Output, Input
 import dash_bootstrap_components as dbc
 
 controlSetName = 'EQUALIZER'
@@ -25,7 +25,7 @@ layout = html.Div(
         dbc.Label('Bass', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='bassGainSlider',
+            id='spectrawhorl-bassGainSlider',
             min=-47,
             max=47,
             step=0.05,
@@ -47,7 +47,7 @@ layout = html.Div(
         dbc.Label('Middle', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='middleGainSlider',
+            id='spectrawhorl-middleGainSlider',
             min=-47,
             max=47,
             step=0.05,
@@ -69,7 +69,7 @@ layout = html.Div(
         dbc.Label('Treble', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='trebleGainSlider',
+            id='spectrawhorl-trebleGainSlider',
             min=-47,
             max=47,
             step=0.1,
@@ -91,4 +91,61 @@ layout = html.Div(
 
     id=controlSetName + "Controls",
 
+)
+
+# bass
+clientside_callback(
+    """
+    function(value) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+	
+        window.spectrawhorl_namespace.bassGain = value;
+        window.spectrawhorl_namespace.bassFilter.gain(value);
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-bassGainSlider', 'value'),
+    Input('spectrawhorl-bassGainSlider', 'value'),
+)
+
+# bass
+clientside_callback(
+    """
+    function(value) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+	
+        window.spectrawhorl_namespace.middleGain = value;
+        window.spectrawhorl_namespace.midFilter.gain(value);
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-middleGainSlider', 'value'),
+    Input('spectrawhorl-middleGainSlider', 'value'),
+)
+
+# bass
+clientside_callback(
+    """
+    function(value) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+	
+        window.spectrawhorl_namespace.trebleGain = value;
+        window.spectrawhorl_namespace.highFilter.gain(value);
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-trebleGainSlider', 'value'),
+    Input('spectrawhorl-trebleGainSlider', 'value'),
 )

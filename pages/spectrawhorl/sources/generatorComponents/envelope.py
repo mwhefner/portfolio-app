@@ -9,7 +9,7 @@ MIT License
 
 """
 
-from dash import html, dcc
+from dash import html, dcc,clientside_callback, Output, Input
 import dash_bootstrap_components as dbc
 
 controlSetName = 'ENVELOPE'
@@ -27,7 +27,7 @@ layout = html.Div(
         dbc.Label('Attack Time', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='attackSlider',
+            id='spectrawhorl-attackSlider',
             min=0.001,
             max=1,
             step=0.001,
@@ -49,7 +49,7 @@ layout = html.Div(
         dbc.Label('Decay Time', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='decaySlider',
+            id='spectrawhorl-decaySlider',
             min=0,
             max=1,
             step=0.01,
@@ -71,7 +71,7 @@ layout = html.Div(
         dbc.Label('Sustain Time', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='sustainTimeSlider',
+            id='spectrawhorl-sustainTimeSlider',
             min=0,
             max=1,
             step=0.01,
@@ -93,7 +93,7 @@ layout = html.Div(
         dbc.Label('Sustain Percentage', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='sustainSlider',
+            id='spectrawhorl-sustainSlider',
             min=0,
             max=1,
             step=0.01,
@@ -115,7 +115,7 @@ layout = html.Div(
         dbc.Label('Release Time', className = "spectrawhorl-label mb-5"),
         
         dcc.Slider(
-            id='releaseSlider',
+            id='spectrawhorl-releaseSlider',
             min=0,
             max=1,
             step=0.01,
@@ -139,4 +139,74 @@ layout = html.Div(
 
     id=controlSetName + "Controls",
 
+)
+
+# attack
+clientside_callback(
+    """
+    function(value) {
+        
+        window.spectrawhorl_namespace.attack = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-attackSlider', 'value'),
+    Input('spectrawhorl-attackSlider', 'value'),
+)
+
+# decay
+clientside_callback(
+    """
+    function(value) {
+        
+        window.spectrawhorl_namespace.decay = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-decaySlider', 'value'),
+    Input('spectrawhorl-decaySlider', 'value'),
+)
+
+# sustainTime
+clientside_callback(
+    """
+    function(value) {
+        
+        window.spectrawhorl_namespace.sustainTime = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-sustainTimeSlider', 'value'),
+    Input('spectrawhorl-sustainTimeSlider', 'value'),
+)
+
+# sustain (time)
+clientside_callback(
+    """
+    function(value) {
+        
+        window.spectrawhorl_namespace.sustain = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-sustainSlider', 'value'),
+    Input('spectrawhorl-sustainSlider', 'value'),
+)
+
+# release
+clientside_callback(
+    """
+    function(value) {
+        
+        window.spectrawhorl_namespace.release = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-releaseSlider', 'value'),
+    Input('spectrawhorl-releaseSlider', 'value'),
 )

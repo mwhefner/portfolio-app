@@ -76,7 +76,7 @@ layout = [
             
             dcc.Markdown("***"),
 
-            dbc.Label("TRIAD", id = "midi1", className = "spectrawhorl-label mb-5"),
+            dbc.Label("TRIAD", id = "midi1", className = "spectrawhorl-label mb-3"),
             
             html.Div(
                 children = [
@@ -173,6 +173,10 @@ layout = [
             ),
             
             html.P([
+                "Triad can also be selected with keyboard keys 1-7."
+            ], className = "spectrawhorl-label my-5"),
+            
+            html.P([
                 "Not sure where to start? ",
                 html.A("Try these songs!", href="https://en.wikipedia.org/wiki/I%E2%80%93V%E2%80%93vi%E2%80%93IV_progression#Songs_using_the_progression", target="_blank", style = {'color' : '#0060DF'})
             ], className = "spectrawhorl-label my-5"),
@@ -205,7 +209,6 @@ clientside_callback(
     Input("spectrawhorl-generatorSource", "value")
 )
 
-# TODO: Found in the javascript - add back in!!
 clientside_callback(
     """
     function(keyNoteValue, keyModeValue, themeValue) {
@@ -244,18 +247,15 @@ clientside_callback(
     [
         Input("spectrawhorl-keyNote", "value"),
         Input("spectrawhorl-keyMode", "value"),
-        Input("theme-switch", "value")
+        Input("theme-switch", "value"),
     ]
 )
 
-# TODO: Add back in!!
 clientside_callback(
     """
     function(n_clicks_1, n_clicks_2, n_clicks_3, n_clicks_4, n_clicks_5, n_clicks_6, n_clicks_7, themeValue) {
         
-        // TODO: add back in!!
-        
-        //cancelScheduledNotes();
+        window.spectrawhorl_namespace.cancelScheduledNotes();
         
         return window.spectrawhorl_namespace.triadButtonSelection(n_clicks_1, n_clicks_2, n_clicks_3, n_clicks_4, n_clicks_5, n_clicks_6, n_clicks_7, themeValue);
     }

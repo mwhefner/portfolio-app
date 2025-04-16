@@ -3,14 +3,14 @@ window.spectrawhorl_namespace = window.spectrawhorl_namespace || {};
 /** spectrawhorl generator variables w/ defaults */
 
 // the parallel web worker for sequence playing
-//window.spectrawhorl_namespace.sequencePlayerWorker;
+window.spectrawhorl_namespace.sequencePlayerWorker = null;
 window.spectrawhorl_namespace.oscillatorType = "sine"; //  'sine' (default), 'triangle', 'sawtooth', 'square'
 window.spectrawhorl_namespace.generatorSource = "free"; // 'free', 'sequence', or 'midi',
 window.spectrawhorl_namespace.midiAccess = null;
 // Used for 'free'
 window.spectrawhorl_namespace.freeOscillator;
 window.spectrawhorl_namespace.freeOscillatorAmplitude = 0;
-window.spectrawhorl_namespace.freeOscillatorFundamental = 440;
+window.spectrawhorl_namespace.freeOscillatorFundamental = 60;
 // Used for all but 'free'
 window.spectrawhorl_namespace.polyphonicOscillators = [];
 window.spectrawhorl_namespace.polyphonicEnvelopes = [];
@@ -36,11 +36,14 @@ window.spectrawhorl_namespace.snapFreqTo = function (freq) {
     }
 };
 // envelope settings
-window.spectrawhorl_namespace.attack = 0.5;
-window.spectrawhorl_namespace.decay = 0.1;
-window.spectrawhorl_namespace.sustain = 0.15;
-window.spectrawhorl_namespace.sustainTime = 0.5;
-window.spectrawhorl_namespace.release = 0;
+
+// These are set in the callbacks in envelope.py
+window.spectrawhorl_namespace.attack = null;
+window.spectrawhorl_namespace.decay = null;
+window.spectrawhorl_namespace.sustain = null;
+window.spectrawhorl_namespace.sustainTime = null;
+window.spectrawhorl_namespace.release = null;
+
 // Used for 'sequence*'
 window.spectrawhorl_namespace.bpm = 120;
 window.spectrawhorl_namespace.npb = 1;
@@ -91,7 +94,11 @@ window.spectrawhorl_namespace.startFreeOscillator = function () {
     window.spectrawhorl_namespace.bassFilter.chain(window.spectrawhorl_namespace.midFilter, window.spectrawhorl_namespace.highFilter);
 
     window.spectrawhorl_namespace.freeOscillator.amp(window.spectrawhorl_namespace.freeOscillatorAmplitude);
-    window.spectrawhorl_namespace.freeOscillator.freq(window.spectrawhorl_namespace.freeOscillatorFundamental);
+    
+    window.spectrawhorl_namespace.freeOscillator.freq(
+        window.spectrawhorl_namespace.snapFreqTo(window.spectrawhorl_namespace.noteToFreq(Number(window.spectrawhorl_namespace.freeOscillatorFundamental)))
+    );
+
     window.spectrawhorl_namespace.freeOscillator.start();
     //console.log("Free Oscillator started.");
 };
@@ -124,7 +131,7 @@ window.spectrawhorl_namespace.startGenerator = function () {
             // Request MIDI access
         if (!window.spectrawhorl_namespace.midiInitiated) {
             if (navigator.requestMIDIAccess) {
-                navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+                navigator.requestMIDIAccess().then(window.spectrawhorl_namespace.onMIDISuccess, window.spectrawhorl_namespace.onMIDIFailure);
                 window.spectrawhorl_namespace.midiInitiated = true;
             } else {
                 console.error("WebMIDI is not supported in this browser.");
@@ -189,7 +196,7 @@ window.spectrawhorl_namespace.getNextNote = function() {
             window.spectrawhorl_namespace.baseFrequencyNote
         );
         let baseIndex = window.spectrawhorl_namespace.overlayKeyNotes.indexOf(nearestNote);
-        let currentIndex = window.spectrawhorl_namespace.overlayKeyNotes.indexOf(currentNote);
+        let currentIndex = window.spectrawhorl_namespace.overlayKeyNotes.indexOf(window.spectrawhorl_namespace.currentNote);
 
         if (currentIndex === -1) {
             currentIndex = baseIndex;
@@ -218,13 +225,13 @@ window.spectrawhorl_namespace.getNextNote = function() {
 
         window.spectrawhorl_namespace.currentNote = window.spectrawhorl_namespace.overlayKeyNotes[currentIndex];
 
-    } else if (sequenceAlong === "TRIAD") {
+    } else if (window.spectrawhorl_namespace.sequenceAlong === "TRIAD") {
         let nearestNote = window.spectrawhorl_namespace.findNearestInteger(
             window.spectrawhorl_namespace.overlayTriadNotes,
             window.spectrawhorl_namespace.baseFrequencyNote
         );
         let baseIndex = window.spectrawhorl_namespace.overlayTriadNotes.indexOf(nearestNote);
-        let currentIndex = window.spectrawhorl_namespace.overlayTriadNotes.indexOf(currentNote);
+        let currentIndex = window.spectrawhorl_namespace.overlayTriadNotes.indexOf(window.spectrawhorl_namespace.currentNote);
 
         if (currentIndex === -1) {
             currentIndex = baseIndex;
@@ -251,7 +258,7 @@ window.spectrawhorl_namespace.getNextNote = function() {
             currentIndex = baseIndex;
         }
 
-        currentNote = window.spectrawhorl_namespace.overlayTriadNotes[currentIndex];
+        window.spectrawhorl_namespace.currentNote = window.spectrawhorl_namespace.overlayTriadNotes[currentIndex];
     }
 }
 

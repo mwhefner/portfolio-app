@@ -17,7 +17,7 @@ window.spectrawhorl_namespace.noteOverlayType = "ALL"; // "NONE", "ALL", "KEY", 
 
 // HARMONIC SERIES OVERLAY
 window.spectrawhorl_namespace.harmonicSeriesOverlayType = "FREE"; // Whether and how to show the harmonic series overlay. "NONE", "FREE", or snap to "NOTE"
-window.spectrawhorl_namespace.seriesFundamental = window.spectrawhorl_namespace.reference_freq;
+window.spectrawhorl_namespace.seriesFundamental = 60;
 
 window.spectrawhorl_namespace.chordFactorsToShow = "ALL"; // "NONE", "ALL", "KEY", or "TRIAD"
 
@@ -32,6 +32,8 @@ window.spectrawhorl_namespace.drawOverlay = function(p) {
 
     // NOTE OVERLAY
     if (window.spectrawhorl_namespace.showNoteOverlay) {
+        const overlayNoteColor = window.spectrawhorl_namespace.hexToRgbCached(window.spectrawhorl_namespace.noteOverlayColor);
+
         // Shuffle through Octave 1 MIDI 
         for (let i = 24; i < 36; i++) {
             
@@ -54,8 +56,8 @@ window.spectrawhorl_namespace.drawOverlay = function(p) {
                 let rxLetter = rLetter * Math.cos(angle) + center_x;
                 let ryLetter = center_y - rLetter * Math.sin(angle);
 
-                p.stroke(window.spectrawhorl_namespace.hexToRgbCached(window.spectrawhorl_namespace.noteOverlayColor), window.spectrawhorl_namespace.overlayOpacity);
-                p.fill(window.spectrawhorl_namespace.hexToRgbCached(window.spectrawhorl_namespace.noteOverlayColor), window.spectrawhorl_namespace.overlayOpacity);
+                p.stroke(overlayNoteColor[0], overlayNoteColor[1], overlayNoteColor[2], window.spectrawhorl_namespace.overlayOpacity);
+                p.fill(overlayNoteColor[0], overlayNoteColor[1], overlayNoteColor[2], window.spectrawhorl_namespace.overlayOpacity);
 
                 p.strokeWeight(window.spectrawhorl_namespace.overlayStrokeWidth);
 
@@ -74,6 +76,8 @@ window.spectrawhorl_namespace.drawOverlay = function(p) {
     }
 
     if (window.spectrawhorl_namespace.harmonicSeriesOverlayType !== "NONE") {
+    
+    const harmonicSeriesOverlayColor = window.spectrawhorl_namespace.hexToRgbCached(window.spectrawhorl_namespace.harmonicSeriesOverlayColor);
     // HARMONIC SERIES OVERLAY
 
     let frequencyToUse = window.spectrawhorl_namespace.seriesFundamental;
@@ -97,12 +101,12 @@ window.spectrawhorl_namespace.drawOverlay = function(p) {
         let lx2 = p.width / 2;
         let ly2 = p.height / 2;
 
-        p.stroke(window.spectrawhorl_namespace.hexToRgbCached(window.spectrawhorl_namespace.harmonicSeriesOverlayColor), window.spectrawhorl_namespace.overlayOpacity);
-        p.fill(window.spectrawhorl_namespace.hexToRgbCached(window.spectrawhorl_namespace.harmonicSeriesOverlayColor), window.spectrawhorl_namespace.overlayOpacity);
+        p.stroke(harmonicSeriesOverlayColor[0], harmonicSeriesOverlayColor[1], harmonicSeriesOverlayColor[2], window.spectrawhorl_namespace.overlayOpacity);
+        p.fill(harmonicSeriesOverlayColor[0], harmonicSeriesOverlayColor[1], harmonicSeriesOverlayColor[2], window.spectrawhorl_namespace.overlayOpacity);
 
         p.strokeWeight(window.spectrawhorl_namespace.overlayStrokeWidth);
 
-        if (spectrogramType === "CIRCLES") {
+        if (window.spectrawhorl_namespace.spectrogramType === "CIRCLES") {
             lx1 = lx1 + (((octave - 1) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.cos(angle);
             ly1 = ly1 - (((octave - 1) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.sin(angle);
 
@@ -111,7 +115,7 @@ window.spectrawhorl_namespace.drawOverlay = function(p) {
 
             p.line(lx1, ly1, lx2, ly2);
 
-        } else if (spectrogramType === "SPIRAL") {
+        } else if (window.spectrawhorl_namespace.spectrogramType === "SPIRAL") {
             lx1 = lx1 + ((((note - 24) / 12) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.cos(angle);
             ly1 = ly1 - ((((note - 24) / 12) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.sin(angle);
 

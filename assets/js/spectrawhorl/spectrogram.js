@@ -4,17 +4,17 @@ window.spectrawhorl_namespace = window.spectrawhorl_namespace || {};
 
 window.spectrawhorl_namespace.spectrogramType = "SPIRAL";
 window.spectrawhorl_namespace.palette = [
-    "rgb(165,0,38)",
-    "rgb(215,48,39)",
-    "rgb(244,109,67)",
-    "rgb(253,174,97)",
-    "rgb(254,224,144)",
-    "rgb(255,255,191)",
-    "rgb(224,243,248)",
-    "rgb(171,217,233)",
-    "rgb(116,173,209)",
-    "rgb(69,117,180)",
-    "rgb(49,54,149)",
+    "#A50026",
+    "#D73027",
+    "#F46D43",
+    "#FDAE61",
+    "#FEE090",
+    "#FFFFBF",
+    "#E0F3F8",
+    "#ABD9E9",
+    "#74ADD1",
+    "#4575B4",
+    "#313695",
 ];
 window.spectrawhorl_namespace.REINIT_SPECTROGRAM = false;
 window.spectrawhorl_namespace.FREQUENCIES = null;
@@ -72,26 +72,26 @@ window.spectrawhorl_namespace.initSpectrogram = function (p) {
     if (window.spectrawhorl_namespace.spectrogramType === "CIRCLES") {
         window.spectrawhorl_namespace.Cx = window.spectrawhorl_namespace.OCTAVES.map(
             (octave, i) =>
-                window.spectrawhorl_namespace.center_x + (((octave - 1) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.cos(window.spectrawhorl_namespace.ANGLES[i])
+                center_x + (((octave - 1) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.cos(window.spectrawhorl_namespace.ANGLES[i])
         );
         window.spectrawhorl_namespace.Cy = window.spectrawhorl_namespace.OCTAVES.map(
             (octave, i) =>
-                window.spectrawhorl_namespace.center_y - (((octave - 1) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.sin(window.spectrawhorl_namespace.ANGLES[i])
+                center_y - (((octave - 1) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.sin(window.spectrawhorl_namespace.ANGLES[i])
         );
     } else if (window.spectrawhorl_namespace.spectrogramType === "SPIRAL") {
         window.spectrawhorl_namespace.Cx = window.spectrawhorl_namespace.NOTES.map(
             (note, i) =>
-                window.spectrawhorl_namespace.center_x +
+                center_x +
                 ((((note - 24) / 12) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.cos(window.spectrawhorl_namespace.ANGLES[i])
         );
         window.spectrawhorl_namespace.Cy = window.spectrawhorl_namespace.NOTES.map(
             (note, i) =>
-                window.spectrawhorl_namespace.center_y -
+                center_y -
                 ((((note - 24) / 12) * window.spectrawhorl_namespace.canvasSize) / 20) * window.spectrawhorl_namespace.octaveWidth * Math.sin(window.spectrawhorl_namespace.ANGLES[i])
         );
     } else {
-        window.spectrawhorl_namespace.Cx = window.spectrawhorl_namespace.FREQUENCIES.map((freq) => window.spectrawhorl_namespace.center_x);
-        window.spectrawhorl_namespace.Cy = window.spectrawhorl_namespace.FREQUENCIES.map((freq) => window.spectrawhorl_namespace.center_y);
+        window.spectrawhorl_namespace.Cx = window.spectrawhorl_namespace.FREQUENCIES.map((freq) => center_x);
+        window.spectrawhorl_namespace.Cy = window.spectrawhorl_namespace.FREQUENCIES.map((freq) => center_y);
     }
 
     // COLORS calculation
@@ -125,6 +125,7 @@ window.spectrawhorl_namespace.spectrum = null;
 window.spectrawhorl_namespace.colorCache = {};
 
 window.spectrawhorl_namespace.hexToRgbCached = function(hex) {
+
     // Check if the hex color is already in the cache
     if (window.spectrawhorl_namespace.colorCache[hex]) {
         return window.spectrawhorl_namespace.colorCache[hex];
@@ -174,17 +175,20 @@ window.spectrawhorl_namespace.drawSpectrogram = function (p) {
                     
                     color = window.spectrawhorl_namespace.palette[Math.floor(window.spectrawhorl_namespace.NOTES[i] + 0.5) % 12];
 
-                    if (
-                        !window.spectrawhorl_namespace.legendPalette.includes(Math.floor(window.spectrawhorl_namespace.NOTES[i] + 0.5) % 12)
-                    ) {
-                        continue;
-                    }
                 } else {
                     color = window.spectrawhorl_namespace.palette[window.spectrawhorl_namespace.OCTAVES[i]];
 
-                    if (!window.spectrawhorl_namespace.legendPalette.includes(window.spectrawhorl_namespace.OCTAVES[i])) {
-                        continue;
-                    }
+
+                }
+
+                if (
+                    !window.spectrawhorl_namespace.noteLegendPalette.includes(Math.floor(window.spectrawhorl_namespace.NOTES[i] + 0.5) % 12)
+                ) {
+                    continue;
+                }
+
+                if (!window.spectrawhorl_namespace.octaveLegendPalette.includes(Math.abs(window.spectrawhorl_namespace.OCTAVES[i]))) {
+                    continue;
                 }
 
                 let rgb = window.spectrawhorl_namespace.hexToRgbCached(color);

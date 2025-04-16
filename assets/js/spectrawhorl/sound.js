@@ -88,7 +88,9 @@ window.spectrawhorl_namespace.switchToMic = function() {
 }
 
 /** Upload a sound file */
-window.spectrawhorl_namespace.addSoundFile = function(p) {
+window.spectrawhorl_namespace.addSoundFile = function() {
+
+    let p = window.spectrawhorl_namespace.sketch;
 
     // Create a web worker to decode the file
     worker = new Worker('assets/js/spectrawhorl/decodeWorker.js');
@@ -146,7 +148,7 @@ window.spectrawhorl_namespace.checkAndSwitchToUploadedFile = function() {
     // Check if the file is successfully uploaded and switch to it if so
     if (window.spectrawhorl_namespace.fileIsSuccessfullyUploaded) {
         window.spectrawhorl_namespace.switchToUploadedFile();
-        document.getElementById("uploadIndicator").innerText = '"' + window.spectrawhorl_namespace.uploadFileName + '"' + " processing complete.";
+        document.getElementById("spectrawhorl-uploadIndicator").innerText = '"' + window.spectrawhorl_namespace.uploadFileName + '"' + " processing complete.";
     } else {
         // Retry after a short delay
         setTimeout(window.spectrawhorl_namespace.checkAndSwitchToUploadedFile, 500);

@@ -9,7 +9,7 @@ MIT License
 
 """
 
-from dash import html, dcc
+from dash import html, dcc,clientside_callback, Output, Input
 import dash_bootstrap_components as dbc
 
 controlSetName = 'SEQUENCE'
@@ -19,7 +19,7 @@ layout = html.Div(
     children = [
         
         dbc.Row(
-            dbc.Col(dbc.Button("Play Sequence", id="playSequenceButton", color="info"), width="auto"),
+            dbc.Col(dbc.Button("Play Sequence", id="spectrawhorl-playSequenceButton", color="info"), width="auto"),
             justify="center", className="m-5"
         ),
         
@@ -33,7 +33,7 @@ layout = html.Div(
                 {'label': 'Tonality Menu: Key', 'value': 'KEY'},
                 {'label': 'Tonality Menu: Triad', 'value': 'TRIAD'},
             ],
-            id="sequenceAlong",
+            id="spectrawhorl-sequenceAlong",
             value='CHROMATIC',
             className = "spectrawhorl-check mb-5 w-75 mx-auto",
             inline=False,  # stack vertically; set to True if you prefer inline
@@ -45,7 +45,7 @@ layout = html.Div(
         dbc.Label('Beats Per Minute (BPM)', id = "bpmTitle", className = "spectrawhorl-label mb-5 "),
 
         dcc.Slider(
-            id='bpmSlider',
+            id='spectrawhorl-bpmSlider',
             min=20,
             max=240,
             step=1,
@@ -74,7 +74,7 @@ layout = html.Div(
         dbc.Label('Notes Per Beat', className = "spectrawhorl-label mb-5 "),
 
         dcc.Slider(
-            id='notesPerBeatSlider',
+            id='spectrawhorl-notesPerBeatSlider',
             min=-2,
             max=3,
             step=None,
@@ -102,10 +102,10 @@ layout = html.Div(
         dbc.Label('Sequence Starting Frequency', className = "spectrawhorl-label mb-5 "),
 
         dcc.Slider(
-            id='baseFrequencySlider',
+            id='spectrawhorl-baseFrequencySlider',
             min=24,
             max=108,
-            step=0.001,
+            step=1,
             value=60,
             marks={
                 24: 'C₁',
@@ -132,7 +132,7 @@ layout = html.Div(
                 {'label': "Down in Pitch", 'value': 'DOWN'},
                 {'label': 'Up in Pitch', 'value': 'UP'},
             ],
-            id="sequenceDirection",
+            id="spectrawhorl-sequenceDirection",
             value='DOWN',
             className = "spectrawhorl-check mb-5 w-75 mx-auto",
             inline=False,  # stack vertically; set to True if you prefer inline
@@ -144,7 +144,7 @@ layout = html.Div(
         dbc.Label('Sequence Length', id = "sequenceLengthTitle", className = "spectrawhorl-label mb-5"),
 
         dcc.Slider(
-            id='sequenceLengthSlider',
+            id='spectrawhorl-sequenceLengthSlider',
             min=1,
             max=60,
             step=1,
@@ -172,4 +172,127 @@ layout = html.Div(
 
     id=controlSetName + "Controls",
 
+)
+
+# play / stop sequence
+clientside_callback(
+    """
+    function(value) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return [window.dash_clientside.no_update, "Play Sequence"];
+        }
+		
+        const play = value % 2 === 0 ? false : true;
+	
+        if (play) {
+
+            window.spectrawhorl_namespace.playSequence();
+
+        } else {
+
+            window.spectrawhorl_namespace.stopSequence();
+        }
+
+        
+        return [window.dash_clientside.no_update, play ? "Stop Sequence" : "Play Sequence"];
+    }
+    """,
+    [Output('spectrawhorl-playSequenceButton', 'n_clicks'),
+    Output('spectrawhorl-playSequenceButton', 'children')],
+    Input('spectrawhorl-playSequenceButton', 'n_clicks'),
+)
+
+# bpm and npb
+clientside_callback(
+    """
+    function(bpmSlider, notesPerBeatSlider) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+        
+        window.spectrawhorl_namespace.bpm = bpmSlider;
+        window.spectrawhorl_namespace.npb = Math.pow(2, Number(notesPerBeatSlider));
+        
+		window.spectrawhorl_namespace.nps = (window.spectrawhorl_namespace.bpm / 60) * window.spectrawhorl_namespace.npb;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-bpmSlider', 'value'),
+    Input('spectrawhorl-bpmSlider', 'value'),
+    Input('spectrawhorl-notesPerBeatSlider', 'value'),
+)
+
+# sequence along
+clientside_callback(
+    """
+    function(value) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+        
+        window.spectrawhorl_namespace.sequenceAlong = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-sequenceAlong', 'value'),
+    Input('spectrawhorl-sequenceAlong', 'value'),
+)
+
+# base frequency for the sequence
+clientside_callback(
+    """
+    function(value) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+        
+        window.spectrawhorl_namespace.baseFrequencyNote = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-baseFrequencySlider', 'value'),
+    Input('spectrawhorl-baseFrequencySlider', 'value'),
+)
+
+# sequence direction
+clientside_callback(
+    """
+    function(value) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+        
+        window.spectrawhorl_namespace.sequenceDirection = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-sequenceDirection', 'value'),
+    Input('spectrawhorl-sequenceDirection', 'value'),
+)
+
+# sequence length
+clientside_callback(
+    """
+    function(value) {
+        
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+        
+        window.spectrawhorl_namespace.sequenceLength = value;
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-sequenceLengthSlider', 'value'),
+    Input('spectrawhorl-sequenceLengthSlider', 'value'),
 )

@@ -370,7 +370,7 @@ app.layout = dbc.Container([
                 dbc.Col(html.I(className="fa-solid fa-palette"), width="auto", className="text-end")
             ], className="d-flex justify-content-between align-items-center", align="center"),
             id="theme-button",
-            color="secondary"
+            color="dark"
         ),
         dbc.Button(
             dbc.Row([

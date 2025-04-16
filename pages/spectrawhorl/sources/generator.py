@@ -69,7 +69,7 @@ layout = [
     
     dcc.Markdown("***", className="w-75 mx-auto"),
     
-    dbc.Label("Generator Control", className = "spectrawhorl-label mb-5"),
+    dbc.Label("Generator Control", id="spectrawhorl-generatorSourceTarget", className = "spectrawhorl-label mb-5"),
     
     # Sample Music Controls
     dbc.RadioItems(
@@ -131,7 +131,7 @@ layout = [
     html.Div(
         
         children = [
-            html.H5("Attempting to connect to your midi device...",id='midiControlIndicator', style={"width":"100%", "textAlign":'center'},className="mb-5"),
+            html.H5("Attempting to connect to your midi device...",id='spectrawhorl-midiControlIndicator', style={"width":"100%", "textAlign":'center'},className="mb-5"),
             dcc.Markdown(midiMarkdown)
             ],
         
@@ -146,7 +146,7 @@ layout = [
 # callback for changing the input source layout
 clientside_callback(
     """
-    function(inputSourceValue, generatorSourceValue) {
+    function(inputSourceValue) {
         const show = {'display' : 'block'};
         const hide = {'display' : 'none'};
         
@@ -182,4 +182,47 @@ clientside_callback(
         Input('spectrawhorl-generatorSource', 'value')
     ]
 
+)
+
+# generator source
+clientside_callback(
+    """
+    function(value) {
+	
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+		
+        window.spectrawhorl_namespace.generatorSource = value;
+
+        window.spectrawhorl_namespace.stopGenerator();
+        window.spectrawhorl_namespace.startGenerator();
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-generatorSourceTarget', 'value'),
+    Input('spectrawhorl-generatorSource', 'value')
+)
+
+# Oscillator Shape
+clientside_callback(
+    """
+    function(value) {
+	
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+		
+        window.spectrawhorl_namespace.oscillatorType = value;
+
+        window.spectrawhorl_namespace.stopGenerator();
+        window.spectrawhorl_namespace.initOscillators();
+        window.spectrawhorl_namespace.startGenerator();
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorl-oscillatorType', 'value'),
+    Input('spectrawhorl-oscillatorType', 'value')
 )

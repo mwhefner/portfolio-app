@@ -33,6 +33,7 @@ layout = html.Div(
         dcc.Location(id='spectrawhorl_url'),
         
         dcc.Store(id = "spectrawhorl_refresh_dummy_target"),
+        dcc.Store(id = "spectrawhorl_theme_dummy_target"),
         
         # Help menu button
         dbc.Stack([
@@ -102,7 +103,7 @@ layout = html.Div(
                         
                         **You can also show your support by simply sharing this app!**
                         
-                        New here? This video should help you get started.
+                        Video tutorial coming soon.
                         
                         """, mathjax=True, className="m-5", style = {'textAlign' : 'center', 'fontSize' : '1.25em'}
                     ),
@@ -166,7 +167,7 @@ layout = html.Div(
 
                     children = [
                         
-                        dbc.Label('Volume', style={'textAlign':'center', 'width' : '305px', 'fontSize' : '1.25em'}, className = "spectrawhorl-label mb-2"),
+                        dbc.Label('Volume', style={'textAlign':'center', 'width' : '250px', 'fontSize' : '1.25em'}, className = "spectrawhorl-label mb-2"),
                         
                         dcc.Slider(
                             id='spectrawhorlVolumeSlider',
@@ -195,10 +196,10 @@ layout = html.Div(
                     
                     children = [
                         
-                        dbc.Label('Monitor Volume', style={'textAlign':'center', 'width' : '305px', 'fontSize' : '1.25em'}, className = "spectrawhorl-label mb-2"),
+                        dbc.Label('Monitor Volume', style={'textAlign':'center', 'width' : '250px', 'fontSize' : '1.25em'}, className = "spectrawhorl-label mb-2"),
                         
                         dcc.Slider(
-                            id='micMonitorVolumeSlider',
+                            id='spectrawhorl-micMonitorVolumeSlider',
                             min=0,
                             max=1,
                             step=0.01,
@@ -218,9 +219,9 @@ layout = html.Div(
                     id = "spectrawhorl-micMonitorVolumeLayout"
                     
                     ),
-            ], color="secondary", className = "p-3 pb-4 pt-2"), 
+            ], color="dark", className = "p-3 pb-4 pt-2"), 
             gap=3, 
-            className = "position-fixed top-0 end-0 m-0 justify-content-end"
+            className = "position-fixed top-0 end-0 m-3 justify-content-end"
         ),
         
         # Menu Modal
@@ -235,10 +236,10 @@ layout = html.Div(
                             dbc.CardHeader(
                                 dbc.Tabs(
                                     [
-                                        dbc.Tab(label="Sound Source", tab_id="Input Source"),
-                                        dbc.Tab(label="Appearance", tab_id="Appearance"),
-                                        dbc.Tab(label="Visual Overlays", tab_id="Overlays"),
-                                        dbc.Tab(label="Tonality", tab_id="Tonality"),
+                                        dbc.Tab(label="Sound Source", tab_id="Input Source", tabClassName="mx-auto"),
+                                        dbc.Tab(label="Appearance", tab_id="Appearance", tabClassName="mx-auto"),
+                                        dbc.Tab(label="Visual Overlays", tab_id="Overlays", tabClassName="mx-auto"),
+                                        dbc.Tab(label="Tonality", tab_id="Tonality", tabClassName="mx-auto"),
 
                                     ],
                                     id="spectrawhorl-menu-tabs",
@@ -287,21 +288,20 @@ layout = html.Div(
 clientside_callback(
     """
     function (path) {
-        let sw = window.spectrawhorl_namespace;
-        
-        if (typeof spectrawhorl_sketch !== "undefined") {
+
+        if (window.spectrawhorl_namespace.spectrawhorl_sketch) {
             // This properly disposes of the old instance
-            spectrawhorl_sketch.remove();
+            window.spectrawhorl_namespace.sketch.remove();
         }
         
         if (path === "/spectrawhorl") {
             // Create a fresh sketch
-            spectrawhorl_sketch = new p5(sw.build_sketch);   
+            window.spectrawhorl_namespace.sketch = new p5(window.spectrawhorl_namespace.build_sketch);   
         }
         
-        if (typeof spectrawhorl_sketch !== "undefined" && path !== "/spectrawhorl") {
+        if (window.spectrawhorl_namespace.sketch && path !== "/spectrawhorl") {
             // Get rid of the instance if you leave the page
-            spectrawhorl_sketch.remove();
+            window.spectrawhorl_namespace.sketch.remove();
         }
         
         return "";
@@ -369,21 +369,42 @@ clientside_callback(
     Input("spectrawhorl-menu-tabs", "active_tab"),
 )
 
-# This controls which volume layout is shown
+# volume
+clientside_callback(
+    """
+    function(v_value, m_value, inputSource) {
+	
+        if (window.spectrawhorl_namespace.unloaded) {
+            return window.dash_clientside.no_update;
+        }
+             
+        if (inputSource === "MICROPHONE") {
+            window.spectrawhorl_namespace.volume = m_value;
+        } else {
+            window.spectrawhorl_namespace.volume = v_value;
+        }
+        
+        window.spectrawhorl_namespace.sketch.outputVolume(window.spectrawhorl_namespace.volume);
+        
+        return window.dash_clientside.no_update;
+    }
+    """,
+    Output('spectrawhorlVolumeSlider', 'value'),
+    Input('spectrawhorlVolumeSlider', 'value'),
+    Input('spectrawhorl-micMonitorVolumeSlider', 'value'),
+    Input('spectrawhorl-inputSource', 'value'),
+)
+
+# peakAccentuationSlider
 clientside_callback(
     """
     function(value) {
-        const hide = {'display' : 'none'};
-        const show = {'display' : 'block'};
 
-        if (value === "MICROPHONE") {
-            return [hide, show];
-        } else {
-            return [show, hide];
-        }
+        window.spectrawhorl_namespace.uiLightTheme = value;
+
+        return window.dash_clientside.no_update;
     }
     """,
-    [Output("spectrawhorl-volumeLayout", "style"),
-    Output("spectrawhorl-micMonitorVolumeLayout", "style")],
-    Input("spectrawhorl-inputSource", "value"),
+    Output('spectrawhorl_theme_dummy_target', 'data'),
+    Input('theme-switch', 'value')
 )

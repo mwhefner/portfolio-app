@@ -20,17 +20,17 @@ window.spectrawhorl_namespace.midiNoteToString = function (midiNote) {
 
     const notes = [
         "C",
-        "C#\nDb",
+        "C♯\nD♭",
         "D",
-        "D# / Eb",
+        "D♯ / E♭",
         "E",
         "F",
-        "F#\nGb",
+        "F♯\nG♭",
         "G",
-        "G# / Ab",
+        "G♯ / A♭",
         "A",
-        "A# / Bb",
-        "B",
+        "A♯ / B♭",
+        "B"
     ];
     const octave = Math.floor(midiNote / 12) - 1;
     const note = notes[midiNote % 12];
@@ -167,8 +167,7 @@ window.spectrawhorl_namespace.updateScaleDegrees = function (keyNoteValue, keyMo
 
     console.log(keyNoteValue, keyModeValue, themeValue);
 
-    // TODO: Put back in!
-    // window.spectrawhorl_namespace.cancelScheduledNotes();
+    window.spectrawhorl_namespace.cancelScheduledNotes();
 
     if (keyModeValue === -6) {
         // Here, minor has been requested as
@@ -185,6 +184,7 @@ window.spectrawhorl_namespace.updateScaleDegrees = function (keyNoteValue, keyMo
     window.spectrawhorl_namespace.overlayKeyNotes = window.spectrawhorl_namespace.expandScale(window.spectrawhorl_namespace.SCALE);
 
     //overlayTriadNotes = expandScale(getTriadFromScale(SCALE, triadScaleDegree));
+    window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree));
 
     window.spectrawhorl_namespace.SCALE = window.spectrawhorl_namespace.SCALE.slice(Math.abs(keyModeValue) - 1).concat(
         window.spectrawhorl_namespace.SCALE.slice(0, Math.abs(keyModeValue) - 1)
@@ -192,8 +192,7 @@ window.spectrawhorl_namespace.updateScaleDegrees = function (keyNoteValue, keyMo
 
     overlayTriadNotes = window.spectrawhorl_namespace.expandScale(window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree));
 
-    // TODO: Put back in!
-    // window.spectrawhorl_namespace.resetNote();
+    window.spectrawhorl_namespace.resetNote();
 
     //console.log("MODE SCALE: ", ms);
     //console.log("OVERLAY TRIAD: ", overlayTriadNotes);
@@ -271,48 +270,71 @@ window.spectrawhorl_namespace.triadButtonSelection = function (
     n_clicks_5,
     n_clicks_6,
     n_clicks_7,
-    themeBoolean) {
+    themeBoolean,
+    fromKeyInput_1 = false,
+    fromKeyInput_2 = false,
+    fromKeyInput_3 = false,
+    fromKeyInput_4 = false,
+    fromKeyInput_5 = false,
+    fromKeyInput_6 = false,
+    fromKeyInput_7 = false) {
 
     let themeValue = themeBoolean ? "Light" : "Dark";
     let updatedIndex = 1;
 
-    if (n_clicks_1 !== undefined && n_clicks_1 !== window.spectrawhorl_namespace.sdn_clicks_1) {
-        window.spectrawhorl_namespace.sdn_clicks_1 = n_clicks_1;
+    if (!(fromKeyInput_1 || fromKeyInput_2 || fromKeyInput_3 || fromKeyInput_4 || fromKeyInput_5 || fromKeyInput_6 || fromKeyInput_7)) {
+        if (n_clicks_1 !== undefined && n_clicks_1 !== window.spectrawhorl_namespace.sdn_clicks_1) {
+            window.spectrawhorl_namespace.sdn_clicks_1 = n_clicks_1;
+            updatedIndex = 1;
+        }
+        if (n_clicks_2 !== undefined && n_clicks_2 !== window.spectrawhorl_namespace.sdn_clicks_2) {
+            window.spectrawhorl_namespace.sdn_clicks_2 = n_clicks_2;
+            updatedIndex = 2;
+        }
+        if (n_clicks_3 !== undefined && n_clicks_3 !== window.spectrawhorl_namespace.sdn_clicks_3) {
+            window.spectrawhorl_namespace.sdn_clicks_3 = n_clicks_3;
+            updatedIndex = 3;
+        }
+        if (n_clicks_4 !== undefined && n_clicks_4 !== window.spectrawhorl_namespace.sdn_clicks_4) {
+            window.spectrawhorl_namespace.sdn_clicks_4 = n_clicks_4;
+            updatedIndex = 4;
+        }
+        if (n_clicks_5 !== undefined && n_clicks_5 !== window.spectrawhorl_namespace.sdn_clicks_5) {
+            window.spectrawhorl_namespace.sdn_clicks_5 = n_clicks_5;
+            updatedIndex = 5;
+        }
+        if (n_clicks_6 !== undefined && n_clicks_6 !== window.spectrawhorl_namespace.sdn_clicks_6) {
+            window.spectrawhorl_namespace.sdn_clicks_6 = n_clicks_6;
+            updatedIndex = 6;
+        }
+        if (n_clicks_7 !== undefined && n_clicks_7 !== window.spectrawhorl_namespace.sdn_clicks_7) {
+            window.spectrawhorl_namespace.sdn_clicks_7 = n_clicks_7;
+            updatedIndex = 7;
+        }
+    } else if (fromKeyInput_1) {
         updatedIndex = 1;
-    }
-    if (n_clicks_2 !== undefined && n_clicks_2 !== window.spectrawhorl_namespace.sdn_clicks_2) {
-        window.spectrawhorl_namespace.sdn_clicks_2 = n_clicks_2;
+    } else if (fromKeyInput_2) {
         updatedIndex = 2;
-    }
-    if (n_clicks_3 !== undefined && n_clicks_3 !== window.spectrawhorl_namespace.sdn_clicks_3) {
-        window.spectrawhorl_namespace.sdn_clicks_3 = n_clicks_3;
+    } else if (fromKeyInput_3) {
         updatedIndex = 3;
-    }
-    if (n_clicks_4 !== undefined && n_clicks_4 !== window.spectrawhorl_namespace.sdn_clicks_4) {
-        window.spectrawhorl_namespace.sdn_clicks_4 = n_clicks_4;
+    } else if (fromKeyInput_4) {
         updatedIndex = 4;
-    }
-    if (n_clicks_5 !== undefined && n_clicks_5 !== window.spectrawhorl_namespace.sdn_clicks_5) {
-        window.spectrawhorl_namespace.sdn_clicks_5 = n_clicks_5;
+    } else if (fromKeyInput_5) {
         updatedIndex = 5;
-    }
-    if (n_clicks_6 !== undefined && n_clicks_6 !== window.spectrawhorl_namespace.sdn_clicks_6) {
-        window.spectrawhorl_namespace.sdn_clicks_6 = n_clicks_6;
+    } else if (fromKeyInput_6) {
         updatedIndex = 6;
-    }
-    if (n_clicks_7 !== undefined && n_clicks_7 !== window.spectrawhorl_namespace.sdn_clicks_7) {
-        window.spectrawhorl_namespace.sdn_clicks_7 = n_clicks_7;
+    } else if (fromKeyInput_7) {
         updatedIndex = 7;
     }
+
 
     window.spectrawhorl_namespace.triadScaleDegree = updatedIndex;
 
     window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree));
 
-    // TODO: Add back in!!
-    // resetNote();
+    window.spectrawhorl_namespace.resetNote();
 
-    console.log(window.spectrawhorl_namespace.overlayKeyNotes, window.spectrawhorl_namespace.triadScaleDegree, window.spectrawhorl_namespace.overlayTriadNotes);
+    //console.log(window.spectrawhorl_namespace.overlayKeyNotes, window.spectrawhorl_namespace.triadScaleDegree, window.spectrawhorl_namespace.overlayTriadNotes);
 
     returnArray = [
         "spectrawhorl-sd_" + themeValue,
@@ -325,6 +347,15 @@ window.spectrawhorl_namespace.triadButtonSelection = function (
     ];
 
     returnArray[window.spectrawhorl_namespace.triadScaleDegree - 1] += "_selected";
+
+    // if it's key input, we have to set it ourselves...
+
+    for (let i = 0; i < 7; i++) {
+        const element = document.getElementById(`spectrawhorl-scale_degree_${i + 1}`);
+        if (element) {
+            element.className = returnArray[i];
+        }
+    }
 
     return returnArray;
 };
