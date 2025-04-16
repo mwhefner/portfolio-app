@@ -15,7 +15,7 @@ import pages.spectrawhorl.sources.generatorComponents.freeOscillator as freeOsci
 import pages.spectrawhorl.sources.generatorComponents.sequencer as sequencer
 import pages.spectrawhorl.sources.generatorComponents.envelope as envelope
 
-midiMarkdown = """**These midi controls are experimental and still under development.**
+midiMarkdown = """**These midi controls are experimental and still under development.** If having this working better or customizing the MIDI metadata for controls is important to you, let me know and I will be glad to implement it (and interested to hear from you!)
 
 _Slider output ranges are mapped from 0-127 in **Data Byte 2** (e.g. Bass Gain slider ranges -47 to +47, so **Data Byte 2** = 0 -> Bass Gain = -47, so **Data Byte 2** = 63 -> Bass Gain = 0, so **Data Byte 2** = 127 -> Bass Gain = +47)._
 
@@ -29,9 +29,9 @@ _Slider output ranges are mapped from 0-127 in **Data Byte 2** (e.g. Bass Gain s
 | Triad Degree 2   | 0xB0 (176)  | 0x11 (17)   | 0x00-0x7F (0-127) |
 | Triad Degree 3   | 0xB0 (176)  | 0x12 (18)   | 0x00-0x7F (0-127) |
 | Triad Degree 4   | 0xB0 (176)  | 0x13 (19)   | 0x00-0x7F (0-127) |
-| Triad Degree 7   | 0xB0 (176)  | 0x15 (21)   | 0x00-0x7F (0-127) |
+| Triad Degree 7   | 0xB0 (176)  | 0x15 (23)   | 0x00-0x7F (0-127) |
 | Triad Degree 6   | 0xB0 (176)  | 0x16 (22)   | 0x00-0x7F (0-127) |
-| Triad Degree 5   | 0xB0 (176)  | 0x17 (23)   | 0x00-0x7F (0-127) |
+| Triad Degree 5   | 0xB0 (176)  | 0x17 (21)   | 0x00-0x7F (0-127) |
 | Play/Pause       | 0xB0 (176)  | 0x14 (20)   | 0x00-0x7F (0-127) |
 | Sequence Mode    | 0xB0 (176)  | 0x18 (24)   | 0x00-0x7F (0-127) |
 | Sequence Direction | 0xB0 (176) | 0x1C (28)   | 0x00-0x7F (0-127) |

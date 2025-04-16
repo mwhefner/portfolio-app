@@ -83,7 +83,7 @@ layout = html.Div(
                         items=[
                             {"key": "6", "src": "/assets/webp/images/tonetornado_still.webp", "caption" : "The Harmonic Series at C3"},
                         ],
-                        controls=True,
+                        controls=False,
                         indicators=False,
                         className="carousel-fade",
                         interval=3000,

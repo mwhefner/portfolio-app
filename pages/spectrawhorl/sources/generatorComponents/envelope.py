@@ -72,16 +72,16 @@ layout = html.Div(
         
         dcc.Slider(
             id='spectrawhorl-sustainTimeSlider',
-            min=0,
-            max=1,
+            min=1,
+            max=10,
             step=0.01,
-            value=0.15,
+            value=1,
             marks={
-                0: '0 sec.',
-                
-                0.5: '.5 sec.',
-                
                 1: '1 sec.',
+                
+                5: '.5 secs.',
+                
+                10: '10 secs.',
             },
             included=True,
             updatemode='drag',

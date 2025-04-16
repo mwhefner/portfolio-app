@@ -35,7 +35,7 @@ window.spectrawhorl_namespace.onMIDISuccess = function (midi) {
 
     // Listen to all MIDI inputs
     for (let input of midiAccess.inputs.values()) {
-        input.onmidimessage = handleMIDIMessage;
+        input.onmidimessage = window.spectrawhorl_namespace.handleMIDIMessage;
         //console.log(`Connected to MIDI device: ${input.name}`);
         document.getElementById('spectrawhorl-midiControlIndicator').innerText = `Connected to MIDI device: ${input.name}`;
     }
@@ -141,11 +141,13 @@ window.spectrawhorl_namespace.handleControlChange = function(controller, value) 
         case 16:
             if (window.spectrawhorl_namespace.cc_double_click_16) {
                 window.spectrawhorl_namespace.cc_double_click_16 = false;
-                window.spectrawhorl_namespace.triadScaleDegree = 1;
-                window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(
-                    window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree)
+
+                window.spectrawhorl_namespace.triadButtonSelection(
+                    0, 0, 0, 0, 0, 0, 0,
+                    window.spectrawhorl_namespace.uiLightTheme,
+                    true, false, false, false, false, false, false
                 );
-                window.spectrawhorl_namespace.resetNote();
+
             } else {
                 window.spectrawhorl_namespace.cc_double_click_16 = true;
             }
@@ -153,11 +155,13 @@ window.spectrawhorl_namespace.handleControlChange = function(controller, value) 
         case 17:
             if (window.spectrawhorl_namespace.cc_double_click_17) {
                 window.spectrawhorl_namespace.cc_double_click_17 = false;
-                window.spectrawhorl_namespace.triadScaleDegree = 2;
-                window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(
-                    window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree)
+
+                window.spectrawhorl_namespace.triadButtonSelection(
+                    0, 0, 0, 0, 0, 0, 0,
+                    window.spectrawhorl_namespace.uiLightTheme,
+                    false, true, false, false, false, false, false
                 );
-                window.spectrawhorl_namespace.resetNote();
+
             } else {
                 window.spectrawhorl_namespace.cc_double_click_17 = true;
             }
@@ -165,11 +169,13 @@ window.spectrawhorl_namespace.handleControlChange = function(controller, value) 
         case 18:
             if (window.spectrawhorl_namespace.cc_double_click_18) {
                 window.spectrawhorl_namespace.cc_double_click_18 = false;
-                window.spectrawhorl_namespace.triadScaleDegree = 3;
-                window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(
-                    window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree)
+                
+                window.spectrawhorl_namespace.triadButtonSelection(
+                    0, 0, 0, 0, 0, 0, 0,
+                    window.spectrawhorl_namespace.uiLightTheme,
+                    false, false, true, false, false, false, false
                 );
-                window.spectrawhorl_namespace.resetNote();
+
             } else {
                 window.spectrawhorl_namespace.cc_double_click_18 = true;
             }
@@ -177,11 +183,13 @@ window.spectrawhorl_namespace.handleControlChange = function(controller, value) 
         case 19:
             if (window.spectrawhorl_namespace.cc_double_click_19) {
                 window.spectrawhorl_namespace.cc_double_click_19 = false;
-                window.spectrawhorl_namespace.triadScaleDegree = 4;
-                window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(
-                    window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree)
+                
+                window.spectrawhorl_namespace.triadButtonSelection(
+                    0, 0, 0, 0, 0, 0, 0,
+                    window.spectrawhorl_namespace.uiLightTheme,
+                    false, false, false, true, false, false, false
                 );
-                window.spectrawhorl_namespace.resetNote();
+
             } else {
                 window.spectrawhorl_namespace.cc_double_click_19 = true;
             }
@@ -189,11 +197,13 @@ window.spectrawhorl_namespace.handleControlChange = function(controller, value) 
         case 21:
             if (window.spectrawhorl_namespace.cc_double_click_21) {
                 window.spectrawhorl_namespace.cc_double_click_21 = false;
-                window.spectrawhorl_namespace.triadScaleDegree = 7;
-                window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(
-                    window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree)
+                
+                window.spectrawhorl_namespace.triadButtonSelection(
+                    0, 0, 0, 0, 0, 0, 0,
+                    window.spectrawhorl_namespace.uiLightTheme,
+                    false, false, false, false, true, false, false
                 );
-                window.spectrawhorl_namespace.resetNote();
+
             } else {
                 window.spectrawhorl_namespace.cc_double_click_21 = true;
             }
@@ -201,11 +211,13 @@ window.spectrawhorl_namespace.handleControlChange = function(controller, value) 
         case 22:
             if (window.spectrawhorl_namespace.cc_double_click_22) {
                 window.spectrawhorl_namespace.cc_double_click_22 = false;
-                window.spectrawhorl_namespace.triadScaleDegree = 6;
-                window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(
-                    window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree)
+                
+                window.spectrawhorl_namespace.triadButtonSelection(
+                    0, 0, 0, 0, 0, 0, 0,
+                    window.spectrawhorl_namespace.uiLightTheme,
+                    false, false, false, false, false, true, false
                 );
-                window.spectrawhorl_namespace.resetNote();
+
             } else {
                 window.spectrawhorl_namespace.cc_double_click_22 = true;
             }
@@ -213,11 +225,13 @@ window.spectrawhorl_namespace.handleControlChange = function(controller, value) 
         case 23:
             if (window.spectrawhorl_namespace.cc_double_click_23) {
                 window.spectrawhorl_namespace.cc_double_click_23 = false;
-                window.spectrawhorl_namespace.triadScaleDegree = 5;
-                window.spectrawhorl_namespace.overlayTriadNotes = window.spectrawhorl_namespace.expandScale(
-                    window.spectrawhorl_namespace.getTriadFromScale(window.spectrawhorl_namespace.SCALE, window.spectrawhorl_namespace.triadScaleDegree)
+                
+                window.spectrawhorl_namespace.triadButtonSelection(
+                    0, 0, 0, 0, 0, 0, 0,
+                    window.spectrawhorl_namespace.uiLightTheme,
+                    false, false, false, false, false, false, true
                 );
-                window.spectrawhorl_namespace.resetNote();
+
             } else {
                 window.spectrawhorl_namespace.cc_double_click_23 = true;
             }
