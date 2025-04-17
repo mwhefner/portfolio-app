@@ -15,4 +15,4 @@ I've hit the optimization asymptote for returns on surface resolution for the cu
 
 **Displaying:** All of that is moot for now because the largest bottleneck by magnitudes is the size of the surface's OBJ (vertex/face/normal definitions) string in memory. With these periodic (triply periodic to be exact) shapes, it would be a lot better if I could instead focus that memory on just a single "generator" unit of, say, a Gyroid or a Schwarz-P surface, and then just instance render (or "tile space with") that with the GPU. 
 
-I tried this with p5.js, and it's just super hacky and randomly crashes. The change will ultimately probably require a refactor to three.js from p5.js, which is sort of the more grown-up / industrial 3D web graphics library. I've just avoided it because it's... another thing to learn, and the app currently "ain't broke..."
+I tried this with p5.js, and it's just super hacky and randomly crashes. The change will ultimately probably require a refactor to three.js from p5.js, which is sort of the more industrial 3D web graphics library. I've just avoided it because it's... another thing to learn, and the app currently "ain't broke..."
