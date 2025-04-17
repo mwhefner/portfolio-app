@@ -103,8 +103,6 @@ layout = html.Div(
                         
                         **You can also show your support by simply sharing this app!**
                         
-                        Video tutorial coming soon.
-                        
                         """, mathjax=True, className="m-5", style = {'textAlign' : 'center', 'fontSize' : '1.25em'}
                     ),
                     
