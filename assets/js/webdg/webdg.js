@@ -23,10 +23,10 @@ window.dash_clientside.differential_geometry.showBackground = true;
 window.dash_clientside.differential_geometry.backgroundColor = "#2e2e2e"; // "middle gray" https://en.wikipedia.org/wiki/Middle_gray
 window.dash_clientside.differential_geometry.orbitControlled = true;
 window.dash_clientside.differential_geometry.surfaceShine = 10;
-window.dash_clientside.differential_geometry.ambient_light = [100, 100, 100];
-window.dash_clientside.differential_geometry.x_light = [255, 0, 0];
-window.dash_clientside.differential_geometry.y_light = [0, 255, 0];
-window.dash_clientside.differential_geometry.z_light = [0, 0, 255];
+window.dash_clientside.differential_geometry.ambient_light = [0, 0, 0];
+window.dash_clientside.differential_geometry.x_light = [0, 255, 255];
+window.dash_clientside.differential_geometry.y_light = [255, 0, 255];
+window.dash_clientside.differential_geometry.z_light = [255, 255, 0];
 window.dash_clientside.differential_geometry.rotate_toggle = false;
 window.dash_clientside.differential_geometry.rotation_speed = 5;
 window.dash_clientside.differential_geometry.orbit_sensitivity = 1;
@@ -66,6 +66,21 @@ window.dash_clientside.differential_geometry.drawBackground = function(p) {
 
 /** Draw axes only if so set */
 window.dash_clientside.differential_geometry.drawAxes = function(p) {
+    if (window.dash_clientside.differential_geometry.showAxis) {
+        p.strokeWeight(3);
+        // X axis - Red
+        p.stroke(0, 255, 255);
+        p.line(0, 0, 0, window.dash_clientside.differential_geometry.scaler*10, 0, 0);
+        p.line(0, 0, 0, -window.dash_clientside.differential_geometry.scaler*10, 0, 0);
+        // Y axis - Green
+        p.stroke(255, 0, 255);
+        p.line(0, 0, 0, 0, window.dash_clientside.differential_geometry.scaler*10, 0);
+        p.line(0, 0, 0, 0, -window.dash_clientside.differential_geometry.scaler*10, 0);
+        // Z axis - Blue
+        p.stroke(255, 255, 0);
+        p.line(0, 0, 0, 0, 0, window.dash_clientside.differential_geometry.scaler*10);
+        p.line(0, 0, 0, 0, 0, -window.dash_clientside.differential_geometry.scaler*10);
+    }
 }
 
 /** Parses what should ostensibly be a constant (includes e, pi) */

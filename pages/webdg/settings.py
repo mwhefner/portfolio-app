@@ -45,7 +45,7 @@ layout = dbc.Card(
                     dbc.Input(
                         type="color",
                         id="bg_colorpicker",
-                        value="#2e2e2e",
+                        value="#999999",
                         className="p-0 mb-4",
                         style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
                     ),
@@ -114,9 +114,9 @@ layout = dbc.Card(
                     
                     dcc.Slider(
                         # roughly pi / 1000's
-                        min=0.00314, 
-                        max=0.314, 
-                        step=0.00314, 
+                        min=0.000314, 
+                        max=0.0628, 
+                        step=0.000314, 
                         value=0.0314, 
                         id='rotation_speed',
                         marks=None,  # Removes labeled marks
@@ -130,7 +130,7 @@ layout = dbc.Card(
                     
                     dbc.Switch(
                         id="show_axes",
-                        label="Show Axes Indicator and Orienting (X-Z) Plane",
+                        label="Show Axes",
                         value=True,
                         disabled=False,
                         style={'user-select': 'none', "fontSize": "1.5em",},
@@ -168,10 +168,10 @@ layout = dbc.Card(
                     ),
                     
                     dcc.Slider(
-                        min=0.1, 
-                        max=40, 
-                        step=0.1, 
-                        value=4, 
+                        min=0.1,
+                        max=40,
+                        step=0.1,
+                        value=4,
                         id='curveWidthSlider',
                         marks=None,  # Removes labeled marks
                         tooltip={"always_visible": False},  # Optional: Hide tooltip
@@ -179,7 +179,6 @@ layout = dbc.Card(
                     ),
                     
                     # TNB SELECTION
-
                     dbc.InputGroup(
                         [
                             dbc.InputGroupText(
@@ -285,9 +284,9 @@ layout = dbc.Card(
                             
                     dcc.Slider(
                         min=0, 
-                        max=50, 
+                        max=100, 
                         step=1, 
-                        value=10, 
+                        value=50, 
                         id='surfaceShine',
                         marks=None,  # Removes labeled marks
                         tooltip={"always_visible": False},  # Optional: Hide tooltip
@@ -307,7 +306,7 @@ layout = dbc.Card(
                     dbc.Input(
                         type="color",
                         id="ambient_light_colorpicker",
-                        value="#646464",
+                        value="#000000",
                         className="p-0 mb-4",
                         style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
                     ),

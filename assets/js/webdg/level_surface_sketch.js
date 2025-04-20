@@ -58,7 +58,7 @@ window.dash_clientside.differential_geometry.level_surface_sketch = function(obj
 
         dg.drawBackground(p);
 
-        dg.drawAxes();
+        dg.drawAxes(p);
 
         // Orbit control to allow mouse interaction
         // Only allow orbit control when no modal is open
