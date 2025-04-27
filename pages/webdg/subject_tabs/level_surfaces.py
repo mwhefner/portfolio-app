@@ -524,47 +524,47 @@ clientside_callback(
                 "P-Surface": {
                     "ls_fcomponent": "cos(x)+cos(y)+cos(z)",
                     
-                    "ls_xstart" : "-6 pi",
-                    "ls_xend" : "6 pi",
+                    "ls_xstart" : "-3.14159",
+                    "ls_xend" : "3.14159",
                     "ls_nx" : 100,
                     
-                    "ls_ystart" : "-6 pi",
-                    "ls_yend" : "6 pi",
+                    "ls_ystart" : "-3.14159",
+                    "ls_yend" : "3.14159",
                     "ls_ny" : 100,
                     
-                    "ls_zstart" : "-6 pi",
-                    "ls_zend" : "6 pi",
+                    "ls_zstart" : "-3.14159",
+                    "ls_zend" : "3.14159",
                     "ls_nz" : 100
                 },
                 "D-Surface": {
                     "ls_fcomponent": "cos(z) * sin(x+y) + sin(z) * cos(x-y)",
                     
-                    "ls_xstart" : "-6 pi",
-                    "ls_xend" : "6 pi",
+                    "ls_xstart" : "-3.14159",
+                    "ls_xend" : "3.14159",
                     "ls_nx" : 100,
                     
-                    "ls_ystart" : "-6 pi",
-                    "ls_yend" : "6 pi",
+                    "ls_ystart" : "-3.14159",
+                    "ls_yend" : "3.14159",
                     "ls_ny" : 100,
                     
-                    "ls_zstart" : "-6 pi",
-                    "ls_zend" : "6 pi",
+                    "ls_zstart" : "-3.14159",
+                    "ls_zend" : "3.14159",
                     "ls_nz" : 100
                     
                 },
                 "Gyroid": {
                     "ls_fcomponent": "sin(x) * cos(y) + sin(y) * cos(z) + cos(x) * sin(z)",
                     
-                    "ls_xstart" : "-6 pi",
-                    "ls_xend" : "6 pi",
+                    "ls_xstart" : "-3.14159",
+                    "ls_xend" : "3.14159",
                     "ls_nx" : 100,
                     
-                    "ls_ystart" : "-6 pi",
-                    "ls_yend" : "6 pi",
+                    "ls_ystart" : "-3.14159",
+                    "ls_yend" : "3.14159",
                     "ls_ny" : 100,
                     
-                    "ls_zstart" : "-6 pi",
-                    "ls_zend" : "6 pi",
+                    "ls_zstart" : "-3.14159",
+                    "ls_zend" : "3.14159",
                     "ls_nz" : 100
                     
                 },

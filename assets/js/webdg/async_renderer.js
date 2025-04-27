@@ -316,7 +316,13 @@ onmessage = function (e) {
         } else if (e.data.subject === "render_level_surface") {
             let LS = createLevelSurfaceOBJ(e.data.ls_params);
             obj = LS[0];
-            postMessage({ success: true, obj_file: obj});
+            xMin = LS[1]; 
+            xMax = LS[2]; 
+            yMin = LS[3]; 
+            yMax = LS[4]; 
+            zMin = LS[5]; 
+            zMax = LS[6];
+            postMessage({ success: true, obj_file: obj, xMin:xMin, xMax:xMax, yMin:yMin, yMax:yMax, zMin:zMin, zMax:zMax});
         } else {
             console.warn("The webworker was called with an ambiguous context.", e.data.subject);
             postMessage({ success: false});
@@ -1246,9 +1252,7 @@ function createLevelSurfaceOBJ(params) {
     objString += normals.map(n => `vn ${n}`).join("\n") + "\n";
     objString += faces.join("\n") + "\n";
 
-    //console.log(objString);
-
-    return [objString];
+    return [objString, xMin, xMax, yMin, yMax, zMin, zMax];
 }
 
 

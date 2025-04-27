@@ -45,7 +45,7 @@ layout = dbc.Card(
                     dbc.Input(
                         type="color",
                         id="bg_colorpicker",
-                        value="#999999",
+                        value="#000000",
                         className="p-0 mb-4",
                         style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
                     ),
@@ -147,7 +147,7 @@ layout = dbc.Card(
                         min=1, 
                         max=500, 
                         step=1, 
-                        value=75, 
+                        value=20, 
                         id='displayScaleSlider',
                         marks=None,  # Removes labeled marks
                         tooltip={"always_visible": False},  # Optional: Hide tooltip
@@ -284,9 +284,9 @@ layout = dbc.Card(
                             
                     dcc.Slider(
                         min=0, 
-                        max=100, 
+                        max=30, 
                         step=1, 
-                        value=50, 
+                        value=15, 
                         id='surfaceShine',
                         marks=None,  # Removes labeled marks
                         tooltip={"always_visible": False},  # Optional: Hide tooltip
@@ -320,7 +320,7 @@ layout = dbc.Card(
                     dbc.Input(
                         type="color",
                         id="x_light_colorpicker",
-                        value="#FF0000",
+                        value="#ff0000",
                         className="p-0 mb-4",
                         style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
                     ),
@@ -353,6 +353,23 @@ layout = dbc.Card(
                         style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
                     ),
                     
+                    dbc.Label(
+                        "Perspective Field of View",
+                        className="pb-0 mb-0",
+                        style={'user-select': 'none',"fontSize": "1.5em",},
+                    ),
+                    
+                    dcc.Slider(
+                        min=0.1, 
+                        max=3, 
+                        step=0.01, 
+                        value=0.62, 
+                        id='fov',
+                        marks=None,  # Removes labeled marks
+                        tooltip={"always_visible": False},  # Optional: Hide tooltip
+                        className="webdg_slider my-2"  # Add the class
+                    ),
+                            
                     # end settings children
                     
                 ],
@@ -447,7 +464,7 @@ clientside_callback(
 # The main clientside callback for configuring the differential geometry namespace
 clientside_callback(
     """
-    function(show_solid_bg, bg_colorpicker_value, show_axes, displayScaleSlider_value, curveWidthSlider_value, movement_speed, show_focal_point, surfaceShine, ambient_light_colorpicker, x_light_colorpicker, y_light_colorpicker, z_light_colorpicker, rotate_toggle, rotation_speed, orbit_sensitivity){
+    function(show_solid_bg, bg_colorpicker_value, show_axes, displayScaleSlider_value, curveWidthSlider_value, movement_speed, show_focal_point, surfaceShine, ambient_light_colorpicker, x_light_colorpicker, y_light_colorpicker, z_light_colorpicker, rotate_toggle, rotation_speed, orbit_sensitivity, fov){
         
         let dg = window.dash_clientside.differential_geometry;
         
@@ -475,6 +492,7 @@ clientside_callback(
         dg.rotate_toggle = rotate_toggle;
         dg.rotation_speed = rotation_speed;
         dg.orbit_sensitivity = orbit_sensitivity;
+        dg.fov = fov;
 
         
         return ""; // empty return, no need to actually store anything
@@ -496,4 +514,5 @@ clientside_callback(
     Input("rotate_toggle", "value"),
     Input("rotation_speed", "value"),
     Input("orbit_sensitivity", "value"),
+    Input("fov", "value"),
 )

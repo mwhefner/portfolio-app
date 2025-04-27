@@ -332,7 +332,7 @@ layout = html.Div(
                 dbc.Input(
                     type="color",
                     id="c_colorpicker",
-                    value="#000000",
+                    value="#FFFFFF",
                     className="p-0 border-0",
                     style={"width": "10%", "height": "2.5rem"}  # Adjust height for visibility
                 ),

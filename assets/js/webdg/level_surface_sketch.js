@@ -5,28 +5,27 @@ window.dash_clientside.differential_geometry = window.dash_clientside.differenti
 
 
 /** the function ran to build a sketch around a level surface */
-window.dash_clientside.differential_geometry.level_surface_sketch = function(obj_file, colorby) {
+window.dash_clientside.differential_geometry.level_surface_sketch = function(obj_file, colorby, x_spacing, y_spacing, z_spacing) {
 
     // Get the subnamespace to refer to variables more efficiently
     let dg = window.dash_clientside.differential_geometry;
 
     let sketch_function = function (p) {
 
-    //subject
-    let subject;
+    //generator
+    let subject
     let cam;
+    let instancingShader;
 
-    p.setup = function () {
+    p.setup = async function () {
     
         // Run the safe setup function
         dg.safe_setup(p);
-    
-        p.setAttributes('antialias', true);
 
         cam = p.createCamera();
     
         // Place the camera at the top-right.
-        cam.setPosition(400, -400, 800);
+        cam.setPosition(800, -800, 800);
       
         // Point it at the origin.
         cam.lookAt(0, 0, 0);
@@ -46,9 +45,66 @@ window.dash_clientside.differential_geometry.level_surface_sketch = function(obj
 
         p.setCamera(cam);
 
+        let instancingCallback = {
+
+
+
+
+
+        };
+
+        instancingShader = p.baseMaterialShader().modify({
+
+            declarations: 'vec3 myNormal;',
+
+            'Vertex getObjectInputs': `(Vertex inputs) {
+                int id = gl_InstanceID;
+                int size = 3; // 10 per axis
+                float spacing = 6.283184;
+                float halfGrid = float(size - 1) * spacing * 0.5;
+
+                int x = id % size;
+                int y = (id / size) % size;
+                int z = id / (size * size);
+
+                vec3 offset = vec3(
+                float(x) * spacing,
+                float(y) * spacing,
+                float(z) * spacing
+                );
+
+                inputs.position.xyz += offset - vec3(halfGrid);
+
+                return inputs;
+            }`,
+
+            'Inputs getPixelInputs': `(Inputs inputs) {
+                myNormal = inputs.normal;
+                return inputs;
+            }`,
+  
+            'vec4 getFinalColor': `(vec4 color) {
+                return mix(
+                vec4(1.0, 1.0, 1.0, 1.0),
+                color,
+                abs(dot(myNormal, vec3(0.0, 0.0, 1.0))));
+            }`
+
+        });
+
+        //p.ortho(-p.width/2, p.width/2, -p.height/2, p.height/2, 0, 50000);
+
     };
     
     p.draw = function () {
+
+        p.perspective(dg.fov, p.width / p.height, .8, 8000);
+
+        p.rotateX(p.PI);
+
+        if (dg.rotate_toggle) {
+            p.rotateY(p.frameCount * dg.rotation_speed);
+        }
 
         if (p.frameCount === 1 && subject) {
             dg.render_result_alert(true);
@@ -60,91 +116,42 @@ window.dash_clientside.differential_geometry.level_surface_sketch = function(obj
 
         dg.drawAxes(p);
 
+        p.push();
+        p.translate(cam.centerX, -cam.centerY, -cam.centerZ);
+        dg.drawFocalPoint(p);
+        p.pop();
+
         // Orbit control to allow mouse interaction
         // Only allow orbit control when no modal is open
         if (dg.orbitControlled) {
             p.orbitControl(dg.orbit_sensitivity, dg.orbit_sensitivity, dg.orbit_sensitivity);
         }
 
-        // Draw a gray dot at the focal point of the camera
-        if (dg.showFocalPoint) {
-            p.push();
-            p.translate(cam.centerX, cam.centerY, cam.centerZ);
-            p.fill(255, 255, 255);
-            p.noStroke();
-            p.sphere(3); // Adjust size as needed
-            p.pop();
-        }
-
-
         //  LIGHTING AND COLOR BY
         if (colorby === "normal") {
-
             p.normalMaterial();
-            //p.ambientLight(255);
 
         } else {
-
             // scene lighting
-            p.ambientLight(dg.ambient_light[0], dg.ambient_light[1], dg.ambient_light[2]); // Ambient light with moderate intensity
-
-
-            p.directionalLight(dg.x_light[0], dg.x_light[1], dg.x_light[2], 1, 0, 0);
-            p.directionalLight(dg.y_light[0], dg.y_light[1], dg.y_light[2], 0, 1, 0);
-            p.directionalLight(dg.z_light[0], dg.z_light[1], dg.z_light[2], 0, 0, 1);
-
-            p.shininess(dg.surfaceShine);       // Make highlights pop
-            p.specularMaterial(255);
-
+            dg.sceneLighting(p, dg);
         }
 
         p.push(); 
-
-        p.rotateX(p.PI);
-
-        if (dg.rotate_toggle) {
-            p.rotateY(p.frameCount * dg.rotation_speed);
-        }
         
         p.strokeWeight(0);
 
         p.scale(dg.scaler);
 
-        p.model(subject);
+        p.shader(instancingShader);
+        
+        p.model(subject, 27);
 
         p.pop();
 
         p.strokeWeight(1);
 
-        if (dg.orbitControlled) {
-            if (p.keyIsDown(p.LEFT_ARROW) === true) {
-                cam.move(-dg.movementSpeed, 0, 0);
-            }
-        
-            if (p.keyIsDown(p.RIGHT_ARROW) === true) {
-                cam.move(dg.movementSpeed, 0, 0);
-            }
-        
-            if (p.keyIsDown(p.UP_ARROW) === true) {
-    
-                if (p.keyIsDown(p.SHIFT)) {
-                    cam.move(0, 0, -dg.movementSpeed);
-                } else {
-                    cam.move(0, -dg.movementSpeed, 0);
-                }
-                
-            }
-        
-            if (p.keyIsDown(p.DOWN_ARROW) === true) {
-    
-                if (p.keyIsDown(p.SHIFT)) {
-                    cam.move(0, 0, dg.movementSpeed);
-                } else {
-                    cam.move(0, dg.movementSpeed, 0);
-                }
-    
-            }
-        }
+        dg.movement(p, cam);
+
     };
     
     }

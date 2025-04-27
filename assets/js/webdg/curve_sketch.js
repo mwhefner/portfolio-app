@@ -78,8 +78,6 @@ window.dash_clientside.differential_geometry.curve_sketch = function (curveData)
         // Run the safe setup function
         dg.safe_setup(p);
 
-        p.setAttributes('antialias', true);
-
         cam = p.createCamera();
 
         // Place the camera at the top-right.
@@ -100,6 +98,13 @@ window.dash_clientside.differential_geometry.curve_sketch = function (curveData)
     };
     
     p.draw = function () {
+        
+        // account for y pointing down at the start
+        p.rotateX(p.PI);
+
+        if (dg.rotate_toggle) {
+            p.rotateY(p.frameCount * dg.rotation_speed);
+        }
 
         if (p.frameCount === 1 && curveData) {
             dg.render_result_alert(true);
@@ -111,32 +116,18 @@ window.dash_clientside.differential_geometry.curve_sketch = function (curveData)
 
         dg.drawAxes(p);
 
+        p.push();
+        p.translate(cam.centerX, -cam.centerY, -cam.centerZ);
+        dg.drawFocalPoint(p);
+        p.pop();
+
         // Orbit control to allow mouse interaction
         // Only allow orbit control when no modal is open
         if (dg.orbitControlled) {
             p.orbitControl(dg.orbit_sensitivity, dg.orbit_sensitivity, dg.orbit_sensitivity);
         }
 
-        // Draw a gray dot at the focal point of the camera
-        if (dg.showFocalPoint) {
-            p.push();
-            p.translate(cam.centerX, cam.centerY, cam.centerZ);
-            p.fill(255, 255, 255);
-            p.noStroke();
-            p.sphere(3); // Adjust size as needed
-            p.pop();
-        }
-
-
-        // account for y pointing down at the start
-        p.rotateX(p.PI);
-    
-        if (dg.rotate_toggle) {
-            p.rotateY(p.frameCount * dg.rotation_speed);
-        }
-
-        // Draw text at the origin
-        p.push(); // Save the current transformation matrix
+        p.push();
 
         if (!dg.TNB_select_disabled && dg.TNB_select === "anchor") {
             dg.plotTNB(dg.TNB_anchor_slider, dg.TNB_data, p);

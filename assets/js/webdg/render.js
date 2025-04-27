@@ -112,7 +112,12 @@ window.dash_clientside.differential_geometry.render_webdg = function(n_clicks, n
                 } else if (triggered_id === "render_surface") {
                     dg.sketch = new p5_v2(dg.surface_sketch(e.data.obj_file, e.data.colorJSON, s_nu_validated, s_nv_validated, s_colorby)); 
                 } else if (triggered_id === "render_level_surface") {
-                    dg.sketch = new p5_v2(dg.level_surface_sketch(e.data.obj_file, ls_colorby)); 
+                    dg.sketch = new p5_v2(
+                        dg.level_surface_sketch(e.data.obj_file, ls_colorby,
+                            e.data.xMax - e.data.xMin,
+                            e.data.yMax - e.data.yMin,
+                            e.data.zMax - e.data.zMin)
+                    ); 
                 } 
 
             } else {

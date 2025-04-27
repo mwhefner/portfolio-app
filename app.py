@@ -26,9 +26,9 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.mi
 app = Dash(
     __name__,
     external_stylesheets=[dbc.themes.LUX, dbc_css, dbc.icons.FONT_AWESOME],
-    title = "M W Hefner's Web Portfolio",
+    title = "Web Portfolio",
     suppress_callback_exceptions=True,
-    update_title = "thinkin' hard...",
+    update_title = "(Loading) Web Portfolio",
     use_pages=True
 )
 

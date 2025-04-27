@@ -70,10 +70,10 @@ layout = dbc.Card(
         dbc.CardHeader(
             dbc.Tabs(
                 [
-                    dbc.Tab(label="Curves", tab_id="curves"),
-                    dbc.Tab(label="Parametric Surfaces", tab_id="surfaces"),
+                    dbc.Tab(label="Curves", tab_id="curves", tabClassName="mx-auto"),
+                    dbc.Tab(label="Parametric Surfaces", tab_id="surfaces", tabClassName="mx-auto"),
                     #dbc.Tab(label="Embedded Curves", tab_id="embedded curves"),
-                    dbc.Tab(label="Level Surfaces", tab_id="minimal surfaces"),
+                    dbc.Tab(label="Level Surfaces", tab_id="minimal surfaces", tabClassName="mx-auto"),
                 ],
                 id="subject-tabs",
                 active_tab="curves",

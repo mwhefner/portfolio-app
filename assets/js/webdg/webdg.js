@@ -6,30 +6,42 @@ window.dash_clientside.differential_geometry = window.dash_clientside.differenti
 /** The current sketch */
 window.dash_clientside.differential_geometry.sketch = null;
 
-/** These variables are manipulated by clienside callbacks in the settings */
 
-window.dash_clientside.differential_geometry.showAxis = true;
-window.dash_clientside.differential_geometry.showFocalPoint = true;
-window.dash_clientside.differential_geometry.movementSpeed = 1;
+/** For displaying the TNB frame of a curve */
 window.dash_clientside.differential_geometry.TNB_data = null;
 window.dash_clientside.differential_geometry.TNB_select = null;
 window.dash_clientside.differential_geometry.TNB_anchor_slider = null;
 window.dash_clientside.differential_geometry.TNB_speed_slider = null;
 window.dash_clientside.differential_geometry.TNB_select_disabled = true;
-window.dash_clientside.differential_geometry.scaler = 100;
-window.dash_clientside.differential_geometry.strokeW = 4;
 window.dash_clientside.differential_geometry.animation_position = 0;
-window.dash_clientside.differential_geometry.showBackground = true;
-window.dash_clientside.differential_geometry.backgroundColor = "#2e2e2e"; // "middle gray" https://en.wikipedia.org/wiki/Middle_gray
+
+/** Contols controls (controls the controls) */
 window.dash_clientside.differential_geometry.orbitControlled = true;
-window.dash_clientside.differential_geometry.surfaceShine = 10;
-window.dash_clientside.differential_geometry.ambient_light = [0, 0, 0];
-window.dash_clientside.differential_geometry.x_light = [0, 255, 255];
-window.dash_clientside.differential_geometry.y_light = [255, 0, 255];
-window.dash_clientside.differential_geometry.z_light = [255, 255, 0];
-window.dash_clientside.differential_geometry.rotate_toggle = false;
-window.dash_clientside.differential_geometry.rotation_speed = 5;
-window.dash_clientside.differential_geometry.orbit_sensitivity = 1;
+window.dash_clientside.differential_geometry.xVelocity = 0;
+window.dash_clientside.differential_geometry.yVelocity = 0;
+window.dash_clientside.differential_geometry.zVelocity = 0;
+
+
+/** These variables are manipulated by clienside callbacks in the settings */
+window.dash_clientside.differential_geometry.showAxis = true;
+window.dash_clientside.differential_geometry.showFocalPoint = true;
+window.dash_clientside.differential_geometry.movementSpeed = 1;
+window.dash_clientside.differential_geometry.scaler = null;             // Initialized in Settings
+window.dash_clientside.differential_geometry.strokeW = null;            // Initialized in Settings
+window.dash_clientside.differential_geometry.showBackground = null;     // Initialized in Settings
+window.dash_clientside.differential_geometry.backgroundColor = null;    // Initialized in Settings
+window.dash_clientside.differential_geometry.surfaceShine = null;       // Initialized in Settings
+window.dash_clientside.differential_geometry.ambient_light = null;      // Initialized in Settings
+window.dash_clientside.differential_geometry.x_light = null;            // Initialized in Settings
+window.dash_clientside.differential_geometry.y_light = null;            // Initialized in Settings
+window.dash_clientside.differential_geometry.z_light = null;            // Initialized in Settings
+window.dash_clientside.differential_geometry.neg_x_light = null;            // Initialized in Settings
+window.dash_clientside.differential_geometry.neg_y_light = null;            // Initialized in Settings
+window.dash_clientside.differential_geometry.neg_z_light = null;            // Initialized in Settings
+window.dash_clientside.differential_geometry.rotate_toggle = null;      // Initialized in Settings
+window.dash_clientside.differential_geometry.rotation_speed = null;     // Initialized in Settings
+window.dash_clientside.differential_geometry.orbit_sensitivity = null;  // Initialized in Settings
+window.dash_clientside.differential_geometry.fov = null;  // Initialized in Settings
 
 /** Essential utility functions */
 
@@ -37,13 +49,7 @@ window.dash_clientside.differential_geometry.orbit_sensitivity = 1;
 window.dash_clientside.differential_geometry.hexToRGB = function(hex) {
     // Remove the hash (#) if it exists
     hex = hex.replace('#', '');
-
-    // Parse the RGB values from the hex string
-    let r = parseInt(hex.substring(0, 2), 16);
-    let g = parseInt(hex.substring(2, 4), 16);
-    let b = parseInt(hex.substring(4, 6), 16);
-
-    return [r, g, b];
+    return [parseInt(hex.substring(0, 2), 16), parseInt(hex.substring(2, 4), 16), parseInt(hex.substring(4, 6), 16)];
 };
 
 /** Safe setup is useful for setup needs for all sketches */
@@ -52,6 +58,8 @@ window.dash_clientside.differential_geometry.safe_setup = function (p) {
     // A little pointless for now, but useful as a stub
     // for future expansion
     p.createCanvas(window.innerWidth, window.innerHeight, p.WEBGL);
+
+    p.setAttributes('antialias', true);
 
 };
 
@@ -64,24 +72,201 @@ window.dash_clientside.differential_geometry.drawBackground = function(p) {
     }
 };
 
-/** Draw axes only if so set */
+/** Draws the focal point */
+window.dash_clientside.differential_geometry.drawFocalPoint = function(p) {
+        // Draw a white dot at the focal point of the camera
+        if (window.dash_clientside.differential_geometry.showFocalPoint) {
+            //
+            p.fill(255, 255, 255);
+            p.noStroke();
+            p.sphere(1); // Adjust size as needed
+        }
+        return "";
+};
+
+/** Draws the axes */
 window.dash_clientside.differential_geometry.drawAxes = function(p) {
-    if (window.dash_clientside.differential_geometry.showAxis) {
-        p.strokeWeight(3);
-        // X axis - Red
-        p.stroke(0, 255, 255);
-        p.line(0, 0, 0, window.dash_clientside.differential_geometry.scaler*10, 0, 0);
-        p.line(0, 0, 0, -window.dash_clientside.differential_geometry.scaler*10, 0, 0);
-        // Y axis - Green
-        p.stroke(255, 0, 255);
-        p.line(0, 0, 0, 0, window.dash_clientside.differential_geometry.scaler*10, 0);
-        p.line(0, 0, 0, 0, -window.dash_clientside.differential_geometry.scaler*10, 0);
-        // Z axis - Blue
-        p.stroke(255, 255, 0);
-        p.line(0, 0, 0, 0, 0, window.dash_clientside.differential_geometry.scaler*10);
-        p.line(0, 0, 0, 0, 0, -window.dash_clientside.differential_geometry.scaler*10);
+    const dg = window.dash_clientside.differential_geometry;
+    if (!dg.showAxis) return;
+
+    const x_max = 100, width = 1; 
+    let x;
+
+
+
+    p.noStroke();
+
+    // Positive x
+    p.push();
+    // align with the x axis
+    p.rotateZ(p.PI / 2);
+    // offset to the edge of the marker rather than center
+    p.translate(0, dg.scaler * (-0.5), 0);
+    p.fill(255, 0, 0);
+    for (x = 0; x < x_max; x += 2) {
+        p.cylinder(width, dg.scaler, 6, 1);
+        p.translate(0, -dg.scaler * 2, 0);
     }
-}
+    p.pop();
+
+    // Negative x
+    p.push();
+    // align with the -x axis
+    p.rotateZ(-p.PI / 2);
+    // offset to the edge of the marker rather than center
+    p.translate(0, dg.scaler * (-0.5), 0);
+    p.fill(0, 255, 255);
+    for (x = 0; x < x_max; x += 2) {
+        p.cylinder(width, dg.scaler, 6, 1);
+        p.translate(0, -dg.scaler * 2, 0);
+    }
+    p.pop();
+
+    // Positive y
+    p.push();
+    // align with the y axis
+    p.rotateZ(p.PI);
+    // offset to the edge of the marker rather than center
+    p.translate(0, dg.scaler * (-0.5), 0);
+    p.fill(0, 255, 0);
+    for (x = 0; x < x_max; x += 2) {
+        p.cylinder(width, dg.scaler, 6, 1);
+        p.translate(0, -dg.scaler * 2, 0);
+    }
+    p.pop();
+
+    // Negative y
+    p.push();
+    // aligned with the y axis
+    // offset to the edge of the marker rather than center
+    p.translate(0, dg.scaler * (-0.5), 0);
+    p.fill(255, 0, 255);
+    for (x = 0; x < x_max; x += 2) {
+        p.cylinder(width, dg.scaler, 6, 1);
+        p.translate(0, -dg.scaler * 2, 0);
+    }
+    p.pop();
+
+    // Positive z
+    p.push();
+    // align with the z axis
+    p.rotateX(-p.PI / 2);
+    // offset to the edge of the marker rather than center
+    p.translate(0, dg.scaler * (-0.5), 0);
+    p.fill(0, 0, 255);
+    for (x = 0; x < x_max; x += 2) {
+        p.cylinder(width, dg.scaler, 6, 1);
+        p.translate(0, -dg.scaler * 2, 0);
+    }
+    p.pop();
+
+    // Negative z
+    p.push();
+    // align with the z axis
+    p.rotateX(p.PI / 2);
+    // offset to the edge of the marker rather than center
+    p.translate(0, dg.scaler * (-0.5), 0);
+    p.fill(255, 255, 0);
+    for (x = 0; x < x_max; x += 2) {
+        p.cylinder(width, dg.scaler, 6, 1);
+        p.translate(0, -dg.scaler * 2, 0);
+    }
+    p.pop();
+
+};
+
+/** Scene lighting */
+window.dash_clientside.differential_geometry.sceneLighting = function(p, dg) {
+
+    p.ambientLight(dg.ambient_light[0], dg.ambient_light[1], dg.ambient_light[2]); // Ambient light with moderate intensity
+
+    if (dg.rotate_toggle) {
+        let angle = p.frameCount * dg.rotation_speed;
+        let cosA = Math.cos(angle);
+        let sinA = Math.sin(angle);
+        
+        // Rotate around Y-axis: [x, z] → [x * cosA - z * sinA, x * sinA + z * cosA]
+        function rotateY([x, y, z]) {
+          return [
+            x * cosA - z * sinA,
+            y,
+            x * sinA + z * cosA
+          ];
+        }
+        
+        // Apply to each light direction
+        let dirs = {
+          x: rotateY([-1, 0, 0]),
+          y: rotateY([0, -1, 0]),
+          z: rotateY([0, 0, -1]),
+          neg_x: rotateY([1, 0, 0]),
+          neg_y: rotateY([0, 1, 0]),
+          neg_z: rotateY([0, 0, 1]),
+        };
+        
+        // Then apply directional lights using the rotated directions
+        p.directionalLight(...dg.x_light, ...dirs.x);
+        p.directionalLight(...dg.y_light, ...dirs.y);
+        p.directionalLight(...dg.z_light, ...dirs.z);             
+    } else {
+        p.directionalLight(dg.x_light[0], dg.x_light[1], dg.x_light[2], -1, 0, 0);
+        p.directionalLight(dg.y_light[0], dg.y_light[1], dg.y_light[2], 0, -1, 0);
+        p.directionalLight(dg.z_light[0], dg.z_light[1], dg.z_light[2], 0, 0, -1);
+    }
+
+    p.shininess(dg.surfaceShine);       // Make highlights pop
+
+    p.specularMaterial(255);
+
+    return "";
+};
+
+window.dash_clientside.differential_geometry.movement = function(p, cam) {
+
+    const acc = window.dash_clientside.differential_geometry.movementSpeed * 0.001;
+
+    if (window.dash_clientside.differential_geometry.orbitControlled) {
+        if (p.keyIsDown(p.LEFT_ARROW) === true) {
+            window.dash_clientside.differential_geometry.xVelocity -= acc;
+        }
+    
+        if (p.keyIsDown(p.RIGHT_ARROW) === true) {
+            window.dash_clientside.differential_geometry.xVelocity += acc;
+        }
+    
+        if (p.keyIsDown(p.UP_ARROW) === true) {
+
+            if (p.keyIsDown(p.SHIFT)) {
+                window.dash_clientside.differential_geometry.zVelocity -= acc;
+            } else {
+                window.dash_clientside.differential_geometry.yVelocity -= acc;
+            }
+            
+        }
+    
+        if (p.keyIsDown(p.DOWN_ARROW) === true) {
+
+            if (p.keyIsDown(p.SHIFT)) {
+                window.dash_clientside.differential_geometry.zVelocity += acc;
+            } else {
+                window.dash_clientside.differential_geometry.yVelocity += acc;
+            }
+
+        }
+
+        //const decay = 0.001; //1 / (101 - window.dash_clientside.differential_geometry.movementSpeed);
+
+        cam.move(window.dash_clientside.differential_geometry.xVelocity, 0, 0);
+        //window.dash_clientside.differential_geometry.xVelocity *= decay;
+
+        cam.move(0, window.dash_clientside.differential_geometry.yVelocity, 0);
+        //window.dash_clientside.differential_geometry.yVelocity *= decay;
+
+        cam.move(0, 0, window.dash_clientside.differential_geometry.zVelocity);
+        //window.dash_clientside.differential_geometry.zVelocity *= decay;
+
+    }
+};
 
 /** Parses what should ostensibly be a constant (includes e, pi) */
 window.dash_clientside.differential_geometry.parse_constant = function(pre, value) {

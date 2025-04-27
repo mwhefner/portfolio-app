@@ -31,8 +31,6 @@ window.dash_clientside.differential_geometry.surface_sketch = function (obj_file
     
         // Run the safe setup function
         dg.safe_setup(p);
-    
-        p.setAttributes('antialias', true);
 
         cam = p.createCamera();
     
@@ -84,6 +82,14 @@ window.dash_clientside.differential_geometry.surface_sketch = function (obj_file
     
     p.draw = function () {
 
+        if (dg.rotate_toggle) {
+            p.rotateY(p.frameCount * dg.rotation_speed);
+        }
+
+        p.push(); 
+
+        p.rotateX(p.PI);
+
         if (p.frameCount === 1 && subject) {
             dg.render_result_alert(true);
         } else if (!subject) {
@@ -94,60 +100,32 @@ window.dash_clientside.differential_geometry.surface_sketch = function (obj_file
 
         dg.drawAxes(p);
 
+        p.push();
+        p.translate(cam.centerX, -cam.centerY, -cam.centerZ);
+        dg.drawFocalPoint(p);
+        p.pop();
+
         // Orbit control to allow mouse interaction
         // Only allow orbit control when no modal is open
         if (dg.orbitControlled) {
             p.orbitControl(dg.orbit_sensitivity, dg.orbit_sensitivity, dg.orbit_sensitivity);
         }
 
-        // Draw a gray dot at the focal point of the camera
-        if (dg.showFocalPoint) {
-            p.push();
-            p.translate(cam.centerX, cam.centerY, cam.centerZ);
-            p.fill(255, 255, 255);
-            p.noStroke();
-            p.sphere(3); // Adjust size as needed
-            p.pop();
-        }
-
-
         //  LIGHTING AND COLOR BY
         if (colorby === "normal") {
-
             p.normalMaterial();
-            //p.ambientLight(255);
-
         } else if (colorby === "lighting") {
-
             // scene lighting
-            p.ambientLight(dg.ambient_light[0], dg.ambient_light[1], dg.ambient_light[2]); // Ambient light with moderate intensity
-
-
-            p.directionalLight(dg.x_light[0], dg.x_light[1], dg.x_light[2], 1, 0, 0);
-            p.directionalLight(dg.y_light[0], dg.y_light[1], dg.y_light[2], 0, 1, 0);
-            p.directionalLight(dg.z_light[0], dg.z_light[1], dg.z_light[2], 0, 0, 1);
-
-            p.shininess(dg.surfaceShine);       // Make highlights pop
-            p.specularMaterial(255);
-
+            dg.sceneLighting(p, dg);
         } else {
-
+            // TODO: replace with p5.Image
             p.texture(graphicsBuffer);
             p.ambientLight(255);
-
         }
-
-        p.push(); 
-
-        p.rotateX(p.PI);
         
         p.strokeWeight(0);
 
         p.scale(dg.scaler);
-
-        if (dg.rotate_toggle) {
-            p.rotateY(p.frameCount * dg.rotation_speed);
-        }
 
         p.model(subject);
 

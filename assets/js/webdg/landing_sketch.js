@@ -38,8 +38,6 @@ window.dash_clientside.differential_geometry.landing_sketch = function () {
             // Run the safe setup function
             dg.safe_setup(p);
 
-            p.setAttributes('antialias', true);
-
         };
 
         p.draw = function() {
