@@ -102,7 +102,7 @@ window.dash_clientside.differential_geometry.surface_sketch = function (obj_file
 
         p.push();
         p.translate(cam.centerX, -cam.centerY, -cam.centerZ);
-        dg.drawFocalPoint(p);
+        //dg.drawFocalPoint(p);
         p.pop();
 
         // Orbit control to allow mouse interaction

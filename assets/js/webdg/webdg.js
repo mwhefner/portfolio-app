@@ -24,7 +24,7 @@ window.dash_clientside.differential_geometry.zVelocity = 0;
 
 /** These variables are manipulated by clienside callbacks in the settings */
 window.dash_clientside.differential_geometry.showAxis = true;
-window.dash_clientside.differential_geometry.showFocalPoint = true;
+window.dash_clientside.differential_geometry.showFocalPoint = false;
 window.dash_clientside.differential_geometry.movementSpeed = 1;
 window.dash_clientside.differential_geometry.scaler = null;             // Initialized in Settings
 window.dash_clientside.differential_geometry.strokeW = null;            // Initialized in Settings

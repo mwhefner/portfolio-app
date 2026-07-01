@@ -91,8 +91,8 @@ layout = dbc.Card(
                     dbc.Switch(
                         id="show_focal_point",
                         label="Show Focal Point",
-                        value=True,
-                        disabled=False,
+                        value=False,
+                        disabled=True,
                         style={'user-select': 'none', "fontSize": "1.5em",},
                         className="my-2"
                     ),

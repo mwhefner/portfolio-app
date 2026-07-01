@@ -490,7 +490,7 @@ layout = html.Div(
                 
                 html.P('Success! WebDG has rendered your subject. ', style={'textAlign' : 'center',"fontSize": "1.5em"}),
                 
-                'Orbit your view around the focal point by left-clicking and dragging. Move the focal point with the arrow keys, and hold shift while pressing the up or down arrow to move it forward or backward. Zoom using the mouse wheel. Explore more adjustments in the Settings menu with the ',
+                'Orbit your view by left-clicking and dragging. Move with the arrow keys; hold shift while pressing the up or down arrow to move it forward or backward. Zoom using the mouse wheel. Explore more adjustments in the Settings menu with the ',
                 
                 html.I(className="fa-solid fa-gear"),
                 
