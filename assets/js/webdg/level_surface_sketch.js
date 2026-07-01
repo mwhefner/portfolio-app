@@ -12,15 +12,16 @@ window.dash_clientside.differential_geometry.level_surface_sketch = function(obj
 
     let sketch_function = function (p) {
 
-    //generator
-    let subject
+    //subject
+    let subject;
     let cam;
-    let instancingShader;
 
     p.setup = async function () {
     
         // Run the safe setup function
         dg.safe_setup(p);
+    
+        p.setAttributes('antialias', true);
 
         cam = p.createCamera();
     
@@ -44,55 +45,6 @@ window.dash_clientside.differential_geometry.level_surface_sketch = function(obj
           }, { passive: false });
 
         p.setCamera(cam);
-
-        let instancingCallback = {
-
-
-
-
-
-        };
-
-        instancingShader = p.baseMaterialShader().modify({
-
-            declarations: 'vec3 myNormal;',
-
-            'Vertex getObjectInputs': `(Vertex inputs) {
-                int id = gl_InstanceID;
-                int size = 3; // 10 per axis
-                float spacing = 6.283184;
-                float halfGrid = float(size - 1) * spacing * 0.5;
-
-                int x = id % size;
-                int y = (id / size) % size;
-                int z = id / (size * size);
-
-                vec3 offset = vec3(
-                float(x) * spacing,
-                float(y) * spacing,
-                float(z) * spacing
-                );
-
-                inputs.position.xyz += offset - vec3(halfGrid);
-
-                return inputs;
-            }`,
-
-            'Inputs getPixelInputs': `(Inputs inputs) {
-                myNormal = inputs.normal;
-                return inputs;
-            }`,
-  
-            'vec4 getFinalColor': `(vec4 color) {
-                return mix(
-                vec4(1.0, 1.0, 1.0, 1.0),
-                color,
-                abs(dot(myNormal, vec3(0.0, 0.0, 1.0))));
-            }`
-
-        });
-
-        //p.ortho(-p.width/2, p.width/2, -p.height/2, p.height/2, 0, 50000);
 
     };
     
@@ -132,57 +84,29 @@ window.dash_clientside.differential_geometry.level_surface_sketch = function(obj
             p.normalMaterial();
 
         } else {
-            // scene lighting
             dg.sceneLighting(p, dg);
+
         }
 
         p.push(); 
+
+        p.rotateX(p.PI);
+
+        if (dg.rotate_toggle) {
+            p.rotateY(p.frameCount * dg.rotation_speed);
+        }
         
         p.strokeWeight(0);
 
         p.scale(dg.scaler);
 
-        p.shader(instancingShader);
-        
-        p.model(subject, 27);
+        p.model(subject);
 
         p.pop();
 
         p.strokeWeight(1);
 
-        // For inertial movement (unused)
-        //dg.movement(p, cam);
-
-        if (dg.orbitControlled) {
-            if (p.keyIsDown(p.LEFT_ARROW) === true) {
-                cam.move(-dg.movementSpeed, 0, 0);
-            }
-        
-            if (p.keyIsDown(p.RIGHT_ARROW) === true) {
-                cam.move(dg.movementSpeed, 0, 0);
-            }
-        
-            if (p.keyIsDown(p.UP_ARROW) === true) {
-    
-                if (p.keyIsDown(p.SHIFT)) {
-                    cam.move(0, 0, -dg.movementSpeed);
-                } else {
-                    cam.move(0, -dg.movementSpeed, 0);
-                }
-                
-            }
-        
-            if (p.keyIsDown(p.DOWN_ARROW) === true) {
-    
-                if (p.keyIsDown(p.SHIFT)) {
-                    cam.move(0, 0, dg.movementSpeed);
-                } else {
-                    cam.move(0, dg.movementSpeed, 0);
-                }
-    
-            }
-        }
-
+        dg.movement(p, cam);
     };
     
     }

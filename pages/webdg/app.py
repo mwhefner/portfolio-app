@@ -314,7 +314,7 @@ layout = html.Div(
                     
                     WebDG is a tool for studying differential geometry that runs in your web browser. It is robust enough to explore interactive 3D visualizations and analyses of abstract curves and surfaces (without the substantial overhead of learning to script computer algebra systems).
                     
-                    **WebDG is free for everyone to use and [open-source.](https://github.com/mwhefner/portfolio-app). No login, download, license, or subscription is required.**
+                    **WebDG is free for everyone to use and [open-source](https://github.com/mwhefner/portfolio-app). No login, download, license, or subscription is required.**
                     
                     If you find it useful and would like to support its continued development and hosting, please consider simply sharing it with others.
                     

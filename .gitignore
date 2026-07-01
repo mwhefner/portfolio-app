@@ -1,3 +1,6 @@
+# Ignore internal to-do
+todo.txt
+
 # Ignore database config
 database.conf
 
