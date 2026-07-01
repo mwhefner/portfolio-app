@@ -17,8 +17,8 @@ register_page(
     __name__,
     path="/dashboards",
     name="Dashboards",
-    title="M. W. Hefner's Dashboards",
-    description="Dashboards for interactive statistical analysis and visualization.",
+    title="Little Apps",
+    description="This is where I share small or one-off dashboards and web applications.",
     image="/assets/webp/thumbnails/ggea.webp",
     meta_tags=[
         {"charset": "UTF-8"},
@@ -64,7 +64,7 @@ def populate_dashboard_cards(_):
     
     return dbc.Col([
         dbc.Row(
-            dbc.Col(dbc.Button("Back", color="primary", href="/"), width="auto"),
+            dbc.Col(dbc.Button("Back to Home Page", color="primary", href="/"), width="auto"),
             justify="center", className="m-4"
         ),
         dbc.Row([

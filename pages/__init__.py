@@ -2,7 +2,7 @@
 
 __init__.py
 
-This defines the template for cards in "landing" or "index" pages of the portfolio.
+This defines the template for cards in "landing" or "index" pages of the home page.
 
 M W Hefner, 2025
 MIT License
@@ -62,8 +62,8 @@ def makeCard(page):
     # if the page has a "last updated", specify it here
     last_updated = {
         "/ggea" : "Last Updated 3.2024",
-        "/webdg" : "Last Updated 4.2025",
-        "/spectrawhorl" : "Last Updated 4.2025",
+        "/webdg" : "Last Updated 7.2026",
+        "/spectrawhorl" : "Last Updated 7.2026",
         "/everest" : "Last Updated 4.2024",
         "/mix_paper" : "",
         '/briggs' : '',

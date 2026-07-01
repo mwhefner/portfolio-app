@@ -21,7 +21,7 @@ register_page(
     path="/spectrawhorl", 
     name="SpectraWhorl", 
     title="SpectraWhorl", 
-    description="SpectraWhorl is a free and open-source spectrogram in a whorled pattern. This creates a real-time geometric conceptual lens through which to view and learn about the physics of sound and the math of harmony.", 
+    description="SpectraWhorl is a free spectrogram (sound visualizer) in a whorled (swirl-like) pattern that runs in your web browser. The 12 chromatic pitches from sound input are shown like the 12 hours of a clock face. The display's configurable appearance and overlays create a real-time geometric conceptual lens through which to view and learn about the physics of sound and the math of harmony. You can use your microphone, upload a sound file, or explore the built-in synthesizer.", 
     image="/assets/webp/thumbnails/SpectraWhorl.webp"
 )
 
@@ -99,9 +99,7 @@ layout = html.Div(
                         
                         **SpectraWhorl is free for everyone. No login, download, license, or subscription is required.**
                     
-                        I created, maintain, and host this open-source educational tool as a labor of love, freely available to everyone. If you find it useful and would like to support its continued development and hosting, you’re welcome to make a small, optional donation via [Buy Me a Coffee](https://www.buymeacoffee.com/mwhefner). No account is needed, and all major credit cards are accepted. Thank you for helping keep this resource online and accessible!
-                        
-                        **You can also show your support by simply sharing this app!**
+                        If you find it useful and would like to support its continued development and hosting, please consider simply sharing it with others.
                         
                         """, mathjax=True, className="m-5", style = {'textAlign' : 'center', 'fontSize' : '1.25em'}
                     ),

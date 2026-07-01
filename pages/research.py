@@ -16,9 +16,9 @@ from pages import makeCard
 register_page(
     __name__,
     path="/research",
-    name="Research",
-    title="M. W. Hefner's Research",
-    description="Research groups, papers, and datasets.",
+    name="Past Research",
+    title="Past Research",
+    description="Here you can learn more about my previous research collaborations, published work, and contributions to open datasets.",
     image="assets/webp/thumbnails/mix_paper.webp",
     meta_tags=[
         {"charset": "UTF-8"},
@@ -62,7 +62,7 @@ def populate_research_cards(_):
     
     return dbc.Col([
         dbc.Row(
-            dbc.Col(dbc.Button("Back", color="primary", href="/"), width="auto"),
+            dbc.Col(dbc.Button("Back to Home Page", color="primary", href="/"), width="auto"),
             justify="center", className="m-4"
         ),
         dbc.Row([

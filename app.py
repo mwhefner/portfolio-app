@@ -26,21 +26,16 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.mi
 app = Dash(
     __name__,
     external_stylesheets=[dbc.themes.LUX, dbc_css, dbc.icons.FONT_AWESOME],
-    title = "Web Portfolio",
+    title = "Home Page",
     suppress_callback_exceptions=True,
-    update_title = "(Loading) Web Portfolio",
+    update_title = "(Loading) Home Page",
     use_pages=True
 )
 
 # Bio text string
 bio_text = """
-I tackle complex problems and transform data, math and science concepts into interactive, pedagogically-informed software solutions.
 
-<br>
-
-I built this app to share my work. You can find the [source code on GitHub.](https://github.com/mwhefner/portfolio-app) Your feedback is strongly encouraged in the form below. It helps me improve. Also feel free to reach out with any questions or if you're interested in a collaboration or commission.
-
-You can [Buy Me a Coffee](https://www.buymeacoffee.com/mwhefner) if you would like to support the applications I build.
+I built this website to share my work. You can find the [source code on GitHub.](https://github.com/mwhefner/portfolio-app)
 
 """
 
@@ -169,10 +164,10 @@ app.layout = dbc.Container([
     # The rest of this will retain across all pages or
     # "subapps" of the application, as I think of it
 
-    # Portfolio Modal
+    # Home Page Modal
     dbc.Modal(
         [
-            dbc.ModalHeader(dbc.ModalTitle("M W Hefner")),
+            dbc.ModalHeader(dbc.ModalTitle("Matthew Hefner")),
             dbc.ModalBody(
                 [
                     html.H1("Welcome", style={"textAlign": "center"}, className="m-5"),
@@ -211,7 +206,7 @@ app.layout = dbc.Container([
                         dbc.Col(
                                 dbc.Button(
                                     dbc.Row([
-                                            dbc.Col(html.Span("Portfolio", className="fw-bold"), width="auto"),
+                                            dbc.Col(html.Span("Home Page", className="fw-bold"), width="auto"),
                                             dbc.Col(html.I(className="fa-solid fa-images"), width="auto", className="text-end")
                                         ]),
                                     id="portfolio-btn",
@@ -356,7 +351,7 @@ app.layout = dbc.Container([
 
     # me popover
     dbc.Popover(
-        dbc.PopoverBody(html.Em("portfolio, info and feedback")),
+        dbc.PopoverBody(html.Em("homepage and contact")),
         target="library-hamburger",
         trigger="hover",
     ),
@@ -374,7 +369,7 @@ app.layout = dbc.Container([
         ),
         dbc.Button(
             dbc.Row([
-                dbc.Col(html.Span("Creator", className="fw-bold"), width="auto"),
+                dbc.Col(html.Span("Welcome", className="fw-bold"), width="auto"),
                 dbc.Col(html.I(className="fa-solid fa-chalkboard-user"), width="auto", className="text-end")
             ], className="d-flex justify-content-between align-items-center", align="center"),
             id="library-hamburger",
@@ -384,7 +379,7 @@ app.layout = dbc.Container([
 
 ])
 
-# Portfolio modal callback
+# Home Page modal callback
 @app.callback(
     Output("portfolio-modal", "is_open"),
     [Input("library-hamburger", "n_clicks"), Input("close-portfolio-modal", "n_clicks"), Input('portfolio-btn', 'n_clicks')],

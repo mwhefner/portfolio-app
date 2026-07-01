@@ -27,7 +27,7 @@ register_page(
     path="/webdg", 
     name="WebDG 1.0.3", 
     title="WebDG 1.0.3", 
-    description="""WebDG is for anyone studying, teaching, or just curious about differential geometry. It is a free, open-source web app robust enough to explore interactive 3D visualizations and analyses of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.""",
+    description="""WebDG is a free tool for studying differential geometry that runs in your web browser. It is robust enough to explore interactive 3D visualizations and analyses of abstract curves and surfaces (without the substantial overhead of learning to script computer algebra systems).""",
     image="/assets/webp/thumbnails/webdg.webp"
 )
 
@@ -235,7 +235,7 @@ layout = html.Div(
     dbc.Modal(
         [
 
-            dbc.ModalHeader(dbc.ModalTitle("Welcome")),
+            dbc.ModalHeader(dbc.ModalTitle("Welcome to WebDG")),
             dbc.ModalBody(
                 [
                     
@@ -299,7 +299,10 @@ layout = html.Div(
                 
                 dcc.Markdown(
                     """
-
+                    ***
+                    
+                    > *Getting Started? Click or touch the X at the top right (or anywhere off of) this information screen to close it. You can re-open this information screen at any time by clicking or touching the question mark at the bottom left of the application.* 
+                    
                     ***
                     
                     #### About
@@ -308,13 +311,12 @@ layout = html.Div(
                 
                 dcc.Markdown(
                     r"""    
-                    WebDG is for anyone studying, teaching, or just curious about [differential geometry](https://www.britannica.com/science/differential-geometry). It is an open-source web app robust enough to explore interactive 3D visualizations and analyses of abstract curves and surfaces without the substantial overhead of learning to script computer algebra systems.
                     
-                    **WebDG is free for everyone. No login, download, license, or subscription is required.**
+                    WebDG is a tool for studying differential geometry that runs in your web browser. It is robust enough to explore interactive 3D visualizations and analyses of abstract curves and surfaces (without the substantial overhead of learning to script computer algebra systems).
                     
-                    I created, maintain, and host this open-source educational tool as a labor of love, freely available to everyone. If you find it useful and would like to support its continued development and hosting, you’re welcome to make a small, optional donation via [Buy Me a Coffee](https://www.buymeacoffee.com/mwhefner). No account is needed, and all major credit cards are accepted. Thank you for helping keep this resource online and accessible!
+                    **WebDG is free for everyone to use and [open-source.](https://github.com/mwhefner/portfolio-app). No login, download, license, or subscription is required.**
                     
-                    **You can also show your support by simply sharing this app!**
+                    If you find it useful and would like to support its continued development and hosting, please consider simply sharing it with others.
                     
                     ***
                     

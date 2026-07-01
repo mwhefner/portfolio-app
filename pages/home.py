@@ -16,9 +16,9 @@ from pages import makeCard
 register_page(
     __name__,
     path="/",
-    name="Portfolio",
-    title="M. W. Hefner",
-    description="I tackle complex problems and transform data, math and science concepts into interactive, pedagogically-informed software solutions.",
+    name="Home Page",
+    title="Matthew Hefner",
+    description="It's my website.",
     image="webp/images/webdg9.webp",
     meta_tags=[
         {"charset": "UTF-8"},
@@ -64,6 +64,12 @@ def populate_cards(_):
     column_three_pages = [page_dict[path] for path in column_three_paths if path in page_dict]
     
     return dbc.Col([
+        dbc.Row(
+            [
+            dbc.Col(html.I(className="fa-solid fa-images"), width="auto", className="text-end"),
+            dbc.Col(html.H4("Home Page"), width="auto"),],
+            justify="center", className="m-4"
+        ),
         dbc.Row([
             dbc.Col(column_one_pages, className = "p-0"),
             dbc.Col(column_two_pages, className = "p-0"),
