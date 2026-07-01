@@ -16,7 +16,7 @@ from pages import makeCard
 register_page(
     __name__,
     path="/dashboards",
-    name="Dashboards",
+    name="Little Apps",
     title="Little Apps",
     description="This is where I share small or one-off dashboards and web applications.",
     image="/assets/webp/thumbnails/ggea.webp",

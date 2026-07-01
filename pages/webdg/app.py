@@ -25,7 +25,7 @@ import pages.webdg.updates as dg_updates
 register_page(
     __name__, 
     path="/webdg", 
-    name="WebDG 1.0.3", 
+    name="WebDG", 
     title="WebDG 1.0.3", 
     description="""WebDG is a free tool for studying differential geometry that runs in your web browser. It is robust enough to explore interactive 3D visualizations and analyses of abstract curves and surfaces (without the substantial overhead of learning to script computer algebra systems).""",
     image="/assets/webp/thumbnails/webdg.webp"

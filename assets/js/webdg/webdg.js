@@ -221,6 +221,7 @@ window.dash_clientside.differential_geometry.sceneLighting = function(p, dg) {
     return "";
 };
 
+// For inertial movement (unused)
 window.dash_clientside.differential_geometry.movement = function(p, cam) {
 
     const acc = window.dash_clientside.differential_geometry.movementSpeed * 0.001;
