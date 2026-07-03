@@ -99,6 +99,8 @@ window.dash_clientside.differential_geometry.curve_sketch = function (curveData)
     
     p.draw = function () {
         
+        p.perspective(dg.fov, p.width / p.height, .8, 8000);
+
         // account for y pointing down at the start
         p.rotateX(p.PI);
 

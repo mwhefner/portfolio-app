@@ -82,6 +82,8 @@ window.dash_clientside.differential_geometry.surface_sketch = function (obj_file
     
     p.draw = function () {
 
+        p.perspective(dg.fov, p.width / p.height, .8, 8000);
+
         if (dg.rotate_toggle) {
             p.rotateY(p.frameCount * dg.rotation_speed);
         }

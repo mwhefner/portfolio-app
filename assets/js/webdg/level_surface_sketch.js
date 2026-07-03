@@ -89,12 +89,6 @@ window.dash_clientside.differential_geometry.level_surface_sketch = function(obj
         }
 
         p.push(); 
-
-        p.rotateX(p.PI);
-
-        if (dg.rotate_toggle) {
-            p.rotateY(p.frameCount * dg.rotation_speed);
-        }
         
         p.strokeWeight(0);
 
