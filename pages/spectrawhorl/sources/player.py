@@ -76,43 +76,6 @@ layout = html.Div(
         className = "mb-5"
         
     ),
-    
-    dcc.Markdown("***", className="w-75 mx-auto"),
-    
-    dbc.Label("Media Player", className = "spectrawhorl-label mb-5"),
-
-    html.Div(
-        children=[
-            dbc.Button(
-                    dbc.Row(
-                        [
-                        dbc.Col(html.I(className="fa-solid fa-play", id="spectrawhorl-playPauseButton-icon"), width="auto", className="text-end"),
-                        dbc.Col(html.Span("Play", id="spectrawhorl-inner-playPauseButton", className="fw-bold"), width="auto"),
-                        ], 
-                        align="center"
-                    ),
-                    id="spectrawhorl-playPauseButton",
-                    color="primary", 
-                    style={'fontSize' : '1.25em'},
-                    className="mx-auto"
-            ),
-            dbc.Button(
-                    dbc.Row(
-                        [
-                        dbc.Col(html.I(className="fa-solid fa-stop"), width="auto", className="text-end"),
-                        dbc.Col(html.Span("Stop", className="fw-bold"), width="auto"),
-                        ], 
-                        align="center"
-                    ),
-                    id="spectrawhorl-stopButton",
-                    color="primary", 
-                    style={'fontSize' : '1.25em'},
-                    className="mx-auto"
-            ),
-        ],
-        id="spectrawhorl-mediaPlayer",
-        className="w-75 mx-auto mb-5"
-    ),
         
     dbc.Label('Playback Rate', className = "spectrawhorl-label mb-5"),
     

@@ -174,7 +174,7 @@ layout = html.Div(
         dbc.Input(
             type="color",
             id="bg_colorpicker",
-            value="#738d72",
+            value="#000000",
             className="p-0 mb-5 w-75 mx-auto",
             style={"width": "100%", "height": 100, 'user-select': 'none', "fontSize": "1.5em",}
         ),
@@ -292,10 +292,10 @@ layout = html.Div(
             min=1,
             max=30,
             step=1,
-            value=10,
+            value=30,
             marks={
                 1: 'Min',
-                30: 'Max'
+                50: 'Max'
             },
             included=True,
             updatemode='drag',
@@ -311,7 +311,7 @@ layout = html.Div(
             min=0,
             max=1,
             step=0.01,
-            value=0,
+            value=0.8,
             marks={
                 0: 'All',
                 1: 'None'
@@ -349,7 +349,7 @@ layout = html.Div(
             min=0.01,
             max=10,
             step=0.01,
-            value=5,
+            value=1,
             marks={
                 0.01: 'Min',
                 10: 'Max'
@@ -368,7 +368,7 @@ layout = html.Div(
             min=0,
             max=16,
             step=0.1,
-            value=4,
+            value=6,
             marks={
                 0: 'Min',
                 16: 'Max'
@@ -387,7 +387,7 @@ layout = html.Div(
             min=0,
             max=1,
             step=0.01,
-            value=0.1,
+            value=0.2,
             marks={
                 0: 'Opaque',
                 1: 'Transparent'
@@ -406,7 +406,7 @@ layout = html.Div(
             min=8,
             max=14,
             step=1,
-            value=13,
+            value=14,
             marks={
                 8: 'Min',
                 14: 'Max'
@@ -425,7 +425,7 @@ layout = html.Div(
             min=0,
             max=0.9,
             step=0.01,
-            value=0,
+            value=0.2,
             marks={
                 0: 'NONE',
                 0.9: 'Max'

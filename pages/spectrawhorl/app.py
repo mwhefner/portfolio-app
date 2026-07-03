@@ -91,7 +91,7 @@ layout = html.Div(
                     
                     dcc.Markdown(
                         r"""    
-                        **SpectraWhorl** is a [**free and open-source**](https://github.com/mwhefner/portfolio-app/blob/main/LICENSE) [**spectrogram**](https://en.wikipedia.org/wiki/Spectrogram) in a [**whorled pattern.**](https://en.wikipedia.org/wiki/Whorl)
+                        **SpectraWhorl** is a **free and [open-source](https://github.com/mwhefner/portfolio-app/blob/main/LICENSE)** [**spectr**ogram](https://en.wikipedia.org/wiki/Spectrogram) in the [**whorl**ed pattern](https://en.wikipedia.org/wiki/Whorl) of a [chromatic circle](https://en.wikipedia.org/wiki/Chromatic_circle).
 
                         Like many spectrograms, SpectraWhorl plots pitch (or the frequency **spectrum**) of different sound sources (e.g., your microphone, an uploaded file, etc). What makes SpectraWhorl different is that it does so in a clock-like **whorled** pattern where one 360° rotation represents rising (counter-clockwise) or falling (clockwise) an octave.  This creates a real-time geometric conceptual lens through which to view and learn about the physics of sound and the math of harmony.
                         
@@ -154,7 +154,7 @@ layout = html.Div(
         
         dbc.Stack(
             dbc.Alert(
-            [
+            [                
                 # Decide which volume container to show based on
                 # input source via none/block style toggle in
                 # clientside callback
@@ -216,7 +216,57 @@ layout = html.Div(
                     id = "spectrawhorl-micMonitorVolumeLayout"
                     
                     ),
-            ], color="dark", className = "p-3 pb-4 pt-2"), 
+            
+                html.Div(
+                    children=[
+
+                        dbc.Button(
+                            [
+                                html.I(className="fa-solid fa-play",
+                                    id="spectrawhorl-playPauseButton-icon"),
+                                html.Span("Play",
+                                        id="spectrawhorl-inner-playPauseButton",
+                                        className="fw-bold"),
+                            ],
+                            id="spectrawhorl-playPauseButton",
+                            color="primary",
+                            className="d-flex justify-content-center align-items-center gap-2 mb-3",
+                            style={
+                                "fontSize": "1.25em",
+                                "width": "fit-content",
+                                "margin": "0 auto", 
+                            },
+                        ),
+
+                        dbc.Button(
+                            [
+                                html.I(className="fa-solid fa-stop"),
+                                html.Span("Stop", className="fw-bold"),
+                            ],
+                            id="spectrawhorl-stopButton",
+                            color="primary",
+                            className="d-flex justify-content-center align-items-center gap-2",
+                            style={
+                                "fontSize": "1.25em",
+                                "width": "fit-content",
+                                "margin": "0 auto",
+                            },
+                        ),
+
+                    ],
+                    id="spectrawhorl-mediaPlayer",
+                    className="mt-4",
+                    style={
+                        "width": "75%",
+                        "margin": "0 auto",
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "alignItems": "center",
+                        "gap": "6px",
+                    },
+                )
+            
+            ], color="dark", className = "p-3"), 
             gap=3, 
             className = "position-fixed top-0 end-0 m-3 justify-content-end"
         ),
