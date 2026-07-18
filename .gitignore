@@ -1,3 +1,10 @@
+# Under development
+assets/png/sandbox_map.png
+assets/js/breakdown.js
+pages/smalls/breakdown.py
+assets/js/map.js
+pages/smalls/map_app.py
+
 # Ignore internal to-do
 todo.txt
 

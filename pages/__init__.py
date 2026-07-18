@@ -56,7 +56,6 @@ def makeCard(page):
         "/mix_paper" : "https://link.springer.com/article/10.1007/s11027-024-10149-x",
         '/briggs' : 'https://doi.org/10.1017/eds.2023.38',
         '/cdiac' : 'https://rieee.appstate.edu/projects-programs/cdiac/',
-        #'/spectrawhorl' : 'https://www.tonetornado.com/',
     }
     
     # if the page has a "last updated", specify it here
@@ -70,7 +69,6 @@ def makeCard(page):
         '/cdiac' : 'Last Updated 11.2024',
         "/Top_100_Steam_Games": "Last Updated 2.2025",
         "/nyt_best_sellers": "Last Updated 2.2025",
-        
     }
     
     # Get page attributes for card

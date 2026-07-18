@@ -232,7 +232,7 @@ layout = html.Div(
             options = [{'label': showPalette(i), 'value': i} for i in range(len(palettes))],
 
             id="spectrawhorl-octaveColorPalette",
-            value=0,
+            value=6,
             className = "spectrawhorl-check mb-5 w-75 mx-auto spectrawhorl-palette",
             inline=False,  # stack vertically; set to True if you prefer inline
             labelClassName="spectrawhorl-inner-label",  # spacing between stacked items
@@ -292,7 +292,7 @@ layout = html.Div(
             min=1,
             max=30,
             step=1,
-            value=30,
+            value=25,
             marks={
                 1: 'Min',
                 50: 'Max'
@@ -311,7 +311,7 @@ layout = html.Div(
             min=0,
             max=1,
             step=0.01,
-            value=0.8,
+            value=0.65,
             marks={
                 0: 'All',
                 1: 'None'

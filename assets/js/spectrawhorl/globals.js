@@ -2,7 +2,7 @@ window.spectrawhorl_namespace = window.spectrawhorl_namespace || {};
 
 /** spectrawhorl variables w/ defaults */
 window.spectrawhorl_namespace.unloaded = true;
-window.spectrawhorl_namespace.viewerBackground = "#738d72";//2e2e2e
+window.spectrawhorl_namespace.viewerBackground = "#000000";//2e2e2e
 window.spectrawhorl_namespace.uiLightTheme = true;
 window.spectrawhorl_namespace.colorBy = "OCTAVE";
 window.spectrawhorl_namespace.noteLegendPalette = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];

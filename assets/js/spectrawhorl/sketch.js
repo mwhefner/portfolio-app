@@ -18,7 +18,7 @@ window.spectrawhorl_namespace.build_sketch = function (p) {
 
     };
 
-    p.setup = function () {
+    p.setup = async function () {
 
         p.createCanvas(window.innerWidth, window.innerHeight);
 

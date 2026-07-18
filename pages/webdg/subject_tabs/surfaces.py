@@ -10,7 +10,7 @@ MIT License
 """
 
 import dash_bootstrap_components as dbc
-from dash import html, Output, Input, dcc,clientside_callback,State, ClientsideFunction
+from dash import html, Output, Input, dcc,clientside_callback,State
 
 layout = html.Div(
     [
@@ -495,8 +495,8 @@ clientside_callback(
                 },
                 "Helical Strake": {
                     "s_xcomponent": "v * cos(u)",
-                    "s_ycomponent": "v * sin(u)",
-                    "s_zcomponent": "u",
+                    "s_zcomponent": "v * sin(u)",
+                    "s_ycomponent": "u",
                     "s_ustart": "-4 * pi",
                     "s_uend": "4 * pi",
                     "s_nu": 300,

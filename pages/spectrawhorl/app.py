@@ -21,7 +21,7 @@ register_page(
     path="/spectrawhorl", 
     name="SpectraWhorl", 
     title="SpectraWhorl", 
-    description="SpectraWhorl is a free spectrogram (sound visualizer) in a whorled (swirl-like) pattern that runs in your web browser. The 12 chromatic pitches from sound input are shown like the 12 hours of a clock face. The display's configurable appearance and overlays create a real-time geometric conceptual lens through which to view and learn about the physics of sound and the math of harmony. You can use your microphone, upload a sound file, or explore the built-in synthesizer.", 
+    description="SpectraWhorl is a free and open-source spectrogram in the whorled pattern of a chromatic circle.", 
     image="/assets/webp/thumbnails/SpectraWhorl.webp"
 )
 
@@ -70,7 +70,7 @@ layout = html.Div(
                     dcc.Markdown(
                         r"""          
                         
-                        Version 1.0.0
+                        Version 1.1.0
                         
                         """,
                         style={
@@ -171,7 +171,7 @@ layout = html.Div(
                             min=0,
                             max=1,
                             step=0.01,
-                            value=0.5,
+                            value=1,
                             marks={
                                 0: {'label' : 'Mute', 'style' : {'fontWeight' : 'bold', 'color' : 'red'}},
                             
